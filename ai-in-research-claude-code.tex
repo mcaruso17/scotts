@@ -246,13 +246,188 @@ guiding philosophy is to build systems \emph{endogenous} to human
 limitations---designing for the researcher one actually is, not the one a tool
 pretends them to be.
 
+% ----------------------------------------------------------------------
+\section{Newsletter Digest: Unread Issues, May 12 -- June 10, 2026}
+% ----------------------------------------------------------------------
+
+This section summarizes the recent backlog of \emph{Scott's Mixtape Substack}
+newsletters (18 distinct issues), grouped by theme. Each entry links to the web
+version of the post.
+
+\subsection{The ``Claude Code'' Series: AI Agents in Research}
+
+\begin{itemize}
+  \item \textbf{\href{https://causalinf.substack.com/p/claude-code-50-claude-is-holding}{Claude
+  Code 50: Claude is Holding On To Its Reasons}} (May 13). Claude Code keeps a
+  JSONL ``diary'' of all its reasoning and abandoned work---a goldmine for
+  studying agent behavior. In Cunningham's minimum-wage experiments, agents
+  randomly primed with different expected effects visibly engaged in
+  \emph{specification searching}: running a model, disliking the result, and
+  silently trying another. Agents do not bind themselves to design principles or
+  target a particular population estimand, so the human must scaffold and verify.
+  Marks six months and fifty essays since he adopted the tool: ``I am pushing all
+  my chips onto this technology.''
+
+  \item \textbf{\href{https://causalinf.substack.com/p/claude-code-51-harnessing-ai-agents}{Claude
+  Code 51: Harnessing AI Agents for Economic Research}} (May 21). Atomistic
+  \texttt{/skills} bolted onto an old workflow are not enough; the structure of
+  research work has shifted and requires a redesigned human-in-the-loop system.
+  Introduces the concept of an \emph{agent harness}---the software infrastructure
+  wrapping the model that manages context, tools, memory, and verification---and
+  plans to rebuild his workflow from first principles, starting from David
+  Allen's \emph{Getting Things Done}.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/claude-code-53-journal-cartels-and}{Claude
+  Code 53: Journal Cartels and AI Disclosure}} (May 27). Academic publishing is
+  highly concentrated (Elsevier and Wiley control roughly 61\% of economics
+  journals; an implied HHI near 2,430), so violating a publisher's AI policy
+  could effectively bar a researcher---and their coauthors---from much of the
+  market, echoing Becker's logic that low detection probability breeds severe
+  punishments. His position: use AI openly, disclose it honestly, and work out
+  disclosure duties with coauthors.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/claude-code-53-applied-econometrics}{Claude
+  Code 53: Applied econometrics will require a detailed checklist}} (June 8).
+  ``Plan-and-let-it-rip'' automation backfires: two Claude instances spent hours
+  confidently chasing wrong conjectures when the real bug was simply a CRAN
+  vs.\ GitHub version difference in the \texttt{did} package---caught only
+  because of his deep human capital in the Callaway--Sant'Anna estimator.
+  Advocates \emph{structured analog workflows} (Gawande-style checklists,
+  e.g.\ ``Pedro's Checklist''): name the estimand in potential outcomes, tabulate
+  cohorts, plot rollout and outcome evolutions, choose covariates methodically,
+  and insist on \textbf{zero error}. Key claim: the returns to econometrics
+  knowledge are \emph{higher}, not lower, with AI, because automation is not
+  verification.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/claude-code-54-amnesia}{Claude
+  Code 54: Amnesia}} (June 10). Summarized at length in the body of this
+  document: introduces ``drift,'' connects it to ADHD-related memory
+  compensation, and describes the ``beautiful deck'' re-orientation artifact
+  added to his harness.
+\end{itemize}
+
+\subsection{AI and the Economics Profession}
+
+\begin{itemize}
+  \item \textbf{\href{https://causalinf.substack.com/p/what-a-panel-of-economists-said-about}{What
+  a panel of economists said about AI in the production of research}} (May 20).
+  Writeup of an NBER panel (Simon, Cunningham, Bradford, Wing) with commentaries
+  by Beam, Fletcher, and Goldsmith-Pinkham. Highlights: the Zurich APE project's
+  1,000 autonomously written papers whose right tail rates alongside published
+  AER work; editors fear a submission flood that desk-rejection workflows cannot
+  absorb; restricted-data contracts collide with cloud AI tools (options:
+  synthetic data, local open-weight models, vendor agreements). Consensus:
+  production has decoupled from verification, and incentives---not
+  technology---will decide whether the field gets better papers or merely more.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/is-ai-slop-saliva-or-spit}{Is
+  AI Slop saliva or spit?}} (June 5). Conjecture that reactions to AI-generated
+  text mirror the ``cognition of disgust'': one's own chatbot conversations feel
+  insightful (saliva) while other people's feel repugnant (spit). Proposes a
+  randomized tournament experiment that blinds and reveals authorship of human
+  vs.\ AI writings to test for ``AI bias''---an experiment he has wanted to run
+  for three years.
+\end{itemize}
+
+\subsection{Econometrics: Difference-in-Differences Methodology}
+
+\begin{itemize}
+  \item \textbf{\href{https://causalinf.substack.com/p/should-i-include-covariates-in-diff}{Should
+  I Include Covariates in Diff-in-Diff?}} (June 1). Pushes back on the belief
+  that covariate-sensitive estimates are untrustworthy: when groups are balanced
+  on a covariate that affects trends, unconditional parallel trends holds and no
+  controls are needed; imbalance is what mechanically breaks parallel trends.
+  First of a planned series (partially paywalled).
+
+  \item \textbf{\href{https://causalinf.substack.com/p/diff-in-diff-can-be-written-down}{Diff-in-diff
+  can be written down six ways!}} (June 4). The 2x2 diff-in-diff is ``four
+  averages and three subtractions,'' computable two manual ways (first
+  differences then difference; group differences then difference) and via four
+  numerically identical OLS specifications (saturated dummies, twoway fixed
+  effects, first-difference regression, group-difference regression)---with
+  Stata code on Card--Krueger and castle-doctrine data to prove it.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/greetings-from-glasgow}{Greetings
+  from Glasgow}} (May 18). A reflection on regression to the mean: the
+  distributions of \(Y(0)\) and \(Y(1)\) are different variables that need not
+  share any moments, so talk of ``the outcome'' reverting to ``the mean'' is
+  ill-posed unless one specifies \emph{which} potential outcome. Plus travel
+  misadventures (a near-missed Zurich border queue and a Dublin gate change
+  missed while talking to a chatbot).
+\end{itemize}
+
+\subsection{The Odd Couple Podcast (with Caitlin Myers)}
+
+\begin{itemize}
+  \item \textbf{\href{https://causalinf.substack.com/p/episode-10-doses-and-decompositions}{Episode
+  10: Doses and Decompositions!}} (May 12). Walks through the decomposition of
+  the OLS twoway fixed effects estimator for continuous-treatment
+  difference-in-differences.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/episode-11-why-is-our-number-this}{Episode
+  11: Why is our number this number?}} (May 19). Continues the
+  Frisch--Waugh--Lovell decomposition of OLS for the continuous-treatment case,
+  working through a Claude-made deck on Callaway, Goodman-Bacon and Sant'Anna
+  (forthcoming AER).
+
+  \item \textbf{\href{https://causalinf.substack.com/p/episode-12-whats-our-causal-effect}{Episode
+  12: What's our causal effect called?}} (May 26). Switches from estimation to
+  defining causal parameters (ATT vs.\ ACRT, the slope of the dose-response
+  curve) and asks whether their abortion-access ``dose'' is distance in levels or
+  in changes---an argument for starting from parameters, not regressions.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/episode-13-finally-the-continuous}{Episode
+  13: Finally the Continuous Diff-in-Diff Estimator Shows Up!}} (June 9).
+  Concludes the parameter discussion for their Texas House Bill 2
+  abortion-clinic study (no-anticipation pins down which dose definition is
+  admissible) and introduces the continuous-treatment estimator itself: splines,
+  kernels, polynomials, and when a fitted curve may be read causally.
+\end{itemize}
+
+\subsection{Travel, Workshops, and Community}
+
+\begin{itemize}
+  \item \textbf{\href{https://causalinf.substack.com/p/weekend-tabs-from-zurich}{Weekend
+  tabs: From Zurich}} (May 16). After a three-day panel-econometrics workshop in
+  Zurich, notes that ``vibe-coded'' slides eroded the memorized delivery he
+  normally relies on---an early sighting of the human-capital theme. Link
+  roundup spans chatbot privacy leaks, a mindfulness-app RCT, and AI-generated
+  minimum-wage papers.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/day-one-in-madrid}{Day one
+  in Madrid}} (May 25). A personal travel essay: new mantras (``thoughts are not
+  instructions''; ``do the next real thing'') and musings on integrity as an
+  off-equilibrium-path concept in game theory.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/third-annual-codechella-madrid-is}{Third
+  Annual CodeChella Madrid is in the Books}} (May 29). The diff-in-diff workshop
+  drew its biggest crowd yet (about 150, up from 80); announces a January
+  CodeChella in Mexico City (contact \texttt{info@mixtape.consulting}) and the
+  800-page book \emph{Causal Inference: the Remix}, out August 25 with a free
+  online version planned.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/closing-my-tabs-the-italian-job}{Closing
+  my tabs: the Italian Job}} (May 30). Travel interlude en route to Lake
+  Maggiore; tabs include Anthropic's near-trillion-dollar valuation, the
+  publication of the JEL ``Difference-in-Differences: A Practitioner's Guide''
+  (Baker et al.), and the Opus 4.8 release.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/closing-tabs-from-lake-maggiore-in}{Closing
+  tabs from Lake Maggiore in Italy}} (June 6). Halfway through eight weeks in
+  Europe after teaching at the European Commission in Ispra (Claude chose his
+  hotel---on the wrong side of the lake, but beautifully). Tabs include
+  Anthropic's internal productivity data, Ethan Mollick's forthcoming
+  \emph{Co-Existence}, NeurIPS's human-authorship policy, and a PLOS ONE RCT on
+  bias against AI writing.
+\end{itemize}
+
 \vspace{1em}
 \hrule
 \vspace{0.5em}
-\noindent\footnotesize\textit{Source material:} Scott Cunningham, ``Claude Code''
-series, \emph{Scott's Mixtape Substack}, including
-\href{https://causalinf.substack.com/p/claude-code-54-amnesia}{``Claude Code 54:
-Amnesia''} (June 10, 2026) and related installments on harnessing AI agents for
-economic research, AI disclosure norms, and reproducible empirical workflows.
+\noindent\footnotesize\textit{Source material:} Scott Cunningham, \emph{Scott's
+Mixtape Substack} (\url{https://causalinf.substack.com}), issues of May
+12 -- June 10, 2026, including the ``Claude Code'' series on harnessing AI
+agents for economic research, AI disclosure norms, and reproducible empirical
+workflows.
 
 \end{document}
