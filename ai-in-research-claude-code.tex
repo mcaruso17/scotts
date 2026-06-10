@@ -1,0 +1,433 @@
+\documentclass[11pt]{article}
+
+% ----------------------------------------------------------------------
+%  AI Applications in Research: The Case of Claude Code
+%  A conceptual summary inspired by Scott Cunningham's "Claude Code"
+%  series (Scott's Mixtape Substack), incl. issue #54, "Amnesia".
+% ----------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
+
+\definecolor{accent}{RGB}{31,73,125}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=accent,
+  urlcolor=accent,
+  citecolor=accent,
+  pdftitle={AI Applications in Research: The Case of Claude Code},
+  pdfauthor={Compiled summary}
+}
+
+\titleformat{\section}{\Large\bfseries\color{accent}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+\newtcolorbox{keybox}[1]{
+  colback=accent!5!white, colframe=accent!75!black,
+  fonttitle=\bfseries, title=#1, breakable, left=2mm, right=2mm
+}
+
+\setlist[itemize]{leftmargin=1.4em, itemsep=2pt, topsep=3pt}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+  \large The Case of Claude Code as a Research Workflow}
+\author{Compiled summary}
+\date{June 10, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts surrounding the use of
+artificial intelligence in empirical research, with particular emphasis on
+\emph{agentic coding assistants}---and Anthropic's \textbf{Claude Code} in
+particular---as instruments for conducting reproducible quantitative work. It
+synthesizes recurring themes from Scott Cunningham's ongoing ``Claude Code''
+series on \emph{Scott's Mixtape Substack}, including the most recent
+installment, \href{https://causalinf.substack.com/p/claude-code-54-amnesia}{``Claude
+Code 54: Amnesia''} (June 2026). The aim is to provide a compact conceptual map
+for researchers considering, or already using, AI agents in their empirical
+pipelines.
+\end{abstract}
+
+\tableofcontents
+\vspace{1em}
+
+% ----------------------------------------------------------------------
+\section{Introduction: From Autocomplete to Agentic Research}
+% ----------------------------------------------------------------------
+
+Artificial intelligence in research has moved well beyond passive text
+generation. The current frontier is the \emph{agentic} assistant: a system that
+can read and write files, execute code, run analyses, manage version control,
+and iterate toward a goal through extended dialogue. \textbf{Claude Code} is a
+prominent example---a command-line agent that operates directly inside a
+researcher's project directory.
+
+For empirical disciplines such as economics, the appeal is immediate. The
+craft of applied work has always rested on disciplined software engineering
+habits that most researchers acquire slowly and imperfectly. An agentic
+assistant can supply those habits by default.
+
+% ----------------------------------------------------------------------
+\section{Core Concepts}
+% ----------------------------------------------------------------------
+
+\subsection{The Research Workflow as Software}
+Modern empirical research is, in practice, a software pipeline: raw data flow
+through cleaning, transformation, estimation, and the automated production of
+tables and figures. The quality of a project is largely the quality of this
+pipeline. Key disciplines include:
+\begin{itemize}
+  \item \textbf{Consistent naming conventions} for files and folders.
+  \item \textbf{A well-organized, repeatable directory structure} reused across projects.
+  \item \textbf{Automated production} of tables and figures (no manual copy-paste).
+  \item \textbf{A pipeline of code} rather than disconnected one-off scripts.
+  \item \textbf{Version control} (e.g., \texttt{git}) for history and reproducibility.
+\end{itemize}
+
+\subsection{What an AI Agent Contributes}
+The central observation is that a capable coding agent performs the above
+disciplines \emph{natively}. Claude Code creates replicable code, organizes the
+directory sensibly, generates figures and tables programmatically, applies
+consistent naming, and---because git operations are accessible to it---makes
+version control straightforward. For a researcher, this can lower the activation
+energy of good practice and, plausibly, reduce the rate of mechanical error.
+
+\subsection{Dialogue-Driven (Conversational) Research}
+A distinctive mode of use is \emph{co-authoring the research process in real
+time} through conversation, rather than dictating discrete tasks or designing
+rigid multi-step orchestration in advance. The researcher ``talks with and to''
+the agent. This is powerful for discovery and exploration, but---as discussed
+below---it shifts where and how errors are produced.
+
+% ----------------------------------------------------------------------
+\section{The Central Challenge: ``Drift''}
+% ----------------------------------------------------------------------
+
+\begin{keybox}{Definition: Drift}
+\emph{Drift} is the subtle, often unnoticed degradation of an empirical project
+over time when work is mediated by an AI agent. The project's foundations move
+without the researcher's awareness, and the resulting errors appear
+\emph{outside} the locations where an experienced researcher is trained to look.
+\end{keybox}
+
+\noindent Concrete manifestations of drift include:
+\begin{itemize}
+  \item \textbf{Phantom scripts:} An analysis step is performed ad hoc during
+  dialogue but never written down as a durable, re-runnable script.
+  \item \textbf{Shifting analytical sample:} The sample silently changes over
+  time, implying a script is being modified unknowingly---or that the project's
+  foundation is coming loose.
+  \item \textbf{Mutating treatment definitions:} Treatment units subtly differ
+  from how they were defined weeks or months earlier.
+  \item \textbf{Stale exhibits:} A proliferation of figures and tables, some of
+  which have quietly become outdated, with no easy way to tell which.
+\end{itemize}
+
+\subsection{Why Drift Is Hard to Detect}
+The danger is not that errors occur---errors always occur---but that they are
+\emph{not caught in real time}. Two structural reasons stand out:
+\begin{enumerate}[leftmargin=1.6em]
+  \item \textbf{The ``well-designed sprawl'' problem.} An agent's output does not
+  look like a mess. It looks organized---``a Claude mess, not a human mess''---which
+  makes it harder to recognize, diagnose, and repair. The familiar visual cues of
+  disorder are absent.
+  \item \textbf{The erosion of memorization.} Researchers historically compensate
+  for fallible memory through \emph{repetition and hyper-focus}: doing the same
+  steps repeatedly builds an internal map of the project. When the agent writes
+  the scaffolding instead, that compensating memorization never forms. Returning
+  to a project after even a couple of days can leave one ``unusually amnesiac.''
+\end{enumerate}
+
+\subsection{Drift as a New Form of an Old Problem}
+Drift is recognizably a descendant of pre-AI pathologies---for example, the
+``poor man's version control'' of saving ten date-stamped copies of a file. The
+difference is that the AI-era version is camouflaged by tidiness, making it
+\emph{harder} to notice than its messy human ancestor.
+
+% ----------------------------------------------------------------------
+\section{Toward Solutions: Building a ``Harness''}
+% ----------------------------------------------------------------------
+
+The proposed response is not a single feature but a \emph{system}---a personal
+infrastructure, or \textbf{harness}, that is the physical expression and capture
+of the research workflow. Several design principles emerge:
+
+\begin{itemize}
+  \item \textbf{Simple, habitual policies over clever tooling.} The most
+  promising fix is a small set (roughly 5--6) of policy rules that, when
+  \emph{habitually} followed, make errors \emph{knowable and controllable}. A
+  bespoke ``skill'' is viewed skeptically because the problem is cognitive and
+  habitual, not merely technical.
+  \item \textbf{Progress logs.} The agent writes a log after every major session,
+  creating a durable trail of what changed and why.
+  \item \textbf{The ``beautiful deck.''} A daily process reads the progress logs
+  and generates a flippable HTML slide deck---with beautiful figures, tables, and
+  slides---accessible from a dashboard side panel. Its sole purpose is to
+  \emph{re-orient} the researcher after time away: a deliberate antidote to
+  amnesia.
+  \item \textbf{External mapping (analog notebook).} A large analog notebook to
+  map what the agent is doing, acknowledging that the agent currently has ``too
+  much latitude.''
+\end{itemize}
+
+\begin{keybox}{Design Principle}
+\textbf{Build systems \emph{endogenous} to your constraints.} Rather than
+assuming away human limitations (memory, attention, fallibility), design the
+workflow so that those limitations are explicitly accommodated. Acceptance of the
+constraint is the precondition for a true fix rather than a band-aid.
+\end{keybox}
+
+% ----------------------------------------------------------------------
+\section{Broader Themes for AI in Research}
+% ----------------------------------------------------------------------
+
+\begin{itemize}
+  \item \textbf{Reproducibility is necessary but not sufficient.} An agent can
+  make code reproducible while the \emph{conceptual} foundation (sample,
+  treatment, identification) still drifts. Reproducibility of a moving target is
+  not enough.
+  \item \textbf{Agent latitude vs. control.} The more autonomy the agent has, the
+  greater the productivity \emph{and} the greater the surface for silent error.
+  Effective use requires deliberate constraints on that latitude.
+  \item \textbf{Human capital must adapt.} Researchers' error-detection instincts
+  were trained on human-generated workflows; AI shifts the distribution of errors
+  and requires new monitoring habits.
+  \item \textbf{Disclosure and norms.} The series also engages with the
+  professional dimension---how journals and the field should handle disclosure of
+  AI use---underscoring that adoption is as much a normative question as a
+  technical one.
+\end{itemize}
+
+% ----------------------------------------------------------------------
+\section{Practical Recommendations}
+% ----------------------------------------------------------------------
+
+Distilling the above into actionable guidance for researchers using Claude Code
+or similar agents:
+\begin{enumerate}[leftmargin=1.6em]
+  \item \textbf{Insist on durable scripts.} Require that every analysis step be
+  written to a re-runnable script, never left as ephemeral dialogue.
+  \item \textbf{Pin the foundations.} Define and freeze the analytical sample and
+  treatment definitions explicitly; audit them whenever the project resumes.
+  \item \textbf{Keep a session log.} Have the agent record what changed after each
+  session, and review it on return.
+  \item \textbf{Maintain a re-orientation artifact.} Use a dashboard, deck, or
+  notebook whose only job is to rebuild your mental model after time away.
+  \item \textbf{Adopt a few non-negotiable habits.} A short, fixed checklist beats
+  elaborate tooling; consistency is what makes errors visible.
+  \item \textbf{Periodically rebuild from the ground up.} When drift is suspected,
+  reconstructing a project from its foundations can be more honest than patching.
+\end{enumerate}
+
+% ----------------------------------------------------------------------
+\section{Conclusion}
+% ----------------------------------------------------------------------
+
+Agentic AI assistants like Claude Code can deliver, by default, the engineering
+discipline that empirical research has always demanded---reproducible code,
+organized projects, automated exhibits, and accessible version control. Yet the
+same fluency introduces a new and subtle failure mode, \emph{drift}, in which a
+project's conceptual foundations move without notice precisely because the
+agent's output looks orderly. The path forward is not to abandon the tool but to
+wrap it in a deliberate \emph{harness}: simple habitual policies, durable logs,
+re-orientation artifacts, and explicit constraints on agent latitude. The
+guiding philosophy is to build systems \emph{endogenous} to human
+limitations---designing for the researcher one actually is, not the one a tool
+pretends them to be.
+
+% ----------------------------------------------------------------------
+\section{Newsletter Digest: Unread Issues, May 12 -- June 10, 2026}
+% ----------------------------------------------------------------------
+
+This section summarizes the recent backlog of \emph{Scott's Mixtape Substack}
+newsletters (18 distinct issues), grouped by theme. Each entry links to the web
+version of the post.
+
+\subsection{The ``Claude Code'' Series: AI Agents in Research}
+
+\begin{itemize}
+  \item \textbf{\href{https://causalinf.substack.com/p/claude-code-50-claude-is-holding}{Claude
+  Code 50: Claude is Holding On To Its Reasons}} (May 13). Claude Code keeps a
+  JSONL ``diary'' of all its reasoning and abandoned work---a goldmine for
+  studying agent behavior. In Cunningham's minimum-wage experiments, agents
+  randomly primed with different expected effects visibly engaged in
+  \emph{specification searching}: running a model, disliking the result, and
+  silently trying another. Agents do not bind themselves to design principles or
+  target a particular population estimand, so the human must scaffold and verify.
+  Marks six months and fifty essays since he adopted the tool: ``I am pushing all
+  my chips onto this technology.''
+
+  \item \textbf{\href{https://causalinf.substack.com/p/claude-code-51-harnessing-ai-agents}{Claude
+  Code 51: Harnessing AI Agents for Economic Research}} (May 21). Atomistic
+  \texttt{/skills} bolted onto an old workflow are not enough; the structure of
+  research work has shifted and requires a redesigned human-in-the-loop system.
+  Introduces the concept of an \emph{agent harness}---the software infrastructure
+  wrapping the model that manages context, tools, memory, and verification---and
+  plans to rebuild his workflow from first principles, starting from David
+  Allen's \emph{Getting Things Done}.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/claude-code-53-journal-cartels-and}{Claude
+  Code 53: Journal Cartels and AI Disclosure}} (May 27). Academic publishing is
+  highly concentrated (Elsevier and Wiley control roughly 61\% of economics
+  journals; an implied HHI near 2,430), so violating a publisher's AI policy
+  could effectively bar a researcher---and their coauthors---from much of the
+  market, echoing Becker's logic that low detection probability breeds severe
+  punishments. His position: use AI openly, disclose it honestly, and work out
+  disclosure duties with coauthors.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/claude-code-53-applied-econometrics}{Claude
+  Code 53: Applied econometrics will require a detailed checklist}} (June 8).
+  ``Plan-and-let-it-rip'' automation backfires: two Claude instances spent hours
+  confidently chasing wrong conjectures when the real bug was simply a CRAN
+  vs.\ GitHub version difference in the \texttt{did} package---caught only
+  because of his deep human capital in the Callaway--Sant'Anna estimator.
+  Advocates \emph{structured analog workflows} (Gawande-style checklists,
+  e.g.\ ``Pedro's Checklist''): name the estimand in potential outcomes, tabulate
+  cohorts, plot rollout and outcome evolutions, choose covariates methodically,
+  and insist on \textbf{zero error}. Key claim: the returns to econometrics
+  knowledge are \emph{higher}, not lower, with AI, because automation is not
+  verification.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/claude-code-54-amnesia}{Claude
+  Code 54: Amnesia}} (June 10). Summarized at length in the body of this
+  document: introduces ``drift,'' connects it to ADHD-related memory
+  compensation, and describes the ``beautiful deck'' re-orientation artifact
+  added to his harness.
+\end{itemize}
+
+\subsection{AI and the Economics Profession}
+
+\begin{itemize}
+  \item \textbf{\href{https://causalinf.substack.com/p/what-a-panel-of-economists-said-about}{What
+  a panel of economists said about AI in the production of research}} (May 20).
+  Writeup of an NBER panel (Simon, Cunningham, Bradford, Wing) with commentaries
+  by Beam, Fletcher, and Goldsmith-Pinkham. Highlights: the Zurich APE project's
+  1,000 autonomously written papers whose right tail rates alongside published
+  AER work; editors fear a submission flood that desk-rejection workflows cannot
+  absorb; restricted-data contracts collide with cloud AI tools (options:
+  synthetic data, local open-weight models, vendor agreements). Consensus:
+  production has decoupled from verification, and incentives---not
+  technology---will decide whether the field gets better papers or merely more.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/is-ai-slop-saliva-or-spit}{Is
+  AI Slop saliva or spit?}} (June 5). Conjecture that reactions to AI-generated
+  text mirror the ``cognition of disgust'': one's own chatbot conversations feel
+  insightful (saliva) while other people's feel repugnant (spit). Proposes a
+  randomized tournament experiment that blinds and reveals authorship of human
+  vs.\ AI writings to test for ``AI bias''---an experiment he has wanted to run
+  for three years.
+\end{itemize}
+
+\subsection{Econometrics: Difference-in-Differences Methodology}
+
+\begin{itemize}
+  \item \textbf{\href{https://causalinf.substack.com/p/should-i-include-covariates-in-diff}{Should
+  I Include Covariates in Diff-in-Diff?}} (June 1). Pushes back on the belief
+  that covariate-sensitive estimates are untrustworthy: when groups are balanced
+  on a covariate that affects trends, unconditional parallel trends holds and no
+  controls are needed; imbalance is what mechanically breaks parallel trends.
+  First of a planned series (partially paywalled).
+
+  \item \textbf{\href{https://causalinf.substack.com/p/diff-in-diff-can-be-written-down}{Diff-in-diff
+  can be written down six ways!}} (June 4). The 2x2 diff-in-diff is ``four
+  averages and three subtractions,'' computable two manual ways (first
+  differences then difference; group differences then difference) and via four
+  numerically identical OLS specifications (saturated dummies, twoway fixed
+  effects, first-difference regression, group-difference regression)---with
+  Stata code on Card--Krueger and castle-doctrine data to prove it.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/greetings-from-glasgow}{Greetings
+  from Glasgow}} (May 18). A reflection on regression to the mean: the
+  distributions of \(Y(0)\) and \(Y(1)\) are different variables that need not
+  share any moments, so talk of ``the outcome'' reverting to ``the mean'' is
+  ill-posed unless one specifies \emph{which} potential outcome. Plus travel
+  misadventures (a near-missed Zurich border queue and a Dublin gate change
+  missed while talking to a chatbot).
+\end{itemize}
+
+\subsection{The Odd Couple Podcast (with Caitlin Myers)}
+
+\begin{itemize}
+  \item \textbf{\href{https://causalinf.substack.com/p/episode-10-doses-and-decompositions}{Episode
+  10: Doses and Decompositions!}} (May 12). Walks through the decomposition of
+  the OLS twoway fixed effects estimator for continuous-treatment
+  difference-in-differences.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/episode-11-why-is-our-number-this}{Episode
+  11: Why is our number this number?}} (May 19). Continues the
+  Frisch--Waugh--Lovell decomposition of OLS for the continuous-treatment case,
+  working through a Claude-made deck on Callaway, Goodman-Bacon and Sant'Anna
+  (forthcoming AER).
+
+  \item \textbf{\href{https://causalinf.substack.com/p/episode-12-whats-our-causal-effect}{Episode
+  12: What's our causal effect called?}} (May 26). Switches from estimation to
+  defining causal parameters (ATT vs.\ ACRT, the slope of the dose-response
+  curve) and asks whether their abortion-access ``dose'' is distance in levels or
+  in changes---an argument for starting from parameters, not regressions.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/episode-13-finally-the-continuous}{Episode
+  13: Finally the Continuous Diff-in-Diff Estimator Shows Up!}} (June 9).
+  Concludes the parameter discussion for their Texas House Bill 2
+  abortion-clinic study (no-anticipation pins down which dose definition is
+  admissible) and introduces the continuous-treatment estimator itself: splines,
+  kernels, polynomials, and when a fitted curve may be read causally.
+\end{itemize}
+
+\subsection{Travel, Workshops, and Community}
+
+\begin{itemize}
+  \item \textbf{\href{https://causalinf.substack.com/p/weekend-tabs-from-zurich}{Weekend
+  tabs: From Zurich}} (May 16). After a three-day panel-econometrics workshop in
+  Zurich, notes that ``vibe-coded'' slides eroded the memorized delivery he
+  normally relies on---an early sighting of the human-capital theme. Link
+  roundup spans chatbot privacy leaks, a mindfulness-app RCT, and AI-generated
+  minimum-wage papers.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/day-one-in-madrid}{Day one
+  in Madrid}} (May 25). A personal travel essay: new mantras (``thoughts are not
+  instructions''; ``do the next real thing'') and musings on integrity as an
+  off-equilibrium-path concept in game theory.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/third-annual-codechella-madrid-is}{Third
+  Annual CodeChella Madrid is in the Books}} (May 29). The diff-in-diff workshop
+  drew its biggest crowd yet (about 150, up from 80); announces a January
+  CodeChella in Mexico City (contact \texttt{info@mixtape.consulting}) and the
+  800-page book \emph{Causal Inference: the Remix}, out August 25 with a free
+  online version planned.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/closing-my-tabs-the-italian-job}{Closing
+  my tabs: the Italian Job}} (May 30). Travel interlude en route to Lake
+  Maggiore; tabs include Anthropic's near-trillion-dollar valuation, the
+  publication of the JEL ``Difference-in-Differences: A Practitioner's Guide''
+  (Baker et al.), and the Opus 4.8 release.
+
+  \item \textbf{\href{https://causalinf.substack.com/p/closing-tabs-from-lake-maggiore-in}{Closing
+  tabs from Lake Maggiore in Italy}} (June 6). Halfway through eight weeks in
+  Europe after teaching at the European Commission in Ispra (Claude chose his
+  hotel---on the wrong side of the lake, but beautifully). Tabs include
+  Anthropic's internal productivity data, Ethan Mollick's forthcoming
+  \emph{Co-Existence}, NeurIPS's human-authorship policy, and a PLOS ONE RCT on
+  bias against AI writing.
+\end{itemize}
+
+\vspace{1em}
+\hrule
+\vspace{0.5em}
+\noindent\footnotesize\textit{Source material:} Scott Cunningham, \emph{Scott's
+Mixtape Substack} (\url{https://causalinf.substack.com}), issues of May
+12 -- June 10, 2026, including the ``Claude Code'' series on harnessing AI
+agents for economic research, AI disclosure norms, and reproducible empirical
+workflows.
+
+\end{document}
