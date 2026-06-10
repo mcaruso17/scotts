@@ -1,0 +1,238 @@
+\documentclass[11pt]{article}
+
+% ----------------------------------------------------------------------
+% Packages
+% ----------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{tcolorbox}
+
+\definecolor{accent}{RGB}{30,90,150}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=accent,
+  urlcolor=accent,
+  citecolor=accent
+}
+
+\titleformat{\section}{\Large\bfseries\color{accent}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+\setlist{itemsep=2pt, topsep=4pt}
+
+% ----------------------------------------------------------------------
+% Title
+% ----------------------------------------------------------------------
+\title{\textbf{AI Applications in Research}\\[0.3em]
+       \large Concepts, Workflows, and the Role of Claude Code}
+\author{Prepared for the reader}
+\date{June 10, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the use of
+artificial intelligence in empirical and applied research, with a focus on
+agentic coding assistants---most prominently \emph{Claude Code}. It frames
+how such tools reshape the research workflow, the benefits they bring to
+reproducibility and productivity, and the new categories of risk
+(notably ``drift'' and loss of mental context) that researchers must
+manage. The discussion is informed by practitioner reflections, including
+Scott Cunningham's ongoing ``Claude Code'' series on applied
+econometrics.
+\end{abstract}
+
+% ----------------------------------------------------------------------
+\section{Introduction}
+% ----------------------------------------------------------------------
+Artificial intelligence has moved from being a \emph{subject} of research to
+being an active \emph{instrument} of it. Large language models (LLMs) and
+the agentic tools built around them now participate directly in the daily
+mechanics of empirical work: writing analysis code, organizing project
+directories, producing tables and figures, drafting prose, and reasoning
+about methodology. This shifts the researcher's role from author of every
+line toward editor, director, and reviewer of an AI collaborator.
+
+This document outlines the key concepts in this transition and pays
+particular attention to \emph{Claude Code}, Anthropic's command-line agent
+for software and research workflows.
+
+% ----------------------------------------------------------------------
+\section{Why AI Fits the Research Workflow}
+% ----------------------------------------------------------------------
+A disciplined empirical workflow has long depended on a handful of habits
+that reduce error and increase reproducibility:
+
+\begin{itemize}
+  \item \textbf{Consistent naming conventions} for files and folders.
+  \item \textbf{A well-organized, repeatable directory structure} across
+        projects.
+  \item \textbf{Automated production} of tables and figures rather than
+        manual copy-paste.
+  \item \textbf{Pipelines of code} instead of one-off, ad hoc scripts.
+  \item \textbf{Version control} (e.g., Git) to track and recover changes.
+\end{itemize}
+
+A central observation is that modern agentic assistants perform \emph{all}
+of these practices by default: they write replicable code, organize
+directories sensibly, automate exhibit generation, follow consistent
+conventions, and integrate naturally with Git. In effect, the AI embodies
+the ``best-practice'' workflow that researchers previously had to impose on
+themselves through discipline.
+
+% ----------------------------------------------------------------------
+\section{What Is Claude Code?}
+% ----------------------------------------------------------------------
+\emph{Claude Code} is an agentic coding assistant that operates in the
+terminal (and through desktop, web, and IDE integrations). Rather than
+returning isolated code snippets, it can read and edit files across a
+project, run shell commands, execute tests, manage Git operations, and carry
+out multi-step tasks autonomously while keeping the researcher in the loop.
+
+\subsection{Modes of Interaction}
+Two broad styles of use have emerged:
+
+\begin{description}[leftmargin=1.5em, style=nextline]
+  \item[Conversational / co-authoring] The researcher works in real-time
+        dialogue with the agent---long, discursive prompts that explore the
+        problem and build the analysis collaboratively. This favors
+        discovery and flexibility.
+  \item[Orchestrated / plan-driven] The researcher specifies a structured,
+        multi-step plan up front, and the agent executes it. This favors
+        predictability and auditability.
+\end{description}
+
+Each style trades off differently between exploratory freedom and
+controllability.
+
+% ----------------------------------------------------------------------
+\section{Benefits for Research}
+% ----------------------------------------------------------------------
+\begin{itemize}
+  \item \textbf{Reproducibility by construction.} Code is written down,
+        organized, and version-controlled as a matter of course.
+  \item \textbf{Automation of exhibits.} Figures and tables are generated
+        programmatically, reducing transcription error.
+  \item \textbf{Lower barrier to good practice.} Pipelines, naming
+        conventions, and structure come ``for free,'' easing the cognitive
+        burden on the researcher.
+  \item \textbf{Speed and breadth.} The researcher can explore more
+        specifications, robustness checks, and alternative methods in less
+        time.
+  \item \textbf{Accessibility.} Methodological techniques that once required
+        substantial coding expertise become more approachable.
+\end{itemize}
+
+% ----------------------------------------------------------------------
+\section{New Risks: ``Drift'' and the Loss of Mental Context}
+% ----------------------------------------------------------------------
+The same fluency that makes AI assistants powerful introduces a subtle and
+important class of risk. Cunningham labels the central phenomenon
+\textbf{drift}: a gradual, hard-to-detect divergence between what the
+researcher believes the analysis is doing and what it actually does.
+Concrete manifestations include:
+
+\begin{itemize}
+  \item A script the researcher believed was saved was in fact only produced
+        ad hoc during dialogue and \emph{never written down}.
+  \item The \textbf{analytical sample shifts over time}, implying a script is
+        being modified unknowingly or the foundation is moving.
+  \item \textbf{Treatment units change subtly} from where they had been
+        defined months earlier.
+\end{itemize}
+
+\begin{tcolorbox}[colback=accent!5,colframe=accent,title=\textbf{The core hazard}]
+Errors emerge \emph{outside} the locations where an experienced researcher
+expects to find them, and they are not caught in real time. Because the
+output is tidy---a ``well-designed sprawl''---the mess does not \emph{look}
+like a mess, which makes it harder to recognize, diagnose, and fix.
+\end{tcolorbox}
+
+\subsection{Why Context Loss Matters}
+A recurring theme is \emph{amnesia}: returning to a project after even a
+short break and finding it difficult to reconstruct what was done. When the
+researcher did not personally write the proliferating scripts and exhibits,
+the usual compensating mechanisms---memorization through repetition and
+hyper-focus---no longer apply. The volume of AI-generated artifacts can
+outpace the human's ability to hold the project in mind, and some exhibits
+silently go stale.
+
+% ----------------------------------------------------------------------
+\section{Toward Solutions: Systems, Harnesses, and Habits}
+% ----------------------------------------------------------------------
+The proposed remedies are systemic rather than purely technical:
+
+\begin{itemize}
+  \item \textbf{A small set of habitual policies.} Rather than a single
+        ``skill'' or plugin, a compact set of 5--6 rules, habitually
+        followed, that make errors \emph{knowable and controllable}.
+  \item \textbf{A research ``harness.''} A system that captures and expresses
+        the entire research workflow---a scaffold that persists state across
+        sessions.
+  \item \textbf{Progress logs.} Having the agent write a structured log after
+        every major session, creating a durable record of decisions and
+        changes.
+  \item \textbf{The ``beautiful deck.''} A daily-generated, flippable HTML
+        summary (built from the progress logs) surfaced in a dashboard, whose
+        sole purpose is to re-orient the researcher to a project after time
+        away---a system built \emph{endogenously} around the researcher's
+        own cognitive constraints.
+  \item \textbf{Analog mapping.} A large physical notebook to map what the
+        agent is doing, constraining the latitude the model otherwise has.
+\end{itemize}
+
+\subsection{Design Principle}
+A guiding lesson is to \emph{build systems endogenous to one's constraints}
+rather than systems that assume those constraints away. For a researcher
+managing attention and memory limits, the workflow should actively
+compensate for them---surfacing state, logging decisions, and re-orienting
+the user---rather than presuming perfect recall.
+
+% ----------------------------------------------------------------------
+\section{Practical Recommendations}
+% ----------------------------------------------------------------------
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item \textbf{Insist on written artifacts.} Require that every analytical
+        step be committed to a named script, not left in ephemeral dialogue.
+  \item \textbf{Pin the analytical sample.} Lock and explicitly verify sample
+        definitions and treatment assignment; re-check them periodically.
+  \item \textbf{Version everything.} Use Git commits as checkpoints so drift
+        is visible in the diff.
+  \item \textbf{Maintain session logs.} Have the agent summarize each session;
+        review the log before resuming.
+  \item \textbf{Re-orient before resuming.} Use a dashboard, deck, or notebook
+        to rebuild mental context after any break.
+  \item \textbf{Prune stale exhibits.} Periodically identify and remove
+        outputs that no longer correspond to the current pipeline.
+\end{enumerate}
+
+% ----------------------------------------------------------------------
+\section{Conclusion}
+% ----------------------------------------------------------------------
+AI assistants such as Claude Code can deliver, almost effortlessly, the
+disciplined workflow that empirical research has always demanded:
+reproducible code, organized structure, automated exhibits, and version
+control. Yet they also introduce a quieter risk---drift and context
+loss---precisely \emph{because} their output is so clean that errors no
+longer look like errors. The path forward is not to abandon the tools but to
+wrap them in a deliberate \emph{system}: a small set of habits, a persistent
+harness, durable logs, and mechanisms that re-orient the researcher. Used
+this way, AI becomes not merely a faster coder but a genuine collaborator in
+rigorous, reproducible research.
+
+\vspace{1em}
+\noindent\rule{\linewidth}{0.4pt}
+
+\small
+\textbf{Source inspiration:} Scott Cunningham, ``Claude Code 54: Amnesia,''
+\emph{Scott's Mixtape Substack}, June 10, 2026.
+\url{https://causalinf.substack.com/p/claude-code-54-amnesia}
+
+\end{document}
