@@ -1,0 +1,221 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+% AI Applications in Research: The Case of Claude Code
+% A conceptual summary inspired by Scott Cunningham's
+% "Scott's Mixtape" Claude Code series.
+% ---------------------------------------------------------------
+
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{parskip}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  urlcolor=blue!50!black,
+  citecolor=blue!50!black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\newcommand{\concept}[1]{\textbf{#1}}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Core Concepts and the Case of Claude Code}
+\author{Conceptual summary compiled from \emph{Scott's Mixtape} (Scott Cunningham)}
+\date{June 12, 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts surrounding the use of
+artificial intelligence (AI) agents in academic and applied research, with a
+particular focus on \concept{Claude Code} as a research assistant. The themes
+are drawn from the ongoing ``Claude Code'' essay series in Scott Cunningham's
+\emph{Scott's Mixtape} newsletter, which documents---in real time---how an
+empirical economist is restructuring his research workflow around AI agents.
+The aim is to distill the recurring ideas: what AI agents do well, what new
+problems they introduce, and the emerging vocabulary (harnesses, skills,
+context, drift) that researchers are developing to work with them reliably.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+AI coding agents such as Claude Code have moved from being autocomplete tools to
+becoming collaborators in the full research pipeline---reading data, writing and
+running analysis code, producing tables and figures, and managing version
+control. For empirical researchers this is not merely a faster way of doing the
+old work; it is a \concept{shift in the production function of research itself}.
+The central message of Cunningham's series is that AI agents ``solve many
+historic problems but also create new ones,'' and that the researcher's job is
+to design the systems that capture the gains while controlling the new failure
+modes.
+
+\section{What AI Agents Do Well in Research}
+
+Claude Code reproduces, automatically, many of the disciplined practices that
+careful empirical researchers spent years building by hand:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \concept{Replicable code.} It writes pipelines rather than one-off
+        scripts, supporting reproducibility.
+  \item \concept{Organized project structure.} It maintains a sensible directory
+        layout and consistent file/folder naming conventions.
+  \item \concept{Automated exhibits.} Tables and figures are generated
+        programmatically from the data and code, not assembled by hand.
+  \item \concept{Version control.} Because git operations are accessible to the
+        agent, commits and history tracking become routine.
+  \item \concept{Lower mechanical error rate.} Many classes of clerical and
+        coding errors that historically required vigilance are handled by the
+        agent ``so much better than me.''
+\end{itemize}
+
+\noindent In short, the agent embodies, by default, the empirical hygiene that
+researchers previously had to enforce on themselves through habit.
+
+\section{The Core Vocabulary}
+
+A new lexicon has emerged for working with AI agents. Three terms anchor the
+discussion.
+
+\subsection{Skills}
+A \concept{skill} (e.g. \texttt{/beautiful\_deck} for slide decks or
+\texttt{/referee2} for code validation) is a reusable, atomistic capability: do
+the normal task, but invoke a skill to do it. Skills are powerful but
+\concept{idiosyncratic to the individual}, and---crucially---they are
+\emph{tools}, not a \emph{philosophy}. A pile of good skills does not by itself
+constitute a working research system.
+
+\subsection{The Harness}
+An \concept{agent harness} is ``the complete architectural system surrounding an
+LLM that manages the lifecycle of context: from intent capture through
+specification, compilation, execution, verification, and persistence''---that
+is, \emph{everything except the model itself}. The harness is what connects the
+model to the outside world: tools, memory stores, and orchestrated workflows. In
+the research context, building a harness means designing the personal
+infrastructure---logs, dashboards, progress summaries---that makes the agent's
+work legible and reliable over time. Cunningham frames this as ``building a house
+from the ground up,'' where the harness is the physical expression of one's
+research workflow.
+
+\subsection{Context and Memory}
+AI agents ``operate within an ecosystem of tools, memory stores, and
+orchestrated workflows.'' Managing \concept{context}---what the agent knows,
+remembers, and persists between sessions---is the central engineering problem.
+Memory that is not deliberately persisted is effectively lost when a session
+ends.
+
+\section{New Problems: Drift and Amnesia}
+
+The most important conceptual contribution of the series is naming the new
+failure modes that AI-driven research introduces.
+
+\subsection{Drift}
+\concept{Drift} is the silent, gradual divergence of a project from its intended
+state. Concrete examples include:
+\begin{itemize}[leftmargin=1.5em]
+  \item A script believed to exist was never actually written---it was produced
+        ad hoc during dialogue and never committed to disk.
+  \item The \concept{analytical sample shifts over time}, implying a script is
+        being modified unknowingly.
+  \item \concept{Treatment units subtly change} from what they were months
+        earlier.
+\end{itemize}
+The danger of drift is not that errors occur, but that they occur
+\concept{outside the researcher's usual error-detection locations}, so they are
+not caught in real time.
+
+\subsection{The ``Claude Mess''}
+Conventional human messes \emph{look} like messes and are therefore easy to
+spot. An agent's output is a \concept{well-designed kind of sprawl}: many
+scripts, many exhibits, some stale---``a Claude mess, not a human mess''---which
+is precisely what makes it hard to recognize, diagnose, and fix. It is a modern
+version of the old ``poor man's version control'' problem of keeping ten
+date-stamped copies of a file.
+
+\subsection{Amnesia and the Human-in-the-Loop}
+When the researcher no longer types the code, the \concept{flow state} that once
+imprinted a project into muscle memory disappears. Putting a project down for
+even two days produces an ``unusually amnesiac'' return. The proposed remedies
+are systemic rather than tool-based:
+\begin{itemize}[leftmargin=1.5em]
+  \item \concept{Progress logs} written by the agent after every major session.
+  \item A daily-generated \concept{dashboard / ``beautiful deck''} that reads
+        those logs and re-orients the researcher to the project.
+  \item A small set of \concept{5--6 habitual policies} that make errors
+        ``knowable and controllable,'' rather than another skill.
+  \item An \concept{analog notebook} to map what the agent is doing and to
+        constrain its latitude.
+\end{itemize}
+The underlying principle: \emph{build systems endogenous to how you actually
+work, rather than systems that assume the problem away.}
+
+\section{Workflow Philosophy}
+
+A recurring theme is that \concept{tools are endogenous to a philosophy}, not the
+other way around. Borrowing from David Allen's \emph{Getting Things Done},
+Cunningham argues the right starting point is a productivity \emph{philosophy}
+from which the specific tools (skills, harnesses, dashboards) are derived. The
+key design question is positional: \concept{``Where do I insert myself in this
+new production function?''}---i.e., how to design the optimal human-in-the-loop
+system that simultaneously raises research productivity and drives errors toward
+zero.
+
+A related stylistic observation: Cunningham works \concept{conversationally},
+co-authoring the research process in real-time dialogue rather than dictating
+tasks or pre-designing multi-step orchestration in ``plan mode.'' This dialogic
+style maximizes discovery but, by removing the researcher from the scaffolding,
+appears to be a source of drift---underscoring that workflow style and error
+profile are tightly linked.
+
+\section{Adjacent Themes: Scientific Norms and Disclosure}
+
+The series situates AI tools within broader questions of scientific practice,
+including \concept{AI disclosure} in published research and the governance of
+academic publishing. As AI agents become co-producers of empirical results, the
+norms for \emph{how} their contribution is disclosed and verified become part of
+the research-integrity conversation. The motivating standard throughout is a
+demand for \concept{reproducibility and a near-zero error rate}, now pursued
+through agent-assisted---rather than purely manual---means.
+
+\section{Key Takeaways}
+
+\begin{enumerate}[leftmargin=1.5em]
+  \item AI agents reproduce empirical best practices (replicable pipelines,
+        organized structure, automated exhibits, version control) by default.
+  \item They shift the \emph{production function} of research; the new
+        equilibrium must be deliberately designed, not assumed.
+  \item \concept{Skills} are reusable tools; a \concept{harness} is the
+        surrounding system that manages context, memory, and verification.
+  \item The signature new risks are \concept{drift} (silent divergence) and
+        \concept{amnesia} (loss of the researcher's internalized project memory).
+  \item An agent's ``mess'' is dangerous because it looks organized---errors
+        appear outside one's habitual detection zones.
+  \item Robust solutions are \concept{systemic and habitual} (logs, dashboards,
+        a few firm policies), built \concept{endogenously} to the researcher's
+        own working style.
+  \item The enduring goal is unchanged: \concept{reproducible research with
+        errors driven to zero}, now achieved with the human positioned
+        intentionally in the loop.
+\end{enumerate}
+
+\section*{Source}
+\addcontentsline{toc}{section}{Source}
+Concepts compiled from the ``Claude Code'' essay series in Scott Cunningham's
+\emph{Scott's Mixtape} newsletter,
+\url{https://causalinf.substack.com/} (notably installments on
+``Harnessing AI Agents for Economic Research,'' ``Journal Cartels and AI
+Disclosure,'' and ``Amnesia''). For Cunningham's broader work on causal
+inference, see \emph{Causal Inference: The Mixtape},
+\url{https://mixtape.scunning.com/}.
+
+\end{document}
