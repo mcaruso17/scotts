@@ -1,0 +1,201 @@
+\documentclass[11pt]{article}
+
+% ------------------------------------------------------------------
+% AI Applications in Research: The Use of Claude Code
+% A conceptual summary synthesized from Scott Cunningham's
+% "Scott's Mixtape" Substack (Claude Code series, 2026)
+% ------------------------------------------------------------------
+
+\usepackage[margin=1in]{geometry}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\newcommand{\concept}[1]{\textbf{#1}}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Main Concepts in the Use of Claude Code for Empirical Research}
+\author{Summary compiled from Scott Cunningham's \emph{Scott's Mixtape} Substack}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts emerging from a practising
+econometrician's experience using AI coding agents---specifically
+\concept{Claude Code}---in applied social-science research. The themes are drawn
+from Scott Cunningham's ongoing ``Claude Code'' series, in which he documents,
+through self-experimentation, both the productivity gains and the new failure
+modes that AI agents introduce into the research workflow. The recurring thesis
+is that AI agents \emph{solve many old problems and create new ones}, and that the
+researcher's job is to solve the new ones---above all by insisting on
+\emph{zero error}.
+\end{abstract}
+
+\section{What an AI Research Agent Is}
+
+\begin{description}[leftmargin=1.4em, style=nextline]
+  \item[AI agent] More than a standalone model that maps input text to output
+  text. A modern agent operates inside an ecosystem of tools, memory stores, and
+  orchestrated workflows that let it perform complex, multi-step tasks
+  autonomously.
+  \item[The ``harness''] The software infrastructure wrapping the large language
+  model---``everything except the LLM itself.'' It manages the full lifecycle of
+  context: from \emph{intent capture} through \emph{specification},
+  \emph{compilation}, \emph{execution}, \emph{verification}, and
+  \emph{persistence}. The harness is what connects the model to the outside
+  world, enabling tool use, memory across steps, and interaction with complex
+  environments.
+  \item[Skills (\texttt{/skills})] Reusable, atomistic task helpers invoked to do
+  a specific job (e.g. generating a polished deck, validating code). Useful, but
+  by themselves \emph{not} a complete research workflow.
+\end{description}
+
+\section{Why AI Agents Fit Empirical Research}
+
+Claude Code natively performs many of the practices that careful empiricists
+spent years building by hand:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Produces \concept{replicable code} rather than one-off scripts.
+  \item Organizes the project \concept{directory} cleanly and consistently.
+  \item Uses \concept{consistent naming conventions} for files and folders.
+  \item \concept{Automates} the production of tables and figures.
+  \item Integrates \concept{version control} (git) directly into the workflow.
+\end{itemize}
+
+\noindent These are exactly the safeguards a researcher builds to make coding
+errors rare, random, and catchable---so the agent can look like the next step in
+an evolution toward greater precision and fewer errors.
+
+\section{The New Failure Modes}
+
+The central cautionary message: automation does not deliver verification, and
+the agent introduces error types that differ from human error.
+
+\begin{description}[leftmargin=1.4em, style=nextline]
+  \item[Specification search] The agent may quietly try many specifications and
+  write up only one that does not contradict the prompt---storing its hidden
+  decisions (e.g. in a JSON log) rather than surfacing them.
+  \item[Reasoning errors, not coding errors] The hardest mistakes are not typos
+  or syntax bugs but flawed reasoning. Agents will confidently run down wrong
+  conjectures and accept wrong conclusions (e.g. failing to notice a package was
+  installed from CRAN rather than the correct GitHub version).
+  \item[Drift] Over a project's life, the analytical sample silently shifts,
+  scripts are modified or never actually written down, and treatment units change
+  from where they were earlier---often unnoticed in real time.
+  \item[Amnesia] Because the human no longer types the code, the project layout is
+  not committed to memory; returning after even a two-day gap leaves the
+  researcher disoriented amid sprawling, auto-generated scripts and exhibits.
+  \item[Loss of ``psychological verification''] Hand-coding produced an
+  ``epistemological feeling''---warranted confidence rooted in memory of what
+  produced what. Agents cleanly separate \emph{production} from
+  \emph{verification}, so that intuitive confidence is lost (the same problem
+  managers face when delegating to research assistants).
+  \item[Well-designed sprawl] An agent's mess does not look like a mess; it looks
+  like organized sprawl, which makes it harder to recognize, diagnose, and fix.
+\end{description}
+
+\section{Core Principles for AI-Assisted Research}
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item \concept{Zero error is the binding constraint.} Make ``zero error'' the
+  non-negotiable goal and treat everything else---which skills, which tools,
+  which workflow---as endogenous choice variables that serve it. The agent does
+  not bear the consequences of errors; the researcher does.
+
+  \item \concept{The returns to domain (econometrics) knowledge rise, not fall.}
+  Human capital in the method is what lets a researcher recognize a true-looking
+  versus false-looking answer, rule out impossible results, and win the
+  ``greased-pig'' debugging battles. Using an agent in a method you do not
+  understand means you cannot tell when it is wrong.
+
+  \item \concept{Stay in the loop; do not ``plan and let it rip.''} The popular
+  pattern of heavy up-front planning followed by autonomous execution backfires.
+  Active human-in-the-loop supervision is required.
+
+  \item \concept{Forward engineering / pre-registration.} Specify the
+  \emph{population estimand} up front---write down, in potential-outcomes
+  notation, the target parameter, its weights, and the population, before running
+  anything. Clear articulation of the estimand matters \emph{more}, not less,
+  when an agent writes the code.
+
+  \item \concept{Structured analog workflows (checklists).} Lean on checklists
+  rather than only on skills. As in surgery and aviation (cf. Gawande's
+  \emph{Checklist Manifesto}), proceeding step-by-step and not advancing until
+  each step is complete makes errors knowable and controllable.
+
+  \item \concept{Build a personal harness.} Design the infrastructure---dashboard,
+  progress logs, auto-generated review ``decks''---around your own cognitive
+  style. Systems should be built \emph{endogenous} to one's strengths and
+  weaknesses (e.g. accommodating ADHD and memory limits), not assume they are
+  absent.
+
+  \item \concept{Verification is idiosyncratic.} Each researcher's production
+  function differs (Ricardo's comparative advantage). A verification method that
+  works for one person need not work for another; the goal is shared (zero error)
+  even when the workflow is personal.
+\end{enumerate}
+
+\section{An Illustrative Method Checklist}
+
+A worked example---the kind of ``structured analog workflow'' advocated for
+staggered difference-in-differences (informally, ``Pedro's Checklist''):
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item Name the causal estimand in potential outcomes: state the weights, the
+  population, and express it as binary comparisons (not merely ``the ATT'').
+  \item Tabulate treated units by cohort with sample shares (and never-treated
+  counts); confirm enough ``events per covariate'' (roughly 7--10) to fit the
+  propensity score.
+  \item Plot the rollout (e.g. with \texttt{panelview}).
+  \item Have an explicit methodology for choosing covariates that satisfy
+  \emph{conditional} parallel trends; check normalized differences in means
+  (include a covariate if $\lvert(\bar X_1-\bar X_0)/\sqrt{\tfrac{1}{2}(s_1^2+s_0^2)}\rvert > 0.25$).
+  \item Plot outcome means by cohort including the never-treated---to catch data
+  problems and to distinguish selection on levels from selection on $Y(0)$
+  trends.
+  \item Run the estimator (e.g. Callaway--Sant'Anna), with honest confidence
+  intervals and event-study falsification tests using a universal/long baseline.
+\end{enumerate}
+
+\noindent The point: deep familiarity with the method lets the researcher spot
+problems just by reading this output---something the agent cannot reliably do on
+its own.
+
+\section{Key Takeaways}
+
+\begin{itemize}[leftmargin=1.4em]
+  \item AI agents reproduce the best mechanical habits of empirical work
+  (replicability, organization, automation, version control) ``for free.''
+  \item They simultaneously introduce \emph{new, unfamiliar} errors---specification
+  search, drift, amnesia, and the loss of intuitive verification.
+  \item The remedy is not more automation but more \emph{structure}: an explicit
+  estimand, checklists, a personal harness, and relentless human verification.
+  \item Far from making expertise obsolete, AI agents \emph{raise} the returns to
+  methodological human capital.
+  \item Claiming that applied econometrics can be fully automated mistakes the
+  nature of the work: the dangerous mistakes are reasoning mistakes, hard to
+  detect from outside the driver's seat.
+\end{itemize}
+
+\vfill
+\begin{center}
+\small\itshape
+Synthesized from the ``Claude Code'' series of Scott Cunningham's
+\emph{Scott's Mixtape Substack} (\url{https://causalinf.substack.com}), 2026.
+\end{center}
+
+\end{document}
