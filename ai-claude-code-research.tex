@@ -1,0 +1,212 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: Concepts and the Use of Claude Code
+%  A conceptual summary, informed by Scott Cunningham's
+%  "Scott's Mixtape Substack" Claude Code series (2026).
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\newcommand{\concept}[1]{\textbf{#1}}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Core Concepts and the Use of Claude Code}
+\author{Prepared for M.\ Caruso}
+\date{14 June 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts surrounding the use of
+artificial intelligence (AI) in scientific research, with particular emphasis
+on agentic coding assistants and \concept{Claude Code}. It synthesizes general
+principles of AI-assisted research with field observations drawn from Scott
+Cunningham's ongoing ``Claude Code'' series on \emph{Scott's Mixtape Substack},
+in which an applied econometrician documents the practical promise and the new
+failure modes of conducting empirical research with large language model (LLM)
+agents. The central thesis is that AI agents \emph{solve old problems and create
+new ones}, and that the researcher's job is to build workflows that solve the
+new ones---above all, to guarantee verification and ``zero error.''
+\end{abstract}
+
+\section{Introduction}
+AI---and in particular LLM-based \concept{agents}---has moved from a writing aid
+to an active participant in the research pipeline. Where earlier tools
+autocompleted code or text, agentic systems such as Claude Code can read a
+project, plan multi-step tasks, write and execute scripts, produce figures and
+tables, run version control, and reason about results in natural-language
+dialogue. This shift changes not only \emph{how fast} research is produced but
+also \emph{where} errors originate and how they are caught. This document lays
+out the main concepts a researcher should understand to use such tools well.
+
+\section{What Is Claude Code?}
+\concept{Claude Code} is Anthropic's command-line agent built on the Claude
+family of models. Rather than returning isolated snippets, it operates inside a
+project directory and can:
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item read and edit files across a codebase while preserving structure;
+  \item run shell commands, execute analysis scripts, and inspect their output;
+  \item produce replicable code, organized directories, consistent naming
+        conventions, and automated tables/figures;
+  \item perform \concept{git} operations, making version control routine;
+  \item hold an extended, conversational \concept{dialogue} about the task,
+        acting as a co-author of the research process rather than a one-shot
+        code generator.
+\end{itemize}
+The most capable current Claude models include the Opus, Sonnet, and Haiku
+tiers; agentic research workflows typically favor the most capable tier for
+reasoning-heavy steps.
+
+\section{Main Concepts in AI-Assisted Research}
+
+\subsection{The research pipeline as the unit of automation}
+The natural object to automate is not a single script but the whole
+\concept{pipeline}: data ingestion, cleaning, analysis, exhibit production, and
+write-up. Claude Code is attractive precisely because it internalizes good
+software-engineering hygiene (modular scripts, reproducible builds, version
+control) that researchers historically had to impose on themselves by hand.
+
+\subsection{Verification is separate from production}
+A defining property of agents is that they \concept{cleanly separate production
+from verification}: the agent produces the result, and the human is left to
+verify it. In traditional hand-coding, production and verification were fused---
+the act of writing the code generated an ``epistemological feeling'' of knowing
+\emph{what made what}. With agents, that felt confidence is lost and must be
+deliberately reconstructed.
+
+\subsection{The returns to domain knowledge \emph{rise}}
+A counterintuitive but central lesson: automation does \emph{not} reduce the
+value of expertise---it raises it. Because the agent can silently make
+\concept{reasoning mistakes} (not just coding bugs), only a researcher with deep
+domain ``human capital'' can recognize when an output is implausible. Cunningham
+frames this as: \emph{the returns to econometrics knowledge with Claude Code are
+higher, not lower.}
+
+\subsection{``Zero error'' as the binding constraint}
+The recommended mental model is to treat \concept{zero error} as a
+non-negotiable constraint and to make everything else---which skills, which
+prompts, which scaffolding---an endogenous choice variable optimized to satisfy
+it. Crucially, when errors slip through, it is the \emph{researcher}, not the
+agent, who bears the professional cost.
+
+\subsection{Estimand-first (``forward engineering'')}
+Before letting an agent compute anything, the researcher should write down the
+target \concept{estimand} explicitly---in potential-outcomes notation, naming
+the population and the weighting of the averaged effects. This ``forward
+engineering'' discipline (e.g., the practitioner's-guide approach to
+difference-in-differences) prevents the agent from quietly
+\concept{specification searching} and reporting only the method that happens to
+fit the prompt.
+
+\subsection{Structured (and analog) workflows over ad hoc skills}
+Rather than relying on packaged \concept{/skills} and ``plan-then-let-it-rip''
+automation, the field experience favors \concept{structured workflows}---often
+explicit \concept{checklists} executed step by step, where one does not proceed
+until the prior step is verified. The analogy is Atul Gawande's
+\emph{The Checklist Manifesto}: checklists cut errors in surgery and aviation
+not by adding intelligence but by enforcing discipline.
+
+\section{New Failure Modes Introduced by Agents}
+AI agents create genuinely new categories of error that look different from
+human mistakes and are therefore harder to detect:
+\begin{description}[leftmargin=1.4em,style=nextline,itemsep=3pt]
+  \item[Drift] The analytical sample, treatment definitions, or scripts shift
+    silently across sessions; the foundation moves without an obvious signal.
+  \item[Unwritten work] Steps performed ``in dialogue'' may never be committed
+    to a script, so the pipeline cannot be reproduced.
+  \item[A ``Claude mess''] Output that is sprawling yet superficially tidy---a
+    well-designed sprawl that does not \emph{look} like a mess, which makes
+    stale or duplicated artifacts hard to spot.
+  \item[Hidden decisions] Agents may store many under-the-hood choices (e.g.,
+    in a JSON state file) that the researcher never sees unless they look.
+  \item[Confident wrong reasoning] Agents will happily pursue and ``conclude''
+    on faulty conjectures (e.g., debugging for hours while the real cause is a
+    wrong package version), with no internal sense that the conclusion is wrong.
+  \item[Amnesia] Because the human did not produce the scaffolding, returning to
+    a project after even a couple of days leaves the researcher unusually
+    disoriented, lacking the memorized mental map that hand-production created.
+\end{description}
+
+\section{Practical Strategies and Mitigations}
+The following practices recur as antidotes to the failure modes above:
+\begin{enumerate}[leftmargin=1.5em,itemsep=3pt]
+  \item \concept{Stay in the loop.} Do not step away and trust the plan; verify
+    continuously, because automation is not verification.
+  \item \concept{Pre-register the estimand} in potential-outcomes terms before
+    any estimation.
+  \item \concept{Use a domain checklist} (e.g., name the estimand; tabulate
+    treated units by cohort; visualize rollout; justify covariates; plot outcome
+    means; run honest intervals and falsification tests) and complete each step
+    before advancing.
+  \item \concept{Build a harness / dashboard} that captures the workflow, makes
+    figures and tables clickable ``cards'' revealing the code that produced
+    them, and supports \concept{psychological verification}---rebuilding the felt
+    confidence that hand-coding used to supply.
+  \item \concept{Maintain progress logs} after each session and auto-generate a
+    concise ``deck'' that re-orients you on return, directly countering amnesia.
+  \item \concept{Keep an analog map.} A physical notebook to track what the agent
+    is doing constrains its latitude and anchors human memory.
+  \item \concept{Design systems endogenous to your own constraints} (working
+    style, strengths, even conditions such as ADHD) rather than assuming an
+    idealized operator; the right verification method is personal and not
+    transferable wholesale from another researcher.
+\end{enumerate}
+
+\section{A Worked Domain: Staggered Difference-in-Differences}
+Cunningham's running example is the Callaway and Sant'Anna (CSDID) estimator,
+where the estimator reduces conceptually to ``four averages and three
+subtractions'' with weights on cell means. The lesson generalizes: an expert can
+verify an agent's output \emph{only} because they know the method's structure---
+e.g., that there should be no coefficient at the period $g-1$ baseline, that
+$7$--$10$ ``events'' per covariate are needed to fit a propensity score, or that
+a normalized mean difference
+\[
+  \mathrm{ND} = \frac{\bar X_1 - \bar X_0}{\sqrt{\tfrac{1}{2}\left(\mathrm{var}_1 + \mathrm{var}_0\right)}}
+\]
+above $0.25$ in absolute value flags a covariate that must be included to defend
+conditional parallel trends. Without such human capital, an agent's plausible-
+looking---but wrong---output is indistinguishable from a correct one.
+
+\section{Conclusion}
+AI agents like Claude Code are best understood not as a replacement for the
+researcher but as a powerful collaborator that \emph{relocates} where effort and
+risk live. They absorb much of the mechanical burden of coding and reproducibility
+while shifting the researcher's role toward \concept{specification},
+\concept{verification}, and \concept{workflow design}. The recurring, hard-won
+conclusions are: domain expertise becomes \emph{more} valuable, verification must
+be rebuilt deliberately because the agent severs it from production, and ``zero
+error'' should be the constraint around which every other choice is optimized.
+Used with that discipline, AI is a genuine accelerant for research; used without
+it, it quietly manufactures confident, hard-to-detect mistakes.
+
+\vfill
+\noindent\rule{\linewidth}{0.4pt}\\[0.3em]
+\footnotesize Sources and inspiration: Scott Cunningham, ``Claude Code'' series
+(esp.\ \#53 ``Applied econometrics will require a detailed checklist'' and \#54
+``Amnesia'') and related posts, \emph{Scott's Mixtape Substack},
+\href{https://causalinf.substack.com}{causalinf.substack.com}, May--June 2026;
+Atul Gawande, \emph{The Checklist Manifesto}; Baker et al., ``Difference-in-
+Differences: A Practitioner's Guide,'' \emph{Journal of Economic Literature},
+2026.
+
+\end{document}
