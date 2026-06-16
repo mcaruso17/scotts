@@ -1,0 +1,215 @@
+\documentclass[11pt]{article}
+
+% ----------------------------------------------------------------------
+%  AI Applications in Research: The Use of Claude Code
+%  Synthesised from Scott Cunningham's "Scott's Mixtape" Substack,
+%  in particular the ongoing "Claude Code" series (2025-2026).
+% ----------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  urlcolor=blue!50!black,
+  citecolor=blue!50!black
+}
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\setlist{itemsep=2pt, topsep=4pt}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Concepts and Practices for Using Claude Code in Empirical Social Science}
+\author{Summary compiled from Scott Cunningham's \emph{Scott's Mixtape} Substack}
+\date{June 16, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarises the main concepts surrounding the use of
+AI agents---especially \textbf{Claude Code}---in empirical research, as
+developed across Scott Cunningham's ongoing ``Claude Code'' newsletter
+series. The recurring thesis is that AI agents simultaneously \emph{solve}
+long-standing problems of the research workflow (organisation,
+reproducibility, automation) and \emph{create} new ones (drift, amnesia,
+hidden specification search, verification gaps). The researcher's job is not
+to celebrate or lament this shift, but to redesign the workflow---building
+\emph{harnesses}, \emph{checklists}, and \emph{human-in-the-loop} systems
+that make errors knowable and drive them toward zero.
+\end{abstract}
+
+\section{The Central Premise}
+AI agents do not eliminate the researcher; they relocate where the
+researcher adds value. Two principles recur:
+\begin{itemize}
+  \item \textbf{Solve, don't lament.} ``Claude Code and other agents solve
+  many problems and create new ones, and our job is just to solve the new
+  ones.'' Nostalgia for hand-typed code is treated like nostalgia for
+  typewriters and buggies.
+  \item \textbf{Insist on zero error.} Automation is not verification.
+  ``Claude will not get into trouble when there are errors---we will.''
+  Zero error is treated as the binding constraint to which every other
+  workflow choice is endogenous.
+\end{itemize}
+
+\section{What Claude Code Does Well}
+For an empirical researcher, the agent natively supplies much of the
+discipline that previously required years of self-built infrastructure:
+\begin{itemize}
+  \item Produces \textbf{replicable, pipeline-style code} rather than
+  one-off scripts.
+  \item Organises the project \textbf{directory} with consistent file and
+  folder naming conventions.
+  \item \textbf{Automates} the production of tables and figures.
+  \item Integrates \textbf{version control} (git) directly into the workflow.
+\end{itemize}
+The temptation is therefore to view the agent as simply the next step in an
+evolution toward fewer errors. The series argues this view is incomplete.
+
+\section{The New Problems}
+\subsection*{Drift}
+On longer projects the work silently degrades:
+\begin{itemize}
+  \item A script discussed in dialogue was \emph{never actually written
+  down}---it existed only ad hoc during the conversation.
+  \item The \textbf{analytical sample shifts} over time as scripts are
+  modified unknowingly.
+  \item \textbf{Treatment units change} subtly from earlier versions.
+\end{itemize}
+Crucially, these errors appear \emph{outside} the locations where a
+human-trained eye expects to find them.
+
+\subsection*{Amnesia}
+Because the researcher no longer types the code, the ``muscle memory'' and
+``epistemological feeling'' of knowing what produced what is lost. Putting a
+project down for even two days produces an unusual ``amnesia,'' worsened by a
+sprawl of auto-generated scripts and exhibits. The agent's output is
+``a Claude mess, not a human mess''---a well-designed sprawl that is harder
+to recognise as a mess at all.
+
+\subsection*{Hidden specification search}
+Agents can quietly \emph{specification-search}: trying methods until one does
+not contradict the prompt, then writing up only that result. Decisions are
+stored under the hood (e.g.\ in a JSON log) and are easy to miss. The
+dangerous errors are not coding errors but \textbf{reasoning errors}, which
+are far harder to detect when the researcher is not ``in the driver's seat.''
+
+\section{Proposed Solutions}
+\subsection*{From skills to harnesses}
+Early use centred on atomistic \texttt{/skills} (e.g.\ \texttt{/beautiful\_deck}
+for slides, \texttt{/referee2} to validate code). The series concludes that
+skills alone are insufficient. The next layer is a \textbf{harness}: the
+software infrastructure surrounding the model that manages the full lifecycle
+of context---``intent capture through specification, compilation, execution,
+verification, and persistence''---essentially everything except the LLM
+itself.
+
+\subsection*{Dashboards, progress logs, and ``psychological verification''}
+A working harness (nicknamed \texttt{gtd}, after David Allen's
+\emph{Getting Things Done}) includes:
+\begin{itemize}
+  \item \textbf{Progress logs} Claude writes after every major session.
+  \item A \textbf{dashboard} of figures and tables as clickable ``cards''
+  that flip to reveal the exact code that generated them.
+  \item A daily auto-generated ``beautiful deck'' that re-reads the logs to
+  reorient the researcher after time away---an explicit countermeasure to
+  amnesia.
+\end{itemize}
+The aim is to rebuild ``psychological verification''---the warranted
+confidence that once came from producing the code oneself---now that agents
+cleanly separate \emph{production} from \emph{verification}.
+
+\subsection*{Structured analog workflows (checklists)}
+Borrowing from Atul Gawande's \emph{The Checklist Manifesto}, the
+recommendation is a short, habitual checklist that forbids moving forward
+until each step is complete. ``Pedro's Checklist'' for staggered-adoption
+difference-in-differences illustrates the idea:
+\begin{enumerate}[leftmargin=*]
+  \item Name the causal estimand in potential outcomes---specify the weights,
+  the population, and express it as binary comparisons (not just ``ATT'').
+  \item Tabulate treated units by cohort with sample shares (and never-treated
+  counts), mindful of the ``7--10 events per covariate'' rule for fitting
+  propensity scores.
+  \item Plot the rollout (e.g.\ with \texttt{panelview}).
+  \item Adopt an explicit methodology for selecting covariates that satisfy
+  \emph{conditional} parallel trends; check normalised differences in means
+  (include a covariate if $|{\Delta}| > 0.25$).
+  \item Plot outcome means by cohort, including never-treated, to catch data
+  problems and distinguish selection on levels from selection on $Y(0)$ trends.
+  \item Estimate with honest confidence intervals and run event-study
+  falsifications (using a universal/long baseline).
+\end{enumerate}
+
+\subsection*{Forward engineering and pre-registration}
+Because agents will do more of the coding, \emph{clear articulation of the
+population estimand up front} matters more, not less. The
+``forward-engineering'' approach---writing down, in potential-outcome terms,
+which aggregation you will target before estimation---is the first line of
+defence against hidden specification search.
+
+\section{The Counter-Intuitive Implication}
+\textbf{The returns to econometrics knowledge rise, not fall, with Claude
+Code.} Cunningham repeatedly wins ``greased-pig'' debugging battles with the
+agent only because he has deep human capital in the method (e.g.\ Callaway and
+Sant'Anna's CSDID). A concrete example: hours of fruitless debugging of
+spurious \texttt{NA}s ultimately traced not to a coding bug but to the wrong
+package version (CRAN vs.\ GitHub \texttt{did})---with \emph{two} Claude
+instances confidently pursuing wrong conjectures the entire time. The moral:
+human capital, not skill-sharing, is what lets a researcher recognise a
+true-versus-false-looking answer. ``Automating applied econometrics'' is
+treated as a claim made by people who do not actually do empirical research.
+
+\section{The Publishing Dimension (Demand Side)}
+Productivity gains are only the \emph{supply} side; journals are the
+\emph{demand} side, and that market is concentrated:
+\begin{itemize}
+  \item A handful of publishers dominate. In economics specifically,
+  Elsevier and Wiley together control roughly 50--60\% of relevant journals;
+  one estimate puts the implied HHI near 2{,}430---``highly concentrated.''
+  \item Major commercial publishers now require \textbf{disclosure of AI
+  use}. Violating these policies could effectively bar an author---and their
+  coauthors---from a large share of the market (though association journals
+  such as AEA titles and university journals such as JPE sit outside it).
+  \item Cunningham's stance: \textbf{disclose honestly}. Invoking Becker's
+  economics of crime (low detection probability $\Rightarrow$ large optimal
+  punishment) and norms of scientific communities, he argues integrity and
+  transparency---including disclosure to coauthors---are the only durable
+  policy.
+  \item A related theme across the series: research and publishing are
+  becoming ``two different things,'' as agents make producing
+  journal-submittable manuscripts dramatically easier while the prestige
+  bottleneck remains.
+\end{itemize}
+
+\section{Key Takeaways}
+\begin{enumerate}[leftmargin=*]
+  \item AI agents shift, rather than remove, the researcher's role---toward
+  specification, verification, and orchestration.
+  \item Every problem an agent solves tends to spawn a new, less familiar
+  one; expect drift, amnesia, and hidden reasoning errors.
+  \item Build a \emph{harness}, not just a pile of skills: progress logs,
+  dashboards, and reorientation aids.
+  \item Use \emph{checklists} and \emph{forward engineering} to make errors
+  knowable; insist on zero error as the binding constraint.
+  \item Domain (econometrics) human capital is more valuable, not less.
+  \item Don't ignore the demand side: understand journal AI-disclosure
+  policies and disclose honestly.
+\end{enumerate}
+
+\section*{Primary Sources}
+Drawn from the \emph{Scott's Mixtape} Substack
+(\url{https://causalinf.substack.com}), notably:
+``Claude Code 51: Harnessing AI Agents for Economic Research,''
+``Claude Code 53: Applied Econometrics Will Require a Detailed Checklist,''
+``Claude code 53: Journal Cartels and AI Disclosure,'' and
+``Claude Code 54: Amnesia.'' Methodological references include
+Baker, Callaway, Cunningham, Goodman-Bacon \& Sant'Anna (2026),
+``Difference-in-Differences: A Practitioner's Guide,'' \emph{Journal of
+Economic Literature}.
+
+\end{document}
