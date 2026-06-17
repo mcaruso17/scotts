@@ -1,0 +1,197 @@
+\documentclass[11pt]{article}
+
+% ------------------------------------------------------------------
+% AI Applications in Research: The Use of Claude Code
+% A conceptual summary drawn from Scott Cunningham's "Claude Code"
+% series on Scott's Mixtape Substack (causalinf.substack.com).
+% ------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\setlist{itemsep=2pt,topsep=3pt}
+
+\title{\textbf{AI Applications in Research}\\[2pt]
+\large Conceptual Foundations and the Use of Claude Code}
+\author{Summary prepared from Scott Cunningham's \emph{Scott's Mixtape Substack}}
+\date{17 June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts surrounding the use of
+agentic AI in empirical research, with particular attention to
+\textbf{Claude Code} as a tool for applied econometrics. It synthesizes themes
+from Scott Cunningham's ongoing ``Claude Code'' series, in which a working
+economist documents---through live self-experimentation---what an AI coding
+agent does well, where it introduces new failure modes, and the human systems
+required to keep automated research trustworthy. The central thesis is
+constructive: agents solve many old problems and create new ones, and the
+researcher's job is simply to solve the new ones.
+\end{abstract}
+
+\section{What AI Agents Bring to the Research Workflow}
+Modern coding agents collapse the distance between an idea and an executable
+analysis. In the research context, Claude Code reliably supplies the
+``hygiene'' that disciplined empiricists spent years building by hand:
+\begin{itemize}
+  \item \textbf{Replicable code} produced as scripts rather than one-off,
+        throwaway commands.
+  \item \textbf{Organized project structure}---consistent directory layouts,
+        stable naming conventions for files and folders.
+  \item \textbf{Automated exhibits}---figures and tables generated directly
+        from code, not assembled by hand.
+  \item \textbf{Built-in version control}, since git operations are accessible
+        to the agent.
+\end{itemize}
+For a researcher, these capabilities can lower the human error rate by
+externalizing precisely the bookkeeping that human attention is worst at.
+
+\section{The Central Tension: New Capabilities, New Failure Modes}
+The same automation that reduces clerical error introduces a different class of
+problems that are harder to see. Three recurring concepts organize this tension.
+
+\subsection{Drift}
+\textbf{Drift} is the slow, unnoticed mutation of an analysis when the human
+co-authors conversationally rather than directing discrete tasks. Observed
+symptoms include:
+\begin{itemize}
+  \item Scripts believed to exist were never actually written---the work was
+        done ad hoc inside a dialogue and never committed to a file.
+  \item The \emph{analytical sample} silently shifts over time, implying a
+        script is being modified unknowingly.
+  \item \emph{Treatment units} subtly change from how they were defined weeks
+        earlier.
+\end{itemize}
+The danger is that errors emerge \emph{outside} the locations where an
+experienced researcher's intuition expects to find them.
+
+\subsection{Amnesia and the loss of ``psychological verification''}
+When the agent produces the code, the human loses the tacit
+\textbf{epistemological feeling}---the warranted confidence that comes from
+having built something oneself and therefore knowing what produced what.
+Because agents cleanly separate \emph{production} from \emph{verification},
+the psychology of verification is offloaded along with the labor. A related
+hazard is a ``Claude mess'': sprawling but well-formatted output that does not
+\emph{look} like a mess, and is therefore harder to diagnose than the
+human kind.
+
+\subsection{Specification search under the hood}
+Left to ``plan and let it rip,'' an agent may quietly conduct a specification
+search---trying methods, keeping whatever does not contradict the prompt, and
+writing up only that. Decisions accumulate invisibly (e.g.\ stored in a JSON
+log) where the researcher never inspects them. Packages can compound this:
+some silently drop covariates so a propensity-score model converges, without
+warning the user.
+
+\section{Human Systems That Keep Automated Research Honest}
+The proposed remedy is \emph{not} more autonomy (skills, elaborate multi-step
+orchestration), but more structured human oversight. Several concrete practices
+recur.
+
+\subsection{Forward engineering: pre-register the estimand}
+Before any code is written, state the target precisely in potential-outcomes
+language:
+\begin{itemize}
+  \item Name the causal estimand explicitly---not merely ``the ATT,'' but the
+        \emph{weights}, the \emph{population}, and the underlying binary
+        comparisons.
+  \item Commit up front to which aggregation will be targeted.
+\end{itemize}
+Clear articulation of the population estimand becomes \emph{more}, not less,
+important once an agent is doing the coding.
+
+\subsection{Structured analog workflows (checklists)}
+Borrowing from Atul Gawande's \emph{The Checklist Manifesto}, the recommended
+discipline is a checklist the researcher works through by hand, not advancing
+until each step is complete. An illustrative diff-in-diff checklist (``Pedro's
+Checklist'') includes:
+\begin{enumerate}
+  \item Name the estimand in potential outcomes---population, weights, and
+        binary comparisons.
+  \item Tabulate treated units by cohort with sample shares (and never-treated
+        counts), so basic questions like ``how many treated units are in the
+        2005 cohort?'' are always answerable.
+  \item Plot the rollout (e.g.\ with Yiqing Xu's \texttt{panelview}).
+  \item Have an explicit methodology for selecting covariates that satisfy
+        \emph{conditional} parallel trends.
+\end{enumerate}
+The covariate step has a quantitative rule of thumb: include a covariate when
+the normalized difference in means exceeds $0.25$ in absolute value,
+\[
+  \mathrm{NDM} \;=\; \frac{\bar{X}_1 - \bar{X}_0}
+       {\sqrt{\tfrac{1}{2}\!\left(\sigma_1^2 + \sigma_0^2\right)}},
+\]
+and otherwise treat the groups as ``balanced enough.'' This matters
+mechanically because fitting a propensity score needs roughly $7$--$10$ events
+per covariate; with too few treated units per cohort, perfect separation forces
+hard choices that are best made \emph{before} estimation begins.
+
+\subsection{The harness and the ``beautiful deck''}
+To combat drift and amnesia, the workflow is captured in a personal
+\textbf{harness}---a dashboard (nicknamed \texttt{gtd}, after David Allen's
+\emph{Getting Things Done}) that makes the research process tangible:
+\begin{itemize}
+  \item Figures and tables become clickable ``cards'' that enlarge and flip to
+        reveal the exact code that produced them---building
+        \emph{psychological verification} back into the pipeline.
+  \item Each day a script reads the session's progress logs and renders a
+        ``beautiful deck'' (HTML slides) summarizing where the project stands,
+        re-orienting the researcher after time away.
+\end{itemize}
+The guiding principle is to build systems \emph{endogenous} to one's own
+limitations (here, memory and attention) rather than systems that pretend those
+limitations do not exist.
+
+\section{Methodological Context: Difference-in-Differences}
+The series uses difference-in-differences (DiD), and specifically the
+Callaway--Sant'Anna estimator (CSDID), as its running laboratory. Two ideas
+appear repeatedly and are worth stating cleanly:
+\begin{itemize}
+  \item DiD is robust to variables that determine the \emph{level} of the
+        untreated outcome $Y(0)$, because its bias depends on \emph{trends} in
+        $Y(0)$, not levels---so ``the fixed effect absorbs it'' is not a valid
+        reason to drop a covariate.
+  \item Covariates are mandatory when they are needed to satisfy
+        \emph{conditional} parallel trends---i.e.\ when imbalanced covariates
+        have returns on $Y(0)$ that change over time, or when treatment effects
+        are heterogeneous along those covariates.
+\end{itemize}
+A practical cautionary tale from the series: hours of debugging spurious
+\texttt{NA}s in a CSDID run traced not to the agent's logic but to a package
+version mismatch (the \texttt{did} package installed from CRAN versus the latest
+GitHub build). Two agents debugging in parallel happily generated confident,
+wrong conclusions---underscoring why human domain knowledge (``human capital''
+from repeated practice) remains the binding check.
+
+\section{Key Takeaways}
+\begin{enumerate}
+  \item Agents excel at research hygiene: replicable scripts, clean structure,
+        automated exhibits, and version control.
+  \item They introduce new, subtler failures: drift, amnesia, lost verification
+        psychology, and hidden specification search.
+  \item The fix is human discipline, not more autonomy: pre-register the
+        estimand, run analog checklists, and never fully step away.
+  \item Build oversight tooling (a harness/dashboard) endogenous to your own
+        cognitive limits.
+  \item Domain expertise is the irreplaceable safeguard---it is what tells you
+        the output ``makes no sense'' when the agent is confidently wrong.
+\end{enumerate}
+
+\vspace{1em}
+\noindent\textbf{Primary source.} Scott Cunningham, \emph{Scott's Mixtape
+Substack}, ``Claude Code'' series (esp.\ \#53 ``Applied econometrics will
+require a detailed checklist'' and \#54 ``Amnesia''), June 2026,
+\url{https://causalinf.substack.com}.
+
+\end{document}
