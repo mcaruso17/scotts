@@ -1,0 +1,187 @@
+\documentclass[11pt]{article}
+
+% ============================================================
+%  AI Applications in Research: The Use of Claude Code
+%  A concept summary inspired by Scott Cunningham's
+%  "Scott's Mixtape" Substack series on AI agents for
+%  applied empirical social science.
+% ============================================================
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue]{hyperref}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\setlist{itemsep=2pt,topsep=3pt}
+
+\title{\textbf{AI Applications in Research:\\ The Use of Claude Code in Applied Empirical Work}}
+\author{Prepared as a concept summary\\ \small inspired by Scott Cunningham's \emph{Scott's Mixtape} Substack}
+\date{June 18, 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the use of artificial
+intelligence (AI) in research, with particular attention to \emph{agentic coding
+assistants} and \emph{Claude Code} as a tool for applied empirical social science.
+It synthesizes general principles of AI-assisted research with the practical,
+workflow-oriented perspective that economist Scott Cunningham has developed in his
+ongoing video-and-essay series on using Claude Code for quantitative work. The aim
+is to provide a scannable reference to the capabilities, workflows, benefits, and
+caveats that researchers should keep in mind when adopting these tools.
+\end{abstract}
+
+\section{Introduction}
+
+AI tools have moved quickly from generic chat assistants to \emph{agentic} systems
+that can read a project, run code, inspect results, and iterate toward a goal.
+For researchers---especially in data-intensive empirical fields---this shifts the
+question from ``can AI write a snippet of code?'' to ``can AI act as a collaborator
+that helps me design, execute, and interrogate an entire analysis?'' Claude Code,
+Anthropic's command-line agent, is a leading example of this newer class of tools.
+A recurring theme in Cunningham's writing is that most online material treats such
+tools \emph{in the abstract}, whereas the real value is best seen through concrete,
+end-to-end empirical applications.
+
+\section{Core Concepts of AI in Research}
+
+\begin{description}[leftmargin=1.5em,style=nextline]
+  \item[Large language models (LLMs).] Models trained on text that can generate,
+    summarize, translate, classify, and reason over natural language and code.
+  \item[Agentic workflows.] Systems that go beyond single responses to take
+    \emph{actions}---editing files, running scripts, reading output---in a loop
+    until a task is complete.
+  \item[Tool use.] The model is given access to external tools (a shell, a search
+    function, an MCP server) so it can gather facts and act rather than only predict
+    text.
+  \item[Human-in-the-loop.] The researcher remains the principal investigator:
+    setting questions, judging plausibility, and validating every result.
+  \item[Reproducibility.] Because the agent works through scripts and version
+    control, its actions are inspectable and re-runnable---a natural fit for the
+    scientific record.
+\end{description}
+
+\section{What Claude Code Is}
+
+Claude Code is an \emph{agentic command-line tool} that operates directly inside a
+project directory. Rather than copying snippets into a chat window, the researcher
+points the agent at a repository and converses with it while it:
+\begin{itemize}
+  \item reads existing code, data dictionaries, and documentation to build context;
+  \item writes and edits scripts (e.g., in R, Stata, or Python);
+  \item executes those scripts and observes the actual output (tables, figures, errors);
+  \item diagnoses failures and iterates, rather than handing back untested code;
+  \item uses version control (git) so each step is committed and reversible.
+\end{itemize}
+
+\section{Applications in Empirical Research}
+
+The following uses recur in Cunningham's Claude Code series and in the broader
+practice of AI-assisted empirical work:
+
+\begin{enumerate}
+  \item \textbf{Text classification at scale.} Using a cheaper model
+    (e.g., \texttt{gpt-4o-mini}) orchestrated through Claude Code to \emph{reclassify}
+    large corpora of text into analytic categories.
+  \item \textbf{Chasing down conjectures.} Forming a hypothesis and then working with
+    the agent to test it quickly---running the regressions, plotting the trends,
+    checking robustness---in an efficient, timely way.
+  \item \textbf{Implementing estimators.} Translating an econometric method
+    (difference-in-differences, event studies, instrumental variables) into working,
+    debugged code with simulated and real data.
+  \item \textbf{Data cleaning and wrangling.} Reshaping, merging, and validating
+    messy datasets, with the agent surfacing anomalies it encounters.
+  \item \textbf{Simulation and diagnostics.} Building Monte Carlo simulations to
+    illustrate identification assumptions (e.g., when parallel trends breaks down).
+  \item \textbf{Documentation and exposition.} Drafting explainers, READMEs, and
+    figure/table output that make an analysis legible to others.
+\end{enumerate}
+
+\section{A Representative Workflow}
+
+\begin{enumerate}
+  \item \textbf{Frame the question.} The researcher states the empirical goal and
+    points the agent at the data and code.
+  \item \textbf{Context gathering.} The agent reads the repository to understand the
+    structure before acting.
+  \item \textbf{Draft and run.} The agent writes a script, runs it, and reports the
+    real output---not a guess at what the output might be.
+  \item \textbf{Iterate.} Errors and surprising results feed back into the next round;
+    the researcher steers and corrects.
+  \item \textbf{Validate.} The researcher checks results against theory, intuition,
+    and known benchmarks.
+  \item \textbf{Commit.} Each accepted step is version-controlled, preserving a
+    reproducible trail.
+\end{enumerate}
+
+\section{Benefits}
+
+\begin{itemize}
+  \item \textbf{Speed.} Routine coding, debugging, and reformatting collapse from
+    hours to minutes, freeing time for thinking.
+  \item \textbf{Lower friction for iteration.} Cheap, fast iteration encourages
+    exploring more conjectures and robustness checks.
+  \item \textbf{Reproducibility by default.} Script-and-commit workflows leave an
+    auditable trail.
+  \item \textbf{Accessibility.} Lowers the barrier for researchers who are strong on
+    theory but less fluent in a given programming language.
+  \item \textbf{Concrete over abstract.} Working end-to-end on real applications
+    reveals practical lessons that abstract tutorials miss.
+\end{itemize}
+
+\section{Risks and Caveats}
+
+\begin{itemize}
+  \item \textbf{Verification is non-negotiable.} AI output can be plausible yet wrong;
+    every result must be checked by the researcher.
+  \item \textbf{Hallucination and silent errors.} Code may run but encode a subtle
+    methodological mistake.
+  \item \textbf{Over-reliance.} Delegating judgment---not just labor---erodes the
+    researcher's own understanding.
+  \item \textbf{Data privacy and ethics.} Sensitive or restricted data require care
+    about what is shared with external services.
+  \item \textbf{Reproducibility and disclosure.} Norms are still forming around how to
+    report AI assistance in published research.
+\end{itemize}
+
+\section{Best Practices}
+
+\begin{itemize}
+  \item Treat the agent as a capable junior collaborator, not an oracle.
+  \item Keep a human in the loop at every decision point.
+  \item Work inside version control so every step is reversible and auditable.
+  \item Prefer small, verifiable steps over large, opaque ones.
+  \item Cross-check estimates against analytic results or simulated ground truth.
+  \item Document how AI was used, for transparency and reproducibility.
+\end{itemize}
+
+\section{Conclusion}
+
+Agentic AI tools such as Claude Code are reshaping how empirical research is done:
+not by replacing the researcher, but by compressing the distance between a question
+and a tested answer. As Cunningham's series emphasizes, the gains are clearest in
+\emph{practical}, hands-on application---using the agent to classify text, chase down
+conjectures, and implement estimators on real data---while the researcher retains
+responsibility for design, interpretation, and verification. Used with discipline,
+these tools expand what a single researcher can credibly investigate.
+
+\section*{Selected Resources}
+\begin{itemize}
+  \item Scott Cunningham, \emph{Scott's Mixtape} Substack ---
+    \url{https://causalinf.substack.com/}
+  \item Claude Code series (collection) ---
+    \url{https://causalinf.substack.com/s/claude-code}
+  \item \emph{Causal Inference: The Mixtape} --- \url{https://mixtape.scunning.com/}
+  \item Anthropic, Claude Code documentation ---
+    \url{https://docs.anthropic.com/en/docs/claude-code}
+\end{itemize}
+
+\end{document}
