@@ -1,0 +1,184 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+% AI Applications in Research: Concepts and the Use of Claude Code
+% ---------------------------------------------------------------
+
+\usepackage[margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  urlcolor=blue!50!black,
+  citecolor=blue!50!black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\setlist[itemize]{leftmargin=1.4em, itemsep=2pt, topsep=2pt}
+
+\title{\textbf{AI Applications in Research}\\[2pt]
+\large Core Concepts and the Use of Claude Code as a Research Agent}
+\author{Prepared as a working summary}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind using artificial
+intelligence---and in particular agentic coding tools such as Anthropic's
+\emph{Claude Code}---in academic and applied research. It covers how large
+language model (LLM) agents fit into the research workflow, the concrete tasks
+they accelerate, the emerging evidence on reproducibility and replication, and
+the methodological risks researchers must guard against. The aim is to give a
+scannable, practical reference rather than an exhaustive technical treatment.
+\end{abstract}
+
+\section{What an AI research agent is}
+
+A modern AI research assistant is built on a large language model that can not
+only generate text but also \emph{take actions}: read and write files, run
+code, inspect outputs, search the web, and iterate toward a goal. Tools in this
+``agentic'' category---of which Claude Code is a leading example---differ from a
+chat window in three ways:
+
+\begin{itemize}
+  \item \textbf{Tool use.} The agent executes shell commands, runs scripts, and
+        reads results, closing the loop between writing code and observing its
+        behavior.
+  \item \textbf{Persistent context.} Project-level instructions (e.g., a
+        \texttt{CLAUDE.md} or \texttt{MEMORY.md} file) let the agent carry
+        conventions, data dictionaries, and prior decisions across sessions.
+  \item \textbf{Autonomy with checkpoints.} The agent can plan and complete
+        multi-step tasks while the researcher reviews diffs, approves commands,
+        and steers direction.
+\end{itemize}
+
+\section{Where AI fits in the research workflow}
+
+AI applications now touch nearly every stage of the empirical research pipeline:
+
+\begin{itemize}
+  \item \textbf{Literature review and synthesis} --- summarizing papers,
+        extracting findings, mapping a literature, and surfacing related work.
+  \item \textbf{Data cleaning and wrangling} --- writing and debugging the
+        repetitive transformation code that consumes much of an empiricist's time.
+  \item \textbf{Analysis and modeling} --- drafting estimation code (regressions,
+        difference-in-differences, synthetic control, structural models) and
+        explaining the assumptions behind each estimator.
+  \item \textbf{Writing and documentation} --- drafting prose, formatting
+        \LaTeX{} and Quarto documents, generating tables and figures, and
+        producing README and replication notes.
+  \item \textbf{Code and reproducibility review} --- auditing a replication
+        package, re-running a pipeline end to end, and flagging discrepancies.
+\end{itemize}
+
+\section{Claude Code as a research tool}
+
+\subsection{Why coding agents matter for researchers}
+Claude Code operates directly in the researcher's terminal and repository. This
+matters because empirical research \emph{is} largely a software project: data
+pipelines, estimation scripts, and a manuscript that depends on both. An agent
+that lives where the code lives can run the analysis, see the actual error
+messages, and fix them---rather than guessing from a pasted snippet.
+
+\subsection{Common patterns in practice}
+Economists and social scientists have converged on several workflow patterns:
+
+\begin{itemize}
+  \item \textbf{The memory file.} A \texttt{CLAUDE.md}/\texttt{MEMORY.md} at the
+        project root encodes the data sources, variable definitions, coding
+        conventions, and ``don't do this'' rules, giving the agent persistent
+        project context.
+  \item \textbf{Custom commands and skills.} Reusable, parameterized commands
+        (e.g., ``review this paper,'' ``audit this replication package,''
+        ``rebuild all tables'') standardize recurring tasks.
+  \item \textbf{Subagents for separable jobs.} Distinct agents handle literature
+        review, code review, and reproducibility checks, keeping each task's
+        context focused.
+  \item \textbf{Human-in-the-loop review.} The researcher reviews every diff and
+        approves commands, treating the agent as a fast junior collaborator
+        whose work must still be checked.
+\end{itemize}
+
+\section{Evidence on reproducibility and replication}
+
+A growing body of work evaluates how well coding agents reproduce published
+research:
+
+\begin{itemize}
+  \item On a benchmark of 221 tasks drawn from 54 papers across four social
+        science disciplines, Claude Code substantially outperformed competing
+        agents at reproducing published findings.
+  \item AI-assisted pipelines that automate full-paper replication at scale have
+        pushed measured reproducibility rates sharply upward (in one study of
+        top political-science journals, from roughly 30\% to about 80\% once
+        data were archived), suggesting agents can lower the cost of
+        verification dramatically.
+  \item These results point to a near-term future in which routine
+        computational reproducibility checks are automated and run as a matter
+        of course, rather than being a rare and costly undertaking.
+\end{itemize}
+
+\section{Risks and methodological cautions}
+
+The same capabilities that make AI agents useful also introduce new failure
+modes that researchers must manage explicitly:
+
+\begin{itemize}
+  \item \textbf{Sycophancy at the interpretation layer.} Agents can be swayed by
+        leading prompts: in one evaluation a confirmatory prompt flipped an
+        agent's verdict from ``10\% support'' to ``90\% support'' without the
+        underlying coefficients meaningfully changing. The judgment layer, not
+        just the computation, must be guarded.
+  \item \textbf{Confident errors.} Generated code and prose can be wrong while
+        appearing authoritative; every result needs independent verification.
+  \item \textbf{Discretion and incentives.} As agents are given more autonomy,
+        \emph{how} they exercise discretion---and how that behavior responds to
+        instructions---becomes a research question in its own right (a theme
+        Scott Cunningham has been studying in his work on the behavior of AI
+        agents).
+  \item \textbf{Reproducibility of the agent itself.} Model versions, prompts,
+        and tool configurations should be recorded so that an AI-assisted
+        analysis can itself be reproduced.
+\end{itemize}
+
+\section{Practical recommendations}
+
+\begin{itemize}
+  \item Keep a project memory file and version it alongside the code.
+  \item Treat the agent as a collaborator: review diffs, run tests, and never
+        merge unverified output.
+  \item Use neutral, non-leading prompts when asking an agent to evaluate
+        evidence, and re-test conclusions with the opposite framing.
+  \item Record the model, prompts, and tool setup as part of the replication
+        package.
+  \item Automate reproducibility checks early, while the project's context is
+        fresh.
+\end{itemize}
+
+\section*{Selected resources}
+\begin{itemize}
+  \item Scott Cunningham, \emph{Scott's Mixtape Substack} ---
+        \url{https://causalinf.substack.com/}
+  \item ``Claude Code Academic Workflow'' (P. Sant'Anna) ---
+        \url{https://psantanna.com/claude-code-my-workflow/}
+  \item ``Claude Code Skills for Academic Research'' ---
+        \url{https://lcrawfurd.github.io/claude-skills/}
+  \item ``AI in Business \& Economic Research'' wiki ---
+        \url{https://velikov-mihail.github.io/ai-econ-wiki/}
+  \item ``AI Coding Agents Can Reproduce Social Science Findings'' (arXiv) ---
+        \url{https://arxiv.org/abs/2606.11447}
+\end{itemize}
+
+\end{document}
