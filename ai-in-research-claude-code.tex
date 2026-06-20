@@ -1,0 +1,218 @@
+\documentclass[11pt]{article}
+
+% ============================================================
+%  AI Applications in Research: The Case of Claude Code
+%  A conceptual summary drawing on Scott Cunningham's
+%  "Claude Code" series (Scott's Mixtape Substack, 2026)
+% ============================================================
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\newcommand{\concept}[1]{\textbf{#1}}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Main Concepts, with a Focus on Claude Code in Empirical Economics}
+\author{Compiled from Scott Cunningham's \emph{Scott's Mixtape} ``Claude Code'' series}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarises the main concepts that have emerged around
+the use of agentic AI---particularly Anthropic's \concept{Claude Code}---in the
+production of empirical research. It draws on the running ``Claude Code'' series
+written by economist Scott Cunningham, in which he documents, through
+self-experimentation, how AI agents reshape the workflow of applied
+econometrics. The picture that emerges is balanced: AI agents automate much of
+the mechanical labour of research and enforce good engineering practice, but in
+doing so they dissolve some of the cognitive scaffolding that human researchers
+have historically relied on for correctness. The recurring thesis is that
+\emph{AI agents solve old problems and create new ones, and the researcher's job
+is to solve the new ones.}
+\end{abstract}
+
+\section{What an AI Research Agent Is}
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \concept{Beyond a chatbot.} A modern research agent is not a standalone
+        model that merely maps input text to output text. It operates within an
+        ecosystem of \emph{tools}, \emph{memory stores}, and \emph{orchestrated
+        workflows} that let it carry out complex, multi-step tasks.
+  \item \concept{The ``harness.''} The surrounding scaffolding---the prompts,
+        skills, memory, logs, and orchestration that wrap the raw model---is
+        increasingly referred to as the \emph{harness}. The harness, not the
+        base model alone, is what determines research productivity and error
+        rates.
+  \item \concept{Skills.} Reusable, atomistic task modules (e.g.\ a
+        \texttt{/beautiful\_deck} command for slides, or a \texttt{/referee2}
+        command to validate code) let a researcher keep doing their normal tasks
+        while delegating the execution to the agent.
+  \item \concept{Product, not just model.} Adoption is driven as much by product
+        design as by raw capability: integrating the agent into the native
+        desktop application (not only the command line) markedly broadened usage.
+\end{itemize}
+
+\section{What AI Agents Do Well in Empirical Research}
+
+Claude Code reproduces, almost for free, the disciplined empirical workflow that
+careful researchers spend years building:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Writes \concept{replicable, pipeline-style code} rather than one-off
+        scripts.
+  \item Maintains an \concept{organised directory structure} with consistent
+        file- and folder-naming conventions.
+  \item \concept{Automates production} of tables and figures.
+  \item Makes \concept{version control} (git) routine and low-friction.
+  \item Lowers the rate of mechanical coding errors that arise from
+        disorganisation and manual repetition.
+\end{itemize}
+
+\noindent For a researcher whose natural workflow is error-prone, the agent can
+feel like the next step in a long evolution toward greater precision and fewer
+mistakes.
+
+\section{The New Problems AI Agents Create}
+
+The central message of the series is that these gains come bundled with novel
+failure modes that fall \emph{outside} the locations where experienced
+researchers are trained to look for error.
+
+\subsection{Drift}
+\begin{itemize}[leftmargin=1.4em]
+  \item Code discussed in dialogue may never actually be \emph{written down}---it
+        is generated ad hoc during conversation and then lost.
+  \item The \concept{analytical sample silently shifts} over time, implying a
+        script is being modified unknowingly or the foundation is moving.
+  \item \concept{Treatment units} may subtly change from one session to the next.
+  \item Crucially, these errors are \emph{not caught in real time}, because they
+        do not resemble the messes a human would make.
+\end{itemize}
+
+\subsection{Amnesia and the Loss of Muscle Memory}
+\begin{itemize}[leftmargin=1.4em]
+  \item Typing one's own code historically imprinted the structure of a project
+        into memory (a ``flow state''); delegating that typing removes the
+        repetition that built recall.
+  \item Returning to a project after even a day or two produces an unusual
+        \concept{amnesia}: with many auto-generated scripts and exhibits, some
+        now stale, the researcher lacks memorised landmarks to navigate.
+  \item A ``Claude mess'' is harder to diagnose than a human mess: it is
+        organised, even elegant---``a well-designed kind of sprawl''---which
+        camouflages the underlying disorder.
+\end{itemize}
+
+\subsection{Loss of the ``Epistemological Feeling''}
+\begin{itemize}[leftmargin=1.4em]
+  \item Because agents cleanly \concept{separate production from verification},
+        the researcher loses the tacit confidence---the ``warranted belief''
+        born of having produced the result oneself---that something is correct.
+  \item This mirrors the experience of managers who delegate to research
+        assistants and likewise lose that felt confidence in the output.
+\end{itemize}
+
+\subsection{Specification Search Under the Hood}
+\begin{itemize}[leftmargin=1.4em]
+  \item Left to ``plan and let it rip,'' an agent may \concept{specification
+        search}---trying methods until one does not contradict the prompt, then
+        writing up only that result.
+  \item Agents may store many intermediate decisions in hidden state (e.g.\ a
+        JSON log); ``turning over the rock'' reveals far more discretion than the
+        write-up suggests.
+  \item Agents will also confidently pursue wrong conjectures to wrong
+        conclusions---e.g.\ a bug traced not to the data or the method but simply
+        to the wrong \emph{version} of a package (CRAN vs.\ GitHub).
+\end{itemize}
+
+\section{Design Principles for AI-Augmented Research}
+
+The series treats these problems not as cause for despair but as an engineering
+agenda. Several principles recur:
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item \concept{Do not step away.} Full automation with blind trust in skills
+        backfires; the human must stay in the loop, especially for econometric
+        choices.
+  \item \concept{Philosophy before tools.} Build the workflow from a productivity
+        philosophy (e.g.\ \emph{Getting Things Done}); the specific tools and
+        skills should be \emph{endogenous} to that philosophy.
+  \item \concept{Systems endogenous to the researcher.} Effective workflows are
+        built around one's actual cognitive style (e.g.\ ADHD), not around the
+        pretence that the limitation is absent.
+  \item \concept{Detailed checklists for applied econometrics.} Replace tacit
+        knowledge with explicit policy, for example:
+        \begin{itemize}[leftmargin=1.2em]
+          \item Name the causal estimand precisely using potential outcomes,
+                populations, and weighted averages---not just ``ATT,'' but the
+                weights, the population, and the binary comparisons.
+          \item Build an explicit table of treated units by cohort with sample
+                shares (and counts of the never-treated), so questions like ``how
+                many treated units are in each cohort?'' are always answerable.
+        \end{itemize}
+  \item \concept{Psychological verification.} Re-introduce the lost ``feeling''
+        of correctness through interface design---e.g.\ clickable figure/table
+        ``cards'' that flip to reveal the exact code that produced them.
+  \item \concept{Progress logs and reorientation aids.} Have the agent write a
+        log after every major session, and auto-generate a daily ``beautiful
+        deck'' / dashboard that re-orients the researcher and counters amnesia.
+\end{enumerate}
+
+\section{Human Capital, Expertise, and Complementarity}
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \concept{Human capital is mathematical.} Deep familiarity with a
+        method---knowing, e.g., that a coefficient should not appear at the
+        reference period $g-1$ in a Callaway--Sant'Anna design---comes from
+        repeated use, and it is exactly what lets a researcher recognise that an
+        agent's output ``makes no sense.''
+  \item \concept{Returns to expertise persist.} Evidence (e.g.\ from Anthropic)
+        suggests there are persistent returns to experience in agentic coding.
+  \item \concept{Complement vs.\ substitute.} Using an agent on tasks one
+        \emph{understands} complements expertise; using it on tasks one does not
+        understand substitutes for the \emph{absence} of expertise---and is where
+        undetected error concentrates.
+  \item \concept{Frontier direction.} Active research now studies the
+        \emph{behaviour of AI agents in semi-autonomous empirical research}, and
+        structured methods such as \concept{Schema-Guided Reasoning} are emerging
+        as research workflows in their own right.
+\end{itemize}
+
+\section{Summary}
+
+AI agents like Claude Code automate the mechanical core of empirical
+research---clean code, organised projects, automated exhibits, version
+control---and thereby remove a whole class of traditional errors. But they
+introduce new, quieter failure modes (drift, amnesia, lost verification
+instinct, hidden specification search) that bypass a researcher's trained
+intuition. The constructive response is to engineer a deliberate
+\emph{harness}: a philosophy-driven workflow with explicit checklists, progress
+logs, dashboards for psychological verification, and a human expert who stays in
+the loop precisely where their hard-won human capital lets them catch what the
+agent cannot.
+
+\vspace{1em}
+\noindent\rule{\linewidth}{0.4pt}\\[0.4em]
+\footnotesize
+Source: Scott Cunningham, ``Claude Code'' series and related ``Closing Tabs''
+posts, \emph{Scott's Mixtape Substack}, \url{https://causalinf.substack.com}
+(2026).
+
+\end{document}
