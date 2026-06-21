@@ -1,0 +1,209 @@
+\documentclass[11pt]{article}
+
+% ----------------------------------------------------------------------
+%  AI Applications in Research: Concepts and Practice with Claude Code
+%  Synthesised from the work and newsletter of Scott Cunningham
+%  (Scott's Mixtape Substack, https://causalinf.substack.com)
+%  Compiled: 21 June 2026
+% ----------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue!60!black,
+    citecolor=black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small AI in Research with Claude Code}
+\lhead{\small Scott's Mixtape (synthesis)}
+\cfoot{\thepage}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Concepts and Practice for Empirical Social Science with Claude Code}
+\author{Synthesised from the work of Scott Cunningham\\
+\small\textit{Scott's Mixtape Substack}}
+\date{Compiled 21 June 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent This document summarises the main concepts behind the application of
+artificial intelligence---and in particular agentic coding tools such as
+\textbf{Claude Code}---to empirical research in the social sciences. It draws on
+the ongoing public experiments and newsletter of economist Scott Cunningham,
+whose ``Claude Code'' series documents what works, what fails, and the
+principles that make AI a productive research collaborator rather than a
+black box. The emphasis throughout is on \emph{reproducibility, verification,
+and the AI as a thinking partner} rather than as an autonomous code generator.
+\end{abstract}
+
+\section{Introduction}
+The arrival of capable agentic coding assistants has shifted AI from a tool that
+\emph{answers questions} to one that \emph{performs research tasks}: writing and
+running code, replicating papers, classifying text at scale, auditing results,
+and producing publication-ready outputs. Claude Code---an agentic command-line
+and desktop tool that can read a project, edit files, run programs, and iterate
+on errors---sits at the centre of this shift for applied empirical work. The
+central question is no longer ``can the model write code?'' but ``how do we
+embed an AI agent into a research workflow so that the results are
+\emph{trustworthy, reproducible, and verifiable}?''
+
+\section{Core Philosophy: AI as a Thinking Partner}
+The organising principle is that the most productive mode is \textbf{Claude as a
+thinking partner}, not as an autonomous agent.
+\begin{itemize}[leftmargin=1.4em]
+  \item The \emph{dialogue itself is the work}, not merely a delivery mechanism
+        for outputs; the researcher steers iteratively and the agent executes
+        when the next move is clear.
+  \item Human judgement remains in the loop: the researcher decides direction,
+        interrogates intermediate results, and refuses to ``trust the number''
+        without verification.
+  \item Autonomy is granted incrementally---tasks that are well specified can be
+        delegated, while ambiguous or consequential steps stay under human
+        control.
+\end{itemize}
+
+\section{Main Application Areas}
+
+\subsection{Replication and Reproduction of Published Work}
+A flagship demonstration replicated a \emph{PNAS} paper that used natural
+language processing on roughly 200{,}000 U.S.\ Congressional speeches about
+immigration. Claude Code re-implemented the pipeline, substituting OpenAI's
+\texttt{gpt-4o-mini} for the original RoBERTa classifier.
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Cost:} approximately \$11 in API charges for the full exercise.
+  \item \textbf{Time:} about 1 hour of setup, 2.6 hours of processing (versus an
+        expected 24 hours), and 1 hour of analysis.
+  \item \textbf{Agreement:} roughly 69\% agreement with the original classifier,
+        illustrating both the promise and the limits of cheap LLM-based
+        classification as a substitute for purpose-trained models.
+\end{itemize}
+The broader lesson: AI agents dramatically lower the cost of \emph{reproducing}
+empirical results, making replication a routine rather than heroic activity.
+
+\subsection{Large-Scale Text Classification}
+Reclassifying large corpora (e.g.\ legislative speeches) with inexpensive LLMs
+is a recurring use case. The workflow shows how an agent can orchestrate data
+acquisition, batching, API calls, cost tracking, and reconciliation against a
+benchmark---tasks that previously required substantial engineering effort.
+
+\subsection{Verification, Auditing, and Reproducibility}
+A distinctive contribution is a suite of \emph{adversarial} verification
+protocols (packaged publicly as ``MixtapeTools''):
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Referee 2} --- a systematic audit protocol: code audits,
+        cross-language replication (R / Stata / Python), directory-structure
+        checks, output-automation audits, and econometric validation. Crucially,
+        a \emph{fresh} Claude instance performs the review to preserve
+        independence.
+  \item \textbf{Blindspot} --- a perception audit that surfaces overlooked
+        problems (``vices'') and missed opportunities (``virtues''), invoking the
+        ``Shklovsky principle'' of restoring perception to work one has
+        internalised.
+  \item \textbf{Bibcheck} --- a multi-agent system that audits \texttt{.bib}
+        bibliography files against canonical sources using parallel,
+        narrow-focus agents rather than one comprehensive pass.
+  \item \textbf{Split-PDF} --- a pipeline for acquiring and reading academic
+        papers in chunks to avoid context overload.
+\end{itemize}
+
+\subsection{Writing, Presentations, and Communication}
+Tooling also targets research \emph{communication}: generating Beamer slide
+decks with attention to rhetorical design, TikZ figures with collision detection
+for visual accuracy, project scaffolding, and LaTeX compilation helpers.
+
+\section{Key Design Principles}
+\begin{enumerate}[leftmargin=1.6em]
+  \item \textbf{Documentation equals permanent artifacts.} Persistent project
+        context (e.g.\ a \texttt{CLAUDE.md} file) encodes conventions, data
+        locations, and decisions so the agent behaves consistently across
+        sessions.
+  \item \textbf{Cross-software replication as quality control.} Re-deriving a
+        result in a second language (R, Stata, Python) is a strong test of
+        correctness.
+  \item \textbf{Adversarial review requires structural separation.} Reviews are
+        run in \emph{new} terminal sessions / fresh agent instances so the
+        reviewer is not anchored by the author's reasoning.
+  \item \textbf{Visual verification trumps numerical trust.} Plotting and
+        eyeballing outputs catches errors that summary statistics hide.
+  \item \textbf{Formal processes outperform intuition.} Explicit, repeatable
+        protocols beat ad-hoc prompting for reliability.
+\end{enumerate}
+
+\section{Findings and Cautions}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{P-hacking and incentives.} Experiments suggest AI agents lack the
+        human career incentives that drive p-hacking: unless explicitly told to
+        optimise for statistical significance, agents show little sign of it and
+        will report null findings. (Cunningham has publicly revised earlier
+        claims on this point---an example of treating these as live, falsifiable
+        experiments.)
+  \item \textbf{Truth and trust.} The strength and weakness of AI coding is the
+        same property---fluent, confident output---so verification protocols are
+        not optional add-ons but the core of credible AI-assisted research.
+  \item \textbf{Cheap models, real limits.} Inexpensive classifiers (e.g.\
+        \texttt{gpt-4o-mini}) make large studies affordable but only
+        \emph{partially} agree with purpose-built models; agreement rates must
+        be measured and reported, not assumed.
+\end{itemize}
+
+\section{Frontier and Speculation}
+Cunningham also writes ``Claude Code fan fiction''---near-future scenarios
+(months, not decades, ahead) about how AI agents may reshape scholarly
+\emph{publishing} itself: not just writing manuscripts but compressing the cycle
+of producing, reviewing, and reproducing empirical work. His recent talks (e.g.\
+at the IMT School of Advanced Studies in Lucca, Italy, June 2026) present
+research on the \emph{behaviour of AI agents in semi-autonomous empirical
+research}---a research agenda in its own right.
+
+\section{Practical Takeaways for Researchers}
+\begin{enumerate}[leftmargin=1.6em]
+  \item Start by treating the agent as a collaborator: specify the goal, inspect
+        each step, and delegate only well-defined sub-tasks.
+  \item Maintain a \texttt{CLAUDE.md} (or equivalent) so context and conventions
+        persist across sessions.
+  \item Build verification in from the start---cross-language replication,
+        independent ``referee'' passes, and visual checks.
+  \item Measure and report cost, runtime, and agreement with benchmarks; these
+        are now part of the empirical record.
+  \item Treat AI-assisted findings as falsifiable claims and be willing to
+        publicly revise them.
+\end{enumerate}
+
+\section{Selected Resources}
+\begin{itemize}[leftmargin=1.4em]
+  \item Scott's Mixtape Substack ---
+        \url{https://causalinf.substack.com}
+  \item ``Claude Code'' series (collected) ---
+        \url{https://causalinf.substack.com/s/claude-code}
+  \item MixtapeTools (GitHub) ---
+        \url{https://github.com/scunning1975/MixtapeTools}
+  \item ``Claude Code 15: The Results Are In: Can LLMs Replicate a PNAS Paper?''
+        --- \url{https://causalinf.substack.com/p/claude-code-15-the-results-are-in}
+  \item Interview, ``Claude Code and AI for economists'' (The AI Economist) ---
+        \url{https://aieconomist.io/newsletters/scott-cunningham-claude-code-ai-economists}
+\end{itemize}
+
+\vfill
+\noindent\rule{\linewidth}{0.4pt}\\
+{\small This is an independent synthesis compiled for study purposes from
+publicly available newsletter posts, talks, and repositories. Figures (cost,
+runtime, agreement) are as reported by the author in the cited materials.}
+
+\end{document}
