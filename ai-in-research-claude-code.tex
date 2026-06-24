@@ -1,0 +1,165 @@
+\documentclass[11pt]{article}
+
+% ----------------------------------------------------------------------
+% AI Applications in Research: The Use of Claude Code
+% A concept summary inspired by Scott Cunningham's "Mixtape" Substack,
+% which documents how AI agents are changing applied empirical research.
+% ----------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue!60!black,
+    citecolor=black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\setlist{itemsep=2pt, topsep=3pt}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Concepts and Practice, with a Focus on Claude Code}
+\author{Research Notes}
+\date{June 24, 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the use of
+artificial intelligence---and AI coding agents in particular---in
+empirical research. It pays special attention to \emph{Claude Code}, a
+command-line agent that operates directly on a researcher's files,
+data, and code. The framing is motivated by ongoing public
+documentation of AI-assisted research workflows, such as Scott
+Cunningham's \emph{Mixtape} Substack, which records in near real time
+how econometric and applied work is being reshaped by autonomous
+coding agents.
+\end{abstract}
+
+\section{Why AI Matters for Research}
+Research is increasingly a software activity: data cleaning, estimation,
+simulation, and reproducible reporting are all mediated by code. Large
+language model (LLM) agents change this work in three broad ways.
+\begin{itemize}
+    \item \textbf{Lowering the cost of code.} Routine scripting,
+    refactoring, and boilerplate (loaders, plots, tables) can be
+    delegated, freeing researcher time for judgment and design.
+    \item \textbf{Closing the methods gap.} Agents can read
+    documentation and replicate state-of-the-art estimators that a
+    researcher might not otherwise have time to implement correctly.
+    \item \textbf{Accelerating iteration.} The loop from
+    ``idea $\rightarrow$ specification $\rightarrow$ result'' shrinks
+    from days to minutes, encouraging more thorough robustness checks.
+\end{itemize}
+
+\section{Core Concepts}
+\begin{description}[style=nextline, leftmargin=0pt]
+    \item[Agentic workflows.] Unlike a chat assistant that only
+    returns text, an \emph{agent} takes actions: it reads and writes
+    files, runs commands, inspects outputs, and iterates toward a goal
+    with minimal supervision.
+    \item[Tool use.] Agents are wired to concrete tools (shell, file
+    editors, search, version control) so their reasoning produces
+    real, checkable artifacts rather than suggestions.
+    \item[Context and grounding.] Quality depends on giving the model
+    the right context---data dictionaries, prior code, and an explicit
+    statement of the estimand---so that output is grounded in the
+    project rather than generic patterns.
+    \item[Human-in-the-loop verification.] The researcher remains
+    responsible for correctness. Agents draft and execute; the analyst
+    reviews assumptions, identification, and inference.
+    \item[Reproducibility.] Because agents operate through scripts and
+    version control, their work is, by construction, a logged and
+    re-runnable record of the analysis.
+\end{description}
+
+\section{Claude Code in Research}
+\emph{Claude Code} is Anthropic's command-line coding agent. It runs in
+the terminal (or in CI / the web) and acts directly on a project's
+repository. Its relevance to research comes from a few properties.
+\begin{itemize}
+    \item \textbf{Operates on real projects.} It reads the actual data,
+    code, and notes in a working directory and edits them in place,
+    rather than working against pasted snippets.
+    \item \textbf{Executes and checks its own work.} It can run
+    estimations, read the resulting tables and figures, and correct
+    errors before reporting back.
+    \item \textbf{Integrates with version control.} Changes land as
+    commits and pull requests, preserving a transparent, reviewable
+    trail of every analytical decision.
+    \item \textbf{Extensible via tools and MCP.} Through the Model
+    Context Protocol and custom tools, it can reach datasets,
+    documentation, email, and external services that a project depends
+    on.
+\end{itemize}
+
+\section{A Representative Research Workflow}
+\begin{enumerate}
+    \item \textbf{Specify the question.} State the estimand and
+    identification strategy (e.g., a continuous-treatment
+    difference-in-differences design).
+    \item \textbf{Prepare the data.} Have the agent build cleaning and
+    construction scripts, documenting each transformation.
+    \item \textbf{Implement the estimator.} Ask the agent to translate
+    a recent method from its reference paper into working code.
+    \item \textbf{Run and inspect.} Execute the analysis; the agent
+    reads the output, produces tables and figures, and flags anomalies.
+    \item \textbf{Robustness and review.} Iterate over specifications;
+    the researcher verifies assumptions and interprets results.
+    \item \textbf{Report and reproduce.} Commit code, output, and a
+    write-up so the entire pipeline is re-runnable from scratch.
+\end{enumerate}
+
+\section{Benefits and Risks}
+\noindent\textbf{Benefits:} faster iteration, broader method coverage,
+better documentation, and lower barriers to reproducible work.
+
+\medskip
+\noindent\textbf{Risks to manage:}
+\begin{itemize}
+    \item \emph{Plausible-but-wrong output.} Agents can produce code
+    that runs yet encodes a subtle misidentification; results must be
+    independently verified.
+    \item \emph{Over-delegation.} Methodological judgment---choice of
+    estimand, assumptions, and inference---cannot be outsourced.
+    \item \emph{Data governance.} Sensitive data require attention to
+    access, privacy, and where computation occurs.
+    \item \emph{Provenance.} Every agent-driven change should be logged
+    so the analysis remains auditable.
+\end{itemize}
+
+\section{Connection to Scott Cunningham's Mixtape}
+Scott Cunningham's \emph{Mixtape} Substack is a live case study of these
+ideas. Episodes document genuine econometrics projects---most recently
+estimating target parameters under continuous-treatment
+difference-in-differences---carried out with AI assistance, narrating
+both what works and what fails. It is a useful, honest reference for how
+agentic tools land in day-to-day applied research.
+
+\section{Takeaways}
+\begin{itemize}
+    \item AI agents shift research from writing code by hand to
+    \emph{specifying, supervising, and verifying} agent-written code.
+    \item Claude Code is well suited to research because it acts on real
+    repositories, runs and checks its own analyses, and records its work
+    through version control.
+    \item The durable skills become problem framing, identification, and
+    critical review---the parts an agent cannot own.
+\end{itemize}
+
+\vspace{1em}
+\noindent\rule{\linewidth}{0.4pt}\\[0.3em]
+\small Further reading: Scott's Mixtape Substack
+(\url{https://causalinf.substack.com}); Anthropic Claude Code
+documentation (\url{https://code.claude.com/docs}).
+
+\end{document}
