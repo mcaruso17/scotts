@@ -1,0 +1,145 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  urlcolor=blue!50!black,
+  citecolor=blue!50!black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\setlist[itemize]{itemsep=2pt, topsep=3pt}
+
+\title{\textbf{AI Applications in Research:\\ The Use of Claude Code in Empirical Workflows}}
+\author{Prepared for Matteo Caruso}
+\date{June 25, 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the use of AI
+coding agents---particularly Anthropic's \textbf{Claude Code}---in scientific
+and empirical research. It draws on the broader 2025--2026 literature on
+agentic AI for science and on the practical, applied perspective developed by
+economist Scott Cunningham in his \emph{Scott's Mixtape} newsletter, whose
+latest episode is summarized in the appendix. The goal is to map how
+conversational, terminal-based AI agents are reshaping the research workflow
+from data cleaning through replication, reproducibility auditing, and writing.
+\end{abstract}
+
+\section{What Claude Code Is}
+Claude Code is a terminal-based (CLI) ``agentic'' assistant built on
+Anthropic's Claude models. Unlike a chat window that only returns text, an
+agent can read and edit files, run code, inspect outputs, and iterate toward a
+goal across many steps. For researchers this turns the model from a
+question-answering tool into a collaborator that operates directly inside the
+project repository---reading data, executing scripts in R, Stata, or Python,
+and revising its own work in response to errors.
+
+\section{Main Themes: Why AI Agents Matter for Research}
+\begin{itemize}
+  \item \textbf{From autocomplete to autonomous workflows.} The shift is from
+  line-by-line code suggestion to delegating whole multi-step tasks (clean,
+  estimate, plot, interpret) to an agent that closes the loop itself.
+  \item \textbf{Reproducibility as a first-class use case.} Agents can re-run
+  published code, reconcile results with reported tables, and flag
+  discrepancies---scaling replication work that was previously too costly to
+  perform at volume.
+  \item \textbf{Cross-language portability.} The same analysis can be
+  translated and cross-checked across R, Stata, and Python, exposing
+  language-specific bugs and confirming robustness.
+  \item \textbf{Lower bar to advanced methods.} Researchers can apply
+  cutting-edge estimators (e.g., modern difference-in-differences) without
+  hand-coding every detail, while still being responsible for the
+  interpretation.
+  \item \textbf{Tighter, more consistent output.} Empirical 2026 studies report
+  that coding agents land near the human-median result but with markedly
+  smaller dispersion and fewer extreme outliers.
+\end{itemize}
+
+\section{Key Applications in the Research Workflow}
+\begin{enumerate}[label=\arabic*.]
+  \item \textbf{Data preparation:} cleaning, merging, reshaping, and building
+  data-quality gates that must pass before estimation proceeds.
+  \item \textbf{Estimation:} implementing and running econometric estimators
+  (panel methods, continuous-treatment diff-in-diff, event studies) and
+  comparing competing packages.
+  \item \textbf{Reproducibility \& code audits:} systematic protocols (e.g., a
+  ``Referee 2'' style audit) that verify whether a paper's code actually
+  produces its claimed results across languages.
+  \item \textbf{Literature \& paper parsing:} reading PDFs of academic papers to
+  extract methods, assumptions, and target parameters.
+  \item \textbf{Writing \& presentation:} drafting LaTeX/Quarto documents,
+  building slide decks, and automating reporting around the analysis.
+  \item \textbf{Project configuration:} \texttt{CLAUDE.md} templates, skills,
+  hooks, and rules that encode a lab's conventions so the agent behaves
+  consistently across sessions.
+\end{enumerate}
+
+\section{Best Practices and Guardrails}
+\begin{itemize}
+  \item \textbf{Verification over trust.} Agents can fabricate plausible but
+  wrong outputs when data or code is missing; results must be checked, not
+  assumed. Adopt a ``zero-error'' / always-verify philosophy.
+  \item \textbf{Human accountability.} Interpretation, identifying assumptions,
+  and final conclusions remain the researcher's responsibility; the agent is an
+  instrument, not an author.
+  \item \textbf{Reproducible scaffolding.} Version control, explicit project
+  rules, and audit protocols make agent contributions inspectable and
+  repeatable.
+  \item \textbf{Know the failure modes.} Reproducibility gains are strong when
+  data and code exist; accuracy degrades sharply on genuinely
+  non-reproducible tasks.
+\end{itemize}
+
+\section{The Scott Cunningham Perspective}
+Scott Cunningham (Professor of Economics, Baylor University; author of
+\emph{Causal Inference: The Mixtape}) has become a prominent applied voice on
+using Claude Code for empirical social science. His \emph{Scott's Mixtape}
+Substack pairs causal-inference teaching with an ongoing, hands-on series of
+walkthroughs on AI-assisted research: comparative audits of causal-inference
+packages, cross-language replication, PDF-reading skills for papers, mobile
+``Dispatch'' workflows, and reflective essays on AI-assisted discovery. He
+also maintains the open-source \texttt{MixtapeTools} repository of coding,
+teaching, and presentation utilities for AI-assisted research.
+
+\section{Outlook}
+Agentic AI is moving from a productivity aid to part of the methodological
+infrastructure of empirical research. The frontier questions are no longer
+``can the model write code?'' but ``how do we audit, attribute, and trust what
+the agent produced?''---making reproducibility tooling, verification
+protocols, and clear human accountability the central design problems for the
+next phase.
+
+\appendix
+\section{Appendix: Latest \emph{Scott's Mixtape} Newsletter}
+\textbf{Episode 14: ``Results from continuous diff-in-diff!''} (June 23, 2026).
+In this podcast episode (\textasciitilde75 min) Scott and co-host Caitlin obtain
+their first estimates of the different target parameters using a
+\emph{continuous-treatment difference-in-differences} estimator. They explain
+in detail how the estimator works and then walk through the analysis live,
+culminating in their reaction to seeing the output rendered in a finished
+slide deck. The post is a reader-supported publication with a call to subscribe
+(free or paid).\\[4pt]
+\noindent Link:
+\href{https://causalinf.substack.com/p/episode-14-results-from-continuous}{causalinf.substack.com/p/episode-14-results-from-continuous}
+
+\vspace{1em}
+\noindent\rule{\linewidth}{0.4pt}\\[2pt]
+{\footnotesize Sources consulted: Scott's Mixtape Substack
+(\href{https://causalinf.substack.com/}{causalinf.substack.com}, incl. the
+\href{https://causalinf.substack.com/s/claude-code}{Claude Code} series);
+\href{https://github.com/scunning1975/MixtapeTools}{MixtapeTools} repository;
+and 2026 arXiv studies on AI coding agents reproducing social-science findings.}
+
+\end{document}
