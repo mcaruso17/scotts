@@ -1,0 +1,146 @@
+\documentclass[11pt]{article}
+
+% --- Packages (standard, portable) ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black,
+  pdftitle={AI Applications in Research: The Use of Claude Code},
+  pdfauthor={Compiled summary}
+}
+
+\titleformat{\section}{\large\bfseries\color{blue!40!black}}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+\setlist[itemize]{leftmargin=1.4em, itemsep=2pt, topsep=2pt}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large The Use of Claude Code in Applied Empirical Work}
+\author{Summary document}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the use of agentic
+AI---and Claude Code in particular---in scholarly research, with a focus on
+applied empirical work in the social sciences. It draws on the public work of
+Scott Cunningham (\textit{Scott's Mixtape Substack}) and on Anthropic's
+empirical studies of how Claude Code is used in practice. The central theme is a
+shift from AI as an autonomous ``researcher'' to AI as a steered \emph{thinking
+and execution partner}, where returns accrue to the human's domain expertise.
+\end{abstract}
+
+\section{What is Claude Code, and why does it matter for research?}
+Claude Code is a command-line \emph{agentic} coding tool: rather than answering a
+single prompt, it operates inside a project, reads and writes files, runs
+commands, inspects results, and iterates toward a goal. For researchers, this
+turns a large language model from a text generator into a collaborator that can
+execute a full empirical pipeline---cleaning data, running estimators, producing
+figures, and drafting documentation---under human direction.
+
+\begin{itemize}
+  \item \textbf{From chat to agency.} The unit of work is a task in a real
+  repository, not an isolated message.
+  \item \textbf{Reproducibility by construction.} Work happens as code and
+  commits, leaving an auditable trail.
+  \item \textbf{Beyond software engineering.} Most online material treats these
+  tools abstractly or from a developer's point of view; the research frontier is
+  applying them to \emph{empirical, quantitative} scholarship.
+\end{itemize}
+
+\section{Core concepts}
+
+\subsection{Division of labor: planning vs.\ execution}
+A recurring finding is a clean split of decisions: the human makes most of the
+\emph{planning} decisions (\emph{what} to do), while the agent makes most of the
+\emph{execution} decisions (\emph{how} to do it). The researcher steers
+iteratively and lets the agent act when the next move is clear---``AI as a
+thinking partner rather than an autonomous agent.''
+
+\subsection{Persistent returns to expertise}
+Domain expertise---not raw coding proficiency---is what amplifies effective use:
+\begin{itemize}
+  \item Domain experts get \emph{more work done per instruction}.
+  \item Experts recover more easily from the agent's errors and
+  misunderstandings.
+  \item Used \emph{within} one's expertise, the tool \textbf{complements} skill;
+  used on tasks one does not understand, it tends to \textbf{substitute} for
+  missing expertise---which is where quality risk concentrates.
+\end{itemize}
+
+\subsection{Semi-autonomous empirical research}
+The active research question is the \emph{behavior of AI agents in
+semi-autonomous empirical research}: how reliably they reproduce results, where
+they go wrong, and how much supervision a given task requires. This motivates
+studying agents the way one would study any research instrument---characterizing
+their failure modes, not just their successes.
+
+\subsection{Workflows, skills, and scaffolding}
+Productive use depends less on the model and more on the surrounding
+\emph{workflow}: reusable instructions, project conventions (e.g.\ a
+\texttt{CLAUDE.md} manifest), and task-specific ``skills'' (such as turning notes
+into presentation-ready decks). The craft is in building scaffolding that makes
+the agent's execution decisions reliable.
+
+\section{Illustrative applications in empirical social science}
+\begin{itemize}
+  \item \textbf{Text classification at scale.} Reclassifying large text corpora
+  with an LLM (e.g.\ \texttt{gpt-4o-mini}) in place of a hand-tuned model.
+  \item \textbf{Replication.} Reproducing a published study---e.g.\ an NLP
+  analysis of $\sim$200{,}000 immigration speeches---and swapping the original
+  classifier for an LLM to test robustness.
+  \item \textbf{End-to-end pipelines.} Driving data cleaning, estimation,
+  figures, and write-up from a single steered session.
+  \item \textbf{Communication.} Generating slide decks and documentation from
+  research notes.
+\end{itemize}
+
+\section{Practical principles}
+\begin{enumerate}[leftmargin=1.6em]
+  \item \textbf{Stay in your domain.} The tool's value is highest where you can
+  judge the output; treat work outside your expertise with extra scrutiny.
+  \item \textbf{Plan, then delegate execution.} Decide \emph{what}; let the agent
+  decide \emph{how}, and verify.
+  \item \textbf{Invest in scaffolding.} Conventions, manifests, and reusable
+  skills pay back across projects.
+  \item \textbf{Verify, don't trust.} Re-run, cross-check estimates, and review
+  the diff---the agent can be confidently wrong.
+  \item \textbf{Keep an audit trail.} Commits and code make empirical work
+  reproducible and reviewable.
+\end{enumerate}
+
+\section{Open questions and outlook}
+How much of the research process can be safely delegated, how peer review and
+publishing adapt when execution is cheap, and how expertise is valued when
+agents handle the mechanics---these remain open. The near-term expectation is
+not full autonomy but \emph{augmentation}: expert researchers steering capable
+agents, with quality still gated by human judgment.
+
+\section*{Selected resources}
+\begin{itemize}
+  \item Scott Cunningham, \textit{Scott's Mixtape Substack} ---
+  \href{https://causalinf.substack.com/}{causalinf.substack.com} (incl.\ the
+  \href{https://causalinf.substack.com/s/claude-code}{Claude Code} series).
+  \item Anthropic, \textit{How Claude Code is used in practice / Agentic coding
+  and persistent returns to expertise} ---
+  \href{https://www.anthropic.com/research/claude-code-expertise}{anthropic.com/research/claude-code-expertise}.
+  \item Anthropic, \textit{Coding agents in the social sciences} ---
+  \href{https://www.anthropic.com/research/coding-agents-social-sciences}{anthropic.com/research/coding-agents-social-sciences}.
+  \item C.\ Backman, \textit{Claude Code in VS Code --- For Academic Economists}
+  --- \href{https://claesbackman.com/claude-code-guide.html}{claesbackman.com/claude-code-guide.html}.
+  \item S.\ Cunningham, \textit{MixtapeTools} (GitHub) ---
+  \href{https://github.com/scunning1975/MixtapeTools}{github.com/scunning1975/MixtapeTools}.
+\end{itemize}
+
+\end{document}
