@@ -1,0 +1,206 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: Concepts from Scott Cunningham's
+%  "Claude Code" series on applied empirical social science
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue!60!black,
+  citecolor=black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\setlist[itemize]{itemsep=2pt, topsep=3pt}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Main Concepts in the Use of Claude Code for Applied Empirical Work}
+\author{Compiled from Scott Cunningham's \emph{Scott's Mixtape Substack}}
+\date{27 June 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent This document summarises the main concepts surrounding the use of
+AI agents---and Claude Code in particular---as tools for empirical research,
+drawing on the practitioner experiments documented by economist Scott
+Cunningham in the ongoing ``Claude Code'' series of his newsletter. The focus
+is the use of large-language-model coding agents in quantitative social
+science: how they reshape the research workflow, the new categories of error
+they introduce, and the disciplines that keep AI-assisted research credible.
+\end{abstract}
+
+\section{Overview}
+
+AI coding agents such as Claude Code have moved from a developer novelty to a
+practical instrument for applied empirical research. Rather than treating the
+agent as an autonomous worker that is handed a task and left to ``rip,''
+Cunningham's central position is that the agent is best used as a
+\textbf{thinking partner}: the researcher co-authors the analysis in real time
+through dialogue, steering iteratively and retaining ownership of every
+methodological decision. The concepts below organise what this looks like in
+practice and where it goes wrong.
+
+\section{Main Themes}
+
+\begin{description}[leftmargin=1.2em, style=nextline]
+  \item[1. The agent as collaborator, not autopilot.] AI is most reliable for
+  research when used conversationally and supervised continuously, not as a
+  multi-step orchestration that runs unattended.
+  \item[2. Reproducible workflows, automated.] Claude Code natively produces
+  the disciplines researchers spent years building by hand---consistent naming,
+  organised directories, scripted pipelines, auto-generated tables and figures,
+  and Git version control.
+  \item[3. New errors for old.] Automation does not eliminate error; it
+  relocates it to places a researcher's trained instincts no longer monitor.
+  \item[4. Methodological pre-commitment.] Clearly articulating the estimand
+  and design \emph{before} delegating the coding is the single most important
+  safeguard against AI-driven specification search.
+  \item[5. Human capital still decides.] Deep domain expertise---not the tool---is
+  what catches results that ``make no sense.''
+  \item[6. Research yes, classroom caution.] Cunningham is strongly supportive
+  of AI for research yet wary of AI in teaching, where incentives drift from
+  learning toward grades.
+\end{description}
+
+\section{Key Concepts and Insights}
+
+\subsection{Claude Code as a research thinking partner}
+\begin{itemize}
+  \item The recommended mode is dialogue-driven co-authoring---long,
+  conversational prompts---rather than dictating tasks or designing elaborate
+  ``plan mode'' orchestrations and stepping away.
+  \item Deliberately \emph{less} automation than many practitioners prefer keeps
+  the researcher in the loop at every decision point.
+\end{itemize}
+
+\subsection{The reproducibility dividend}
+\begin{itemize}
+  \item Claude Code automatically delivers replicable code, well-organised
+  directories, consistent file-naming conventions, and auto-produced exhibits.
+  \item Because Git operations are accessible to the agent, version control
+  becomes straightforward rather than an afterthought.
+\end{itemize}
+
+\subsection{``Drift'' and ``amnesia'': the new failure mode}
+\begin{itemize}
+  \item \textbf{Drift} is the silent shifting of a project's foundations---a
+  script that was never actually written down, an analytical sample that mutates
+  over time, treatment units that subtly change from where they were months
+  earlier.
+  \item These errors surface \emph{outside} the locations where an experienced
+  researcher expects errors, so they are not caught in real time.
+  \item A ``Claude mess'' is a \emph{well-designed sprawl}: it does not look like
+  a mess, which makes it harder to recognise, diagnose, and fix than an
+  ordinary human mess.
+  \item Putting a project down for even two days can leave the researcher
+  ``amnesiac,'' because the scaffolding was generated by the agent rather than
+  memorised through hands-on repetition.
+\end{itemize}
+
+\subsection{Specification search and the case for pre-registration}
+\begin{itemize}
+  \item Left to automate freely, an agent can effectively \emph{specification
+  search}---trying methods until one does not contradict the prompt and then
+  writing up only that result.
+  \item Decisions may be quietly stored by the agent (e.g.\ in a JSON log),
+  meaning ``more is happening under the hood'' than the visible write-up reveals.
+  \item The remedy is \textbf{forward engineering}: pre-register the design,
+  write down the target population estimand in potential-outcomes terms, and fix
+  the aggregation \emph{before} delegating the coding.
+\end{itemize}
+
+\subsection{Human capital as the last line of defence}
+\begin{itemize}
+  \item Expertise built through thousands of repetitions---Cunningham's example
+  is the Callaway \& Sant'Anna difference-in-differences estimator---lets a
+  researcher know immediately when output (e.g.\ unexpected \texttt{NA}s) cannot
+  be right.
+  \item This ``human capital'' is what AI cannot supply; it is precisely why the
+  researcher must remain the methodological authority over the agent.
+\end{itemize}
+
+\subsection{Building a harness and checklists}
+\begin{itemize}
+  \item Cunningham is sceptical that a single \texttt{/skill} solves drift;
+  he favours a small set of 5--6 habitual policies that make errors
+  \emph{knowable and controllable}.
+  \item He is developing a personal ``harness''---including daily reading of
+  progress logs (a ``beautiful deck'' concept)---to reconstruct project state
+  and combat amnesia.
+  \item Applied econometrics with AI ``will require a detailed checklist'':
+  systematically working through known pitfalls is how silent errors get caught.
+\end{itemize}
+
+\subsection{AI in peer review and replication}
+\begin{itemize}
+  \item AI agents can support the referee process---e.g.\ replication audits---%
+  \emph{without} having the agent write the referee report itself.
+  \item A representative experiment uses Claude Code to replicate an empirical
+  pipeline from scratch across multiple languages and packages
+  (Python, R, Stata), with difference-in-differences as the test case.
+\end{itemize}
+
+\subsection{Research versus the classroom}
+\begin{itemize}
+  \item Using AI for research is endorsed; conversing with a coding agent is
+  ``trivially easy'' and not the hard skill worth fretting over.
+  \item In teaching, Cunningham leans against AI because allowing it tilted
+  incentives toward grades and away from genuinely learning econometrics---the
+  scarce, hard-won skill.
+  \item Forward-looking: an informal ``AI agents club'' for research (not a
+  hackathon) is planned at Baylor.
+\end{itemize}
+
+\section{Practical Takeaways}
+
+\begin{enumerate}[leftmargin=1.5em]
+  \item Treat the agent as a collaborator under continuous supervision, not an
+  autonomous worker.
+  \item Pre-register the estimand and design before delegating any code.
+  \item Assume errors have merely \emph{moved}; build checklists and audits to
+  find them where your instincts no longer look.
+  \item Keep and read progress logs so project state survives time away.
+  \item Never outsource the methodological judgement that only domain human
+  capital provides.
+\end{enumerate}
+
+\section{Sources and Further Reading}
+
+\begin{itemize}
+  \item Scott's Mixtape Substack --- \url{https://causalinf.substack.com}
+  \item Claude Code series landing page ---
+  \url{https://causalinf.substack.com/s/claude-code}
+  \item ``Claude Code 53: Applied econometrics will require a detailed
+  checklist'' ---
+  \url{https://causalinf.substack.com/p/claude-code-53-applied-econometrics}
+  \item ``Claude Code 54: Amnesia'' ---
+  \url{https://causalinf.substack.com/p/claude-code-54-amnesia}
+  \item MixtapeTools (companion repository) ---
+  \url{https://github.com/scunning1975/MixtapeTools}
+  \item Baker, Callaway, Cunningham, Goodman-Bacon \& Sant'Anna,
+  ``Difference-in-Differences: A Practitioner's Guide,''
+  \emph{Journal of Economic Literature}, 2026 (referenced for the
+  forward-engineering approach).
+\end{itemize}
+
+\vfill
+\noindent\rule{\linewidth}{0.4pt}\\[0.3em]
+{\small Compiled 27 June 2026 from publicly published newsletter content for
+summary purposes. All views summarised are the author's (Scott Cunningham).}
+
+\end{document}
