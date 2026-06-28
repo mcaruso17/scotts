@@ -1,0 +1,259 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Agentic Coding and the Use of Claude Code in Empirical Work}
+\author{Summary compiled from Scott Cunningham's \emph{Scott's Mixtape Substack}}
+\date{June 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts surrounding the application of
+artificial intelligence to scientific research, with particular emphasis on
+\textbf{Claude Code} as a tool for empirical, econometric work. It synthesizes the
+recurring themes from Scott Cunningham's ongoing ``Claude Code'' newsletter series:
+the productivity gains of agentic coding, the new and unfamiliar classes of error it
+introduces, and the workflows and habits researchers must build to keep error
+controllable. The central thesis is that AI agents \emph{solve old problems and create
+new ones}, and that the researcher's job is to design systems that solve the new ones
+while insisting on zero error.
+\end{abstract}
+
+\tableofcontents
+\vspace{1em}
+
+%========================================================
+\section{What AI Agents Bring to Research}
+%========================================================
+
+Agentic coding tools such as Claude Code act as a co-author for the empirical research
+pipeline rather than as a passive autocomplete. In Cunningham's account, they
+automatically deliver many of the disciplines that a careful researcher would otherwise
+build by hand over years:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Replicable code.} The agent produces scripts and pipelines rather than
+        one-off interactive commands.
+  \item \textbf{Organized project structure.} Consistent directory layouts, naming
+        conventions, and folder hygiene are produced by default.
+  \item \textbf{Automated exhibits.} Figures and tables are generated programmatically
+        and regenerated as the analysis changes.
+  \item \textbf{Built-in version control.} Git operations are accessible, so versioning
+        becomes a natural part of the workflow.
+  \item \textbf{Lower mechanical error rate.} The kinds of clerical coding mistakes that
+        plague hand-written analysis become rarer.
+\end{itemize}
+
+\noindent For a researcher these properties look like the next step in a decades-long
+evolution toward greater precision and fewer errors --- which is exactly why the new
+risks are so easy to miss.
+
+%========================================================
+\section{The New Problems: Drift, Amnesia, and Reasoning Errors}
+%========================================================
+
+The core insight of the series is that AI agents do not eliminate error; they
+\emph{relocate} it to places the researcher is not trained to inspect.
+
+\subsection{Drift}
+Because so much work happens conversationally and in real time, the analysis can quietly
+move off its foundations:
+\begin{itemize}[leftmargin=1.5em]
+  \item Scripts believed to exist were never actually written down --- they were
+        improvised during dialogue and lost.
+  \item The analytical sample shifts over time, implying a script is being modified
+        unknowingly.
+  \item Treatment units subtly change from what they were weeks earlier.
+\end{itemize}
+The danger is that this drift is \textbf{not caught in real time} and surfaces outside
+the usual locations where a researcher expects errors to appear.
+
+\subsection{``Claude messes'' versus human messes}
+A proliferation of scripts and stale exhibits is a modern version of the old
+``ten dated copies of a file'' problem. But an agent's mess does not \emph{look} like a
+mess --- it is a ``well-designed kind of sprawl,'' which makes it harder to recognize,
+diagnose, and fix.
+
+\subsection{Loss of ``psychological verification''}
+When a researcher writes code by hand, even buggy code carries an
+``epistemological feeling'': they know what produced what, and where results
+originated. Agents cleanly separate \emph{production} from \emph{verification}, so this
+felt confidence is lost --- the same blind spot that managers relying on research
+assistants already face.
+
+\subsection{Specification search}
+Left to plan-and-let-it-rip autonomy, an agent may effectively \textbf{specification
+search}: trying methods until one does not contradict the prompt, then writing only that
+up. Many decisions are stored silently (e.g.\ in a JSON log) and are far more numerous
+than the researcher expects --- ``like turning over a rock and finding weird bugs.''
+These are \textbf{reasoning errors}, not coding errors, and are hard to detect when you
+are not in the driver's seat.
+
+%========================================================
+\section{Why Domain Expertise Matters \emph{More}, Not Less}
+%========================================================
+
+A central, counterintuitive claim:
+
+\begin{quote}
+\itshape The returns to econometrics knowledge with Claude Code are higher, not lower ---
+because automation does not mean verification.
+\end{quote}
+
+\noindent Cunningham illustrates this with a multi-hour debugging episode using the
+Callaway and Sant'Anna staggered difference-in-differences estimator (\texttt{CSDID}).
+Two agents, each running plausible conjectures, repeatedly reached confident but
+\emph{wrong} conclusions. The true cause --- a package installed from CRAN rather than the
+newer GitHub version --- was found only because the researcher's deep
+``human capital'' in the method told him the \texttt{NA} results were impossible.
+The lesson: an expert can recognize a true-versus-false-looking answer; without that
+expertise, one simply loses the battle without knowing it.
+
+\paragraph{Implication.} Claims that applied econometrics can be fully automated
+underestimate how many subtle, non-coding mistakes agents make. The human's comparative
+advantage shifts from \emph{producing} code to \emph{specifying} and \emph{verifying} it.
+
+%========================================================
+\section{Recommended Practices for AI-Assisted Research}
+%========================================================
+
+The series converges on a set of habits rather than a single tool or ``skill.''
+
+\subsection{Insist on zero error}
+The non-negotiable constraint is \textbf{zero error}. Make zero error the objective and
+treat every other element of the workflow --- tools, prompts, checklists --- as an
+endogenous choice variable selected to achieve it. The agent does not bear the cost of
+mistakes; the researcher does.
+
+\subsection{Forward engineering and pre-registration}
+Define the target before automating:
+\begin{itemize}[leftmargin=1.5em]
+  \item Name the causal estimand precisely using potential outcomes --- specify the
+        population and the weighted average, not merely ``the ATT.''
+  \item Write down, up front, which aggregation will be targeted.
+  \item Pre-register, at least informally, so the agent cannot drift into a convenient
+        specification.
+\end{itemize}
+This ``forward engineering'' mindset follows Baker et al.\ (2026),
+\emph{Difference-in-Differences: A Practitioner's Guide}, \emph{Journal of Economic
+Literature}.
+
+\subsection{Structured analog workflows (checklists)}
+Drawing on Atul Gawande's \emph{The Checklist Manifesto}, the recommendation is a small
+set of habitual steps --- not a software ``skill'' --- that make errors knowable and
+controllable. A condensed version of Cunningham's staggered-adoption checklist:
+\begin{enumerate}[leftmargin=1.7em]
+  \item Name the estimand in potential outcomes, with weights and population.
+  \item Tabulate treated units by cohort with sample shares (and never-treated counts).
+  \item Plot the treatment rollout (e.g.\ Xu's \texttt{panelview}).
+  \item Choose covariates with an explicit method for conditional parallel trends;
+        check normalized differences in means (include if $|{\cdot}| > 0.25$).
+  \item Plot outcome-mean evolution by cohort, including the never-treated.
+  \item Run the estimator with honest confidence intervals and event-study
+        falsifications (using a universal baseline).
+\end{enumerate}
+Going systematically through such a list --- and not advancing until each step is
+complete --- is what lets an expert spot problems just by looking at the output.
+
+\subsection{Stay in the driver's seat}
+Avoid the ``plan once, then let it rip'' pattern that places blind confidence in
+automation. Co-author the process, keep verification a human act, and be skeptical of
+confident agent conclusions.
+
+\subsection{Build systems endogenous to your own constraints}
+Every researcher has a different production function (Cunningham frames this via
+comparative advantage). A verification style that works for one person may not work for
+another; the goal is not to pass around shared skills but for each researcher to design
+the workflow that achieves zero error \emph{for them}.
+
+%========================================================
+\section{Tooling: The ``Harness'' and Dashboard Concept}
+%========================================================
+
+To operationalize these habits, Cunningham is building a personal ``harness'' --- the
+physical capture of his research workflow --- including a \texttt{gtd} dashboard
+(after David Allen's \emph{Getting Things Done}):
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Clickable exhibit ``cards.''} Figures and tables become cards that
+        enlarge and flip to reveal the exact code that produced them --- building
+        ``psychological verification'' back into the workflow.
+  \item \textbf{Progress logs and a ``beautiful deck.''} Claude writes progress logs
+        after each major session; a daily script reads them and renders an HTML deck in
+        the dashboard's side panel to re-orient the researcher after time away --- an
+        explicit countermeasure to project ``amnesia.''
+  \item \textbf{Analog mapping.} A large physical notebook to map what the agent is
+        doing, because the agent ``has too much latitude.''
+\end{itemize}
+
+%========================================================
+\section{Teaching, Learning, and Research}
+%========================================================
+
+Cunningham distinguishes sharply between AI \emph{for research} and AI \emph{in the
+classroom}:
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Supportive of AI for research.} He plans an informal ``AI agents club''
+        at Baylor focused on using agents for empirical work --- not a hackathon.
+  \item \textbf{Cautious about AI in classes.} The goal of education should be
+        \emph{learning, not grades}; allowing AI tended to tilt incentives toward grades.
+        Conversing with Claude Code is ``trivially easy''; learning econometrics and
+        empirical skills is not --- and the latter is what matters.
+\end{itemize}
+
+%========================================================
+\section{Key Takeaways}
+%========================================================
+
+\begin{enumerate}[leftmargin=1.7em]
+  \item AI agents deliver replicability, organization, and automated exhibits ``for
+        free,'' lowering the mechanical error rate.
+  \item They introduce new failure modes --- drift, amnesia, disguised messes, lost
+        verification confidence, and silent specification search.
+  \item These new errors are \emph{reasoning} errors, surfacing outside a researcher's
+        habitual inspection points.
+  \item Domain expertise becomes \emph{more} valuable, because automation does not
+        provide verification.
+  \item The durable solution is human discipline: zero-error as the binding constraint,
+        forward-engineered estimands, pre-registration, and checklists --- supported by
+        tooling like a harness/dashboard --- rather than reliance on any single
+        automated ``skill.''
+\end{enumerate}
+
+%========================================================
+\section*{Sources}
+%========================================================
+\addcontentsline{toc}{section}{Sources}
+\begin{itemize}[leftmargin=1.5em]
+  \item Scott Cunningham, ``Claude Code 53: Applied econometrics will require a detailed
+        checklist,'' \emph{Scott's Mixtape Substack}, June 2026.\\
+        \url{https://causalinf.substack.com/p/claude-code-53-applied-econometrics}
+  \item Scott Cunningham, ``Claude Code 54: Amnesia,'' \emph{Scott's Mixtape Substack},
+        June 2026.\\
+        \url{https://causalinf.substack.com/p/claude-code-54-amnesia}
+  \item Scott Cunningham, ``6 countries, 10 cities, 46 days,'' \emph{Scott's Mixtape
+        Substack}, June 2026.\\
+        \url{https://causalinf.substack.com/p/6-countries-10-cities-46-days}
+  \item Baker, Callaway, Cunningham, Goodman-Bacon, and Sant'Anna (2026),
+        ``Difference-in-Differences: A Practitioner's Guide,'' \emph{Journal of Economic
+        Literature}.
+\end{itemize}
+
+\end{document}
