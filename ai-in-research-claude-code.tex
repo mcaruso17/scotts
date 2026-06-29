@@ -1,0 +1,209 @@
+\documentclass[11pt]{article}
+
+% ----------------------------------------------------------------------
+%  AI Applications in Research: The Use of Claude Code
+%  A conceptual summary, motivated by Scott Cunningham's "Mixtape"
+%  Substack series on Claude Code for quantitative social science.
+% ----------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  urlcolor=blue!50!black,
+  citecolor=blue!50!black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\setlist{itemsep=2pt, topsep=3pt}
+
+\newtcolorbox{keybox}[1]{colback=gray!6, colframe=gray!40,
+  title={#1}, fonttitle=\bfseries, boxrule=0.4pt}
+
+\title{\textbf{AI Applications in Research}\\[2pt]
+       \large Concepts for the Use of Claude Code in Applied Empirical Work}
+\author{Compiled summary}
+\date{June 29, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the use of
+agentic AI---specifically \textbf{Claude Code}---in research, drawing on the
+practitioner workflow developed in Scott Cunningham's ``Mixtape'' Substack
+series and his companion \texttt{MixtapeTools} repository. The central thesis
+is that AI agents have \emph{unbundled} the historically fused activities of
+\emph{producing} research and \emph{verifying} it. Where the production of
+code, data pipelines, and prose can now be substantially delegated to an
+agent, the researcher's distinctive value shifts toward \emph{specification},
+\emph{steering}, and \emph{adversarial verification}. The document lays out
+the workflow philosophy, the verification protocols, and the broader
+implications for empirical social science.
+\end{abstract}
+
+\section{Background and motivation}
+Large language model (LLM) ``agents''---tools that can read a codebase, run
+commands, edit files, and iterate toward a goal---have moved from autocomplete
+assistants to collaborators capable of executing multi-step research tasks.
+\textbf{Claude Code} is a command-line agent of this kind: pointed at a project
+directory, it can read existing scripts, replicate analyses, write and run code
+across languages (R, Stata, Python), draft documentation, and build
+presentations. Most public material on such tools is either abstract or written
+from a software-engineering point of view; the contribution of the Mixtape
+series is to demonstrate the workflow concretely for \emph{applied empirical
+research} in the social sciences.
+
+\section{The core thesis: unbundling production from verification}
+\begin{keybox}{Central idea}
+Historically, the act of producing a research result and the act of being
+confident it is correct were \emph{bundled}: you trusted the analysis partly
+because you wrote every line of it yourself. Agentic AI breaks that bundle.
+Production can be delegated; \textbf{verification cannot}. The new core task of
+the researcher is to verify what the agent produces.
+\end{keybox}
+
+\noindent Consequences of this reframing:
+\begin{itemize}
+  \item Writing code is no longer the scarce skill; \emph{judging} whether the
+        code is correct, identified, and well-specified is.
+  \item Trust must be \emph{manufactured} deliberately through process, rather
+        than assumed as a by-product of having done the typing.
+  \item Verification becomes a first-class, designed activity with its own
+        tools, protocols, and artifacts---not an afterthought.
+\end{itemize}
+
+\section{Workflow philosophy: the agent as thinking partner}
+The recommended stance is \textbf{Claude as a thinking partner, not as an
+autonomous pipeline}. The human steers iteratively; the agent surfaces
+ambiguity and executes once the next move is clear.
+
+\begin{itemize}
+  \item \textbf{The dialogue is the work.} Conversation is not merely a
+        delivery mechanism for output---the back-and-forth of clarifying intent
+        \emph{is} the research thinking.
+  \item \textbf{Design before results.} Fix specifications intentionally
+        \emph{before} looking at outcomes, to avoid result-driven rationalization.
+  \item \textbf{Iterative steering.} The human makes directional choices at each
+        fork; the agent fills in the mechanical execution.
+  \item \textbf{Documentation as artifact.} ``Unfiled work is invisible work''---
+        decisions and rationale are written down as durable Markdown.
+  \item \textbf{External memory.} Persisting context to Markdown files
+        compensates for the agent's session amnesia, giving the project a
+        memory that outlives any single conversation.
+\end{itemize}
+
+\section{Verification protocols}
+A distinguishing feature of the approach is a set of named, repeatable audit
+protocols---essentially a quality-assurance regime for AI-assisted research.
+
+\subsection*{Cross-software replication}
+Independently re-implement the same analysis in more than one language
+(e.g.\ R, Stata, and Python) and compare results to many decimal places.
+Agreement to 6+ decimals across independent stacks catches single-language
+bugs that no amount of re-reading one script would reveal.
+
+\subsection*{Referee 2 --- the five-audit protocol}
+A systematic post-project audit run in a \textbf{fresh terminal} by a Claude
+instance with \emph{no prior context}, which never modifies the author's code
+and only writes independent replication scripts. The five audits:
+\begin{enumerate}
+  \item \textbf{Code audit} --- errors, merges, variable construction.
+  \item \textbf{Cross-language replication} --- numerical comparison across stacks.
+  \item \textbf{Directory and naming} --- structure and conventions.
+  \item \textbf{Output automation} --- programmatic vs.\ manual generation.
+  \item \textbf{Econometric specification} --- identification and standard errors.
+\end{enumerate}
+
+\subsection*{Blindspot --- a perception audit}
+A complementary ``peripheral vision'' audit that looks for what the author
+\emph{cannot see}: problems hiding in plain sight and overlooked
+opportunities, organized on a $2\times2$ grid of vices and virtues. It is
+framed by Shklovsky's notion of making ``the stone stony again''---restoring
+perception to things rendered invisible by familiarity. Referee~2 targets
+implementation correctness; Blindspot targets perceptual clarity; both should
+run at different project stages.
+
+\subsection*{Bibcheck and other narrow audits}
+A multi-agent bibliography audit spawns one agent per citation (or per field:
+journal, authors, DOI) to catch transcription errors and metadata drift. The
+pattern generalizes: decompose a verification task and assign each narrow slice
+to a focused agent.
+
+\section{Design principles for trustworthy AI-assisted research}
+\begin{keybox}{Principles}
+\begin{itemize}
+  \item \textbf{Structural independence.} Adversarial review happens in a fresh
+        session with no memory of the work, to prevent rationalization bias.
+  \item \textbf{Formal process over intuition.} Documented checklists and
+        protocols beat informal judgment.
+  \item \textbf{Falsifiability.} Research claims are filed as warrants with
+        explicit, recoverable evidence (the work-in-progress ``GTD research
+        harness'').
+  \item \textbf{Replication-package readiness.} Directory and automation audits
+        ensure outputs are reproducible by others, not just by the author.
+\end{itemize}
+\end{keybox}
+
+\section{Beyond analysis: writing, slides, and reading}
+The same agentic workflow extends across the research lifecycle:
+\begin{itemize}
+  \item \textbf{Deep reading.} A split-PDF pipeline chunks papers into short
+        segments, reads them incrementally, and extracts structured notes
+        across multiple dimensions.
+  \item \textbf{Presentations.} End-to-end Beamer/\LaTeX{} deck generation with
+        a pedagogical sequence (narrative $\rightarrow$ application
+        $\rightarrow$ picture $\rightarrow$ code $\rightarrow$ technical) and
+        zero-warning compilation, including a TikZ collision audit that detects
+        and fixes overlapping diagram elements.
+  \item \textbf{Text classification.} Using LLMs to reclassify text data
+        (e.g.\ with smaller models) as a research task in its own right.
+\end{itemize}
+
+\section{Implications for empirical social science}
+\begin{itemize}
+  \item The comparative advantage of the researcher migrates ``up the stack'':
+        from execution toward problem framing, identification strategy, and
+        verification design.
+  \item Reproducibility improves when cross-software replication and structured
+        audits are routine rather than exceptional.
+  \item New risks emerge---automation bias, plausible-but-wrong output, and
+        over-trust---which the verification-first discipline is explicitly
+        designed to counter.
+  \item Pedagogy shifts: teaching now includes \emph{how to steer and verify}
+        an agent, not only how to write code from scratch.
+\end{itemize}
+
+\section{Key takeaways}
+\begin{enumerate}
+  \item AI agents unbundle production from verification; verification becomes
+        the researcher's core job.
+  \item Treat the agent as a thinking partner under iterative human steering,
+        not as an autonomous pipeline.
+  \item Manufacture trust through process: cross-language replication,
+        fresh-context adversarial audits, and documented protocols.
+  \item Persist context and decisions as durable external memory.
+  \item Extend the workflow across the whole lifecycle---reading, analysis,
+        writing, and presentation.
+\end{enumerate}
+
+\section*{Sources and further reading}
+\begin{itemize}
+  \item Scott's Mixtape Substack --- \url{https://causalinf.substack.com/}
+  \item ``Claude Code'' series (section) ---
+        \url{https://causalinf.substack.com/s/claude-code}
+  \item About the newsletter ---
+        \url{https://causalinf.substack.com/about}
+  \item \texttt{MixtapeTools} repository (templates, protocols, and Claude Code
+        skills) --- \url{https://github.com/scunning1975/MixtapeTools}
+\end{itemize}
+
+\end{document}
