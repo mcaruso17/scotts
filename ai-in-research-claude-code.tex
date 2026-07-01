@@ -1,0 +1,202 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: The Use of Claude Code
+%  A concise conceptual summary
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{parskip}
+\usepackage{xcolor}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!50!black,
+    urlcolor=blue!60!black,
+    citecolor=blue!50!black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Core Concepts and the Use of Claude Code}
+\author{Research Notes}
+\date{July 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the growing use of
+artificial intelligence---and \emph{AI coding agents} such as
+\href{https://www.anthropic.com/claude-code}{Claude Code} in
+particular---across the modern research workflow. It is framed around empirical
+and computational research (e.g.\ econometrics, causal inference, and the data
+sciences), where AI agents are increasingly used not to replace domain expertise
+but to accelerate the mechanical work that surrounds it. The emphasis
+throughout is that AI is most valuable as a \emph{tool for research}, while the
+underlying methodological skill remains the researcher's own responsibility.
+\end{abstract}
+
+\section{Introduction}
+
+Large language models (LLMs) have moved from novelty to infrastructure in the
+research process. The most recent shift is the arrival of \emph{agentic} AI:
+systems that do not merely answer a prompt but plan, execute, inspect their own
+output, and iterate against a real environment---a terminal, a code base, a data
+set. \textbf{Claude Code} is Anthropic's command-line coding agent built on the
+Claude family of models; it operates directly inside a project directory, can
+read and edit files, run programs, and drive multi-step tasks under the
+researcher's supervision.
+
+The central premise of this summary is a distinction increasingly voiced by
+practising empirical researchers: using an AI agent is \emph{trivially easy to
+learn}, whereas the substantive craft---econometrics, identification, careful
+empirical design---is \emph{not}. AI is therefore best understood as a force
+multiplier for a skilled researcher, not a substitute for the skills themselves.
+
+\section{Main Themes}
+
+\begin{enumerate}[leftmargin=1.4em]
+    \item \textbf{AI as a research tool, not a research shortcut.} Agents
+    compress the time cost of implementation, freeing the researcher to spend
+    scarce attention on questions, identification, and interpretation.
+    \item \textbf{Agentic coding.} The step-change from ``chatbot'' to ``agent''
+    that can act on a real project with feedback loops.
+    \item \textbf{Reproducibility and rigor.} AI can strengthen---or quietly
+    erode---the reliability of results, depending on how it is supervised.
+    \item \textbf{Learning versus grades.} In teaching, AI helps most when it
+    serves genuine learning and least when it becomes a route around it.
+    \item \textbf{Democratizing method.} Agents help spread advanced empirical
+    techniques to communities and regions where they have lagged.
+\end{enumerate}
+
+\section{What Claude Code Is}
+
+Claude Code is a terminal-native coding agent. In practical terms it can:
+
+\begin{itemize}[leftmargin=1.4em]
+    \item Read, search, and edit files across an entire project.
+    \item Run shell commands, execute scripts, and read back their output.
+    \item Plan and carry out multi-step tasks, correcting itself from errors.
+    \item Use version control (branching, committing) and open pull requests.
+    \item Connect to external tools and data through the Model Context Protocol
+    (MCP), and run non-interactively in scripts, CI, or scheduled jobs.
+\end{itemize}
+
+Because it lives where the work lives---the file system and the shell---it fits
+naturally into a computational research pipeline rather than sitting beside it in
+a separate chat window.
+
+\section{Applications Across the Research Workflow}
+
+\subsection{Data acquisition and cleaning}
+Writing scrapers and API clients, reshaping messy data, documenting variable
+construction, and generating the tedious ``plumbing'' code that dominates early
+project time.
+
+\subsection{Analysis and modelling}
+Implementing estimators, translating a method from paper to code, porting
+analyses between languages (e.g.\ Stata~$\leftrightarrow$~R~$\leftrightarrow$~Python),
+and building simulations to check that an estimator behaves as theory predicts.
+In causal inference specifically, agents can scaffold designs such as
+difference-in-differences, synthetic control, instrumental variables, and
+regression discontinuity---leaving the researcher to make the identifying
+assumptions and defend them.
+
+\subsection{Reproducibility and engineering}
+Refactoring analysis scripts into reproducible pipelines, adding tests that guard
+against silent errors, writing documentation, and containerizing environments so
+results can be regenerated by others.
+
+\subsection{Writing and communication}
+Drafting and revising prose, generating figures and tables, formatting
+\LaTeX{} manuscripts, summarizing literatures, and preparing referee reports and
+slides---always subject to the author's judgment and verification.
+
+\subsection{Literature and synthesis}
+Rapidly surveying prior work, extracting structured information from many papers,
+and organizing notes---useful for orientation, provided claims are traced back to
+primary sources.
+
+\section{Benefits}
+
+\begin{itemize}[leftmargin=1.4em]
+    \item \textbf{Speed.} Order-of-magnitude reductions in the time to a working
+    prototype or a clean data set.
+    \item \textbf{Lower barriers.} Researchers can attempt techniques and
+    languages outside their prior training, widening access to modern methods.
+    \item \textbf{Focus.} Human attention shifts from syntax and boilerplate to
+    the intellectually hard parts---design, identification, interpretation.
+    \item \textbf{Iteration.} Cheap experimentation encourages more robustness
+    checks, alternative specifications, and simulation-based validation.
+\end{itemize}
+
+\section{Risks and Limitations}
+
+\begin{itemize}[leftmargin=1.4em]
+    \item \textbf{Plausible-but-wrong output.} LLMs can produce confident,
+    subtly incorrect code or claims; unverified results are a liability.
+    \item \textbf{Erosion of skill.} Over-reliance can crowd out the very
+    learning that makes a researcher able to judge the output.
+    \item \textbf{Reproducibility drift.} Non-deterministic assistance must be
+    pinned down in scripts and version control to remain reproducible.
+    \item \textbf{Data governance.} Sensitive or confidential data requires care
+    about what is shared with external services.
+    \item \textbf{Incentive distortion in teaching.} When AI is permitted
+    without design, incentives tilt toward grades and away from learning.
+\end{itemize}
+
+\section{Best Practices for Research Use}
+
+\begin{enumerate}[leftmargin=1.4em]
+    \item \textbf{Verify everything.} Treat AI output as a draft to be checked,
+    tested, and reconciled with theory---never as an authority.
+    \item \textbf{Keep the human in the loop.} Own the assumptions, the
+    identification strategy, and the final interpretation.
+    \item \textbf{Version control.} Commit early and often so every AI-assisted
+    change is auditable and reversible.
+    \item \textbf{Test and validate.} Use unit tests and simulations to confirm
+    estimators recover known truths.
+    \item \textbf{Protect data.} Be deliberate about what leaves the local
+    environment.
+    \item \textbf{Learn the method first.} Use AI to implement what you
+    understand, not to substitute for understanding it.
+\end{enumerate}
+
+\section{Teaching and the Learning-First Principle}
+
+A recurring theme among empirical educators is that the goal of training should
+be \emph{learning, not grades}. Conversing with an AI agent is easy to pick up
+and does not require formal instruction; mastering econometrics and empirical
+craft does. The practical stance that follows is to be enthusiastic about AI as a
+\emph{research} tool while remaining cautious about AI in the \emph{classroom},
+where it can quietly displace the effortful practice that builds real skill.
+Informal, low-stakes settings---an ``AI agents for research'' club rather than a
+graded assignment---let students explore the tools without corrupting the
+incentives to learn the fundamentals.
+
+\section{Conclusion}
+
+AI agents such as Claude Code are becoming a standard part of the empirical
+researcher's toolkit. Their value is greatest when they absorb the mechanical
+overhead of computational work---data wrangling, implementation, refactoring,
+documentation---so that human effort concentrates on the parts that genuinely
+require expertise. The enduring principle is simple: the method is the
+researcher's responsibility; the agent is only the tool that helps carry it out.
+
+\vfill
+\begin{center}
+\small\itshape
+Prepared as a conceptual summary of AI applications in research,
+with emphasis on agentic coding tools such as Claude Code.
+\end{center}
+
+\end{document}
