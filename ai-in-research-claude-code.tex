@@ -1,0 +1,290 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: The Use of Claude Code
+%  A conceptual summary synthesised from Scott Cunningham's
+%  "Scott's Mixtape Substack" (Claude Code series), 2026.
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue!60!black,
+  citecolor=black,
+  pdftitle={AI Applications in Research: The Use of Claude Code},
+  pdfauthor={Summary compiled from Scott Cunningham's Mixtape Substack}
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\newcommand{\keyterm}[1]{\textbf{#1}}
+
+\title{\textbf{AI Applications in Research:\\ The Use of Claude Code in Empirical Social Science}}
+\author{Compiled from \emph{Scott's Mixtape Substack} (Scott Cunningham), 2026}
+\date{July 2, 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent This document summarises the main concepts surrounding the use of
+AI agents --- and \keyterm{Claude Code} in particular --- as tools for
+empirical research, drawing on the running ``Claude Code'' series and related
+posts in Scott Cunningham's newsletter. The emphasis is on \emph{applied
+quantitative social science} (causal inference and econometrics) rather than
+software engineering, which is the perspective from which most existing
+material on AI agents is written. The recurring thesis is that AI agents
+reorganise the entire production function of research: they remove much of
+the manual burden of coding and file management, but in doing so they
+introduce new failure modes that require deliberate human-in-the-loop design,
+explicit specification, and disciplined checklists.
+\end{abstract}
+
+\tableofcontents
+\vspace{1em}
+
+% ---------------------------------------------------------------
+\section{Framing: AI Agents as Research Infrastructure}
+% ---------------------------------------------------------------
+
+The central premise is that agentic AI has moved from a novelty to a piece of
+\keyterm{research infrastructure} for applied empirical work. Cunningham's
+stated mission is to bridge causal-inference methodology --- and,
+increasingly, AI agents as tools for empirical research --- to parts of the
+world and parts of the discipline where these methods have lagged.
+
+Key framing concepts:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \keyterm{Agent, not autocomplete.} Claude Code is treated as an
+        \emph{agent} that can independently call multiple languages and
+        packages, execute a pipeline, run git operations, and produce tables
+        and figures --- not merely a code-completion tool.
+  \item \keyterm{Thinking partner, not autopilot.} The productive stance is
+        an iterative dialogue in which the researcher steers and the agent
+        executes when the next move is clear. The \emph{conversation itself}
+        is the intellectual work.
+  \item \keyterm{Applied-science lens.} Most public discussion of Claude Code
+        is either abstract or written from a software-developer viewpoint. The
+        distinctive contribution here is to demonstrate concrete value for
+        applied, quantitative social-scientific research.
+  \item \keyterm{New equilibrium.} Adopting agents does not simply speed up
+        the old workflow; it shifts the structure of work, requiring the
+        researcher to \emph{design} a genuinely new process rather than
+        inherit one.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{What Claude Code Does Well for Research}
+% ---------------------------------------------------------------
+
+A recurring observation is that Claude Code natively performs the very
+practices that empirical researchers spend years building by hand to guard
+against error:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Produces \keyterm{replicable code} organised as a pipeline rather than
+        one-off scripts.
+  \item Maintains a \keyterm{well-structured directory} with consistent file
+        and folder naming conventions.
+  \item \keyterm{Automates} the production of tables and figures.
+  \item Makes \keyterm{version control} (git) straightforward and accessible.
+  \item Can perform a \keyterm{cross-language coding audit}, independently
+        calling multiple languages (e.g.\ Python, R, Stata) and multiple
+        packages to replicate a single analytical pipeline from scratch ---
+        a powerful robustness and reproducibility check.
+\end{itemize}
+
+Because the agent supplies the organisational discipline that once had to be
+manufactured through habit, error rates on routine tasks can fall
+substantially: the agent does these mechanical things more reliably than a
+human working under time pressure.
+
+% ---------------------------------------------------------------
+\section{The New Failure Modes}
+% ---------------------------------------------------------------
+
+The core cautionary theme is that automation removes old errors but
+\emph{relocates and disguises} them. Errors no longer appear where a trained
+researcher's ``human capital'' is used to catching them.
+
+\subsection{Specification search}
+Left to plan-and-``let-it-rip'' autonomy, the agent may effectively conduct a
+\keyterm{specification search}: trying methods until it finds one that does
+not contradict the prompt, then writing up only that result. Crucially, the
+agent may store its intermediate decisions in hidden state (e.g.\ a JSON
+file), so ``there is far more under the hood than expected.'' This makes naive
+delegation actively dangerous for inference.
+
+\subsection{Drift}
+On longer projects a subtler pathology appears, termed \keyterm{drift}:
+\begin{itemize}[leftmargin=1.4em]
+  \item a script believed to exist was never actually written down --- it was
+        produced ad hoc during dialogue and then lost;
+  \item the \keyterm{analytical sample} shifts over time, implying a pipeline
+        is being modified unknowingly;
+  \item \keyterm{treatment units} subtly change from what they were weeks or
+        months earlier.
+\end{itemize}
+The danger is not that drift occurs but that it is \emph{not caught in real
+time}, because it surfaces outside the usual locations where errors appear.
+
+\subsection{Amnesia and memory}
+Related to drift is \keyterm{amnesia}: the agent's working memory and context
+do not persist the way a carefully maintained folder structure once did. What
+felt like an evolution toward greater precision can quietly regress if the
+system's memory is not externalised and pinned down by the researcher.
+
+% ---------------------------------------------------------------
+\section{Design Principles for a Human-in-the-Loop Workflow}
+% ---------------------------------------------------------------
+
+The proposed remedies are organisational and epistemic rather than purely
+technical. The recurring prescription is: \emph{do not step away}, and
+\emph{re-derive the workflow from first principles}.
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item \keyterm{Stay in the loop.} Full delegation of an econometric analysis
+        backfires; the human must remain an active checkpoint, especially at
+        inference-critical steps.
+  \item \keyterm{Forward engineering / pre-registration.} State the target
+        \emph{before} estimation. Write down the population estimand in
+        potential-outcomes notation and specify which aggregation is being
+        targeted. Clear articulation of the estimand becomes \emph{more}
+        important, not less, once the agent writes the code.
+  \item \keyterm{Detailed checklists.} Applied econometrics with agents
+        requires explicit, teachable checklists (e.g.\ verifying cell-level
+        outcome and covariate values in a Callaway--Sant'Anna
+        difference-in-differences design before trusting the output).
+  \item \keyterm{Redesign the production function.} Borrowing from
+        productivity thinking (e.g.\ \emph{Getting Things Done}), the task is
+        to decide precisely \emph{where the human inserts value} in the new
+        pipeline --- what to record, how to capture conjectures and
+        interpretations now that one is further removed from typing code.
+  \item \keyterm{Externalise memory and visualisation.} Because muscle memory
+        from hand-coding is lost, ideas must be deliberately recorded
+        (markdown notes, dashboards, ``beautiful decks'') and made visible so
+        the researcher retains a mental model of the analysis.
+  \item \keyterm{Simple, habitual rules over more tooling.} For some failure
+        modes (especially those tied to attention and memory), the fix is a
+        small number of habitually followed policy rules, not another
+        \texttt{/skill}.
+\end{enumerate}
+
+% ---------------------------------------------------------------
+\section{Skills and Modular Tooling}
+% ---------------------------------------------------------------
+
+A practical layer of the workflow is the use of \keyterm{slash-command skills}
+(\texttt{/skills}) --- reusable, near-atomic commands that wrap a habitual
+task, for example:
+\begin{itemize}[leftmargin=1.4em]
+  \item \texttt{/beautiful\_deck} --- generate presentation decks;
+  \item \texttt{/referee2} --- check and validate code as a referee would.
+\end{itemize}
+The candid assessment, however, is that a skills-only strategy (``do my normal
+thing, but call a skill to do it'') is not sufficient by itself. Skills
+automate steps but do not solve the deeper problem of \emph{workflow design}
+and memory --- hence the emphasis above on rebuilding the process from
+fundamentals. Supporting tooling is collected in the author's public
+\texttt{MixtapeTools} repository.
+
+% ---------------------------------------------------------------
+\section{AI in Peer Review and Scholarly Publishing}
+% ---------------------------------------------------------------
+
+Beyond producing research, the series considers AI agents in the surrounding
+scholarly ecosystem:
+\begin{itemize}[leftmargin=1.4em]
+  \item \keyterm{AI-assisted refereeing.} Using AI agents to \emph{support}
+        peer review --- checking and stress-testing code and analysis ---
+        \emph{without} having the agent write the referee report itself.
+  \item \keyterm{Disclosure norms.} Attention to how AI use should be
+        disclosed, and speculation (``Claude Code fan fiction'') about how AI
+        agents may reshape journals and the publishing pipeline in the near
+        future.
+  \item \keyterm{Reproducibility as a first-class output.} Independent
+        multi-language replication of a pipeline reframes reproducibility from
+        an afterthought into a routine, automatable check.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{Teaching, Learning, and Institutions}
+% ---------------------------------------------------------------
+
+A clear pedagogical stance emerges:
+\begin{itemize}[leftmargin=1.4em]
+  \item \keyterm{Pro-AI for research, cautious for coursework.} AI agents are
+        strongly endorsed as research tools, but their use in the classroom is
+        viewed skeptically because permitting AI tends to tilt student
+        incentives toward grades and away from learning.
+  \item \keyterm{The hard skill is the method, not the tool.} Learning to
+        converse with Claude Code is regarded as trivially easy; learning
+        econometrics and the craft of empirical work is not. Institutional
+        energy should protect the latter.
+  \item \keyterm{Community of practice.} The proposed vehicle is an informal
+        ``AI agents club'' focused on \emph{using} agents for research
+        (explicitly not a hackathon) --- learning by doing within a research
+        community.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{Summary of Core Takeaways}
+% ---------------------------------------------------------------
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item AI agents like Claude Code are now practical research infrastructure
+        for applied social science, not just software engineering.
+  \item They excel at the mechanical discipline of research --- replicable
+        pipelines, organisation, automation, version control, and
+        cross-language auditing.
+  \item They introduce new, hidden failure modes --- specification search,
+        drift, and amnesia --- that appear outside a researcher's usual
+        error-detection instincts.
+  \item The remedy is human-in-the-loop design: stay engaged, pre-specify the
+        estimand, follow explicit checklists, and rebuild the workflow from
+        first principles.
+  \item Modular \texttt{/skills} help but do not substitute for disciplined
+        workflow and externalised memory.
+  \item AI extends into refereeing and publishing, raising disclosure and
+        reproducibility questions.
+  \item In teaching, the tool is easy; the methodology is what must be
+        learned and protected.
+\end{enumerate}
+
+% ---------------------------------------------------------------
+\section*{Sources}
+\addcontentsline{toc}{section}{Sources}
+% ---------------------------------------------------------------
+
+Synthesised from \emph{Scott's Mixtape Substack} by Scott Cunningham,
+\url{https://causalinf.substack.com/}, in particular the ``Claude Code''
+series and related posts (2026):
+
+\begin{itemize}[leftmargin=1.4em, itemsep=1pt]
+  \item Claude Code 50: \emph{Claude is Holding On To Its Reasons}.
+  \item Claude Code 51: \emph{Harnessing AI Agents for Economic Research}.
+  \item Claude Code 53: \emph{Journal Cartels and AI Disclosure}.
+  \item Claude Code 53: \emph{Applied econometrics will require a detailed
+        checklist}.
+  \item Claude Code 54: \emph{Amnesia}.
+  \item \emph{6 countries, 10 cities, 46 days} (June 26, 2026) --- travel and
+        reflections, including the plan for an informal AI-agents research
+        club and the pro-research / cautious-in-class teaching stance.
+  \item \texttt{MixtapeTools} repository:
+        \url{https://github.com/scunning1975/MixtapeTools}.
+  \item Claude Code section index:
+        \url{https://causalinf.substack.com/s/claude-code}.
+\end{itemize}
+
+\end{document}
