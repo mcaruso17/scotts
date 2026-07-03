@@ -1,0 +1,184 @@
+\documentclass[11pt]{article}
+
+% ----------------------------------------------------------------------
+%  AI Applications in Research: The Rise of Agentic Tools and Claude Code
+%  A concept summary inspired by Scott Cunningham's Mixtape Substack
+% ----------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{parskip}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\title{\textbf{AI Applications in Research}\\[4pt]
+\large The Rise of Agentic Tools and Claude Code in Empirical Work}
+\author{Concept Summary\\ \small Inspired by Scott Cunningham's \emph{Mixtape Substack}}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent Artificial intelligence is shifting from a passive autocomplete assistant
+into an active \emph{agent} that participates in the research process itself. This
+document summarizes the main concepts behind AI applications in research, with
+particular attention to \textbf{agentic coding tools} and Anthropic's
+\textbf{Claude Code}. It draws thematically on the work of economist Scott
+Cunningham, whose newsletter increasingly frames AI agents as first-class tools
+for causal inference and applied empirical research. The emphasis throughout is a
+distinction Cunningham himself stresses: AI is a powerful accelerant for
+\emph{research}, but the enduring value lies in mastering the underlying
+methodology---the econometrics and empirical craft---not the conversation with
+the agent.
+\end{abstract}
+
+\section{Introduction}
+
+For most of its short history, machine learning entered empirical research as a
+\emph{method}: a way to predict, classify, or estimate. The more recent shift is
+different. Large language models packaged as \emph{agents} now act on the
+researcher's environment---reading files, writing and running code, inspecting
+output, and iterating---turning the model into a collaborator in the day-to-day
+workflow rather than a single-shot oracle.
+
+This document organizes the main concepts around three questions:
+\begin{enumerate}[leftmargin=1.4em]
+  \item What does it mean for AI to be \emph{agentic}, and how does Claude Code
+        embody that idea?
+  \item Where does AI genuinely add value across the empirical research
+        pipeline?
+  \item What are the limits, risks, and the pedagogical stance a researcher
+        should adopt?
+\end{enumerate}
+
+\section{From Autocomplete to Agents}
+
+\subsection{The agentic shift}
+A traditional coding assistant completes a line of code. An \textbf{agent} is
+given a goal and a set of tools, and it plans, acts, observes the result, and
+adapts---looping until the goal is met. The key ingredients are:
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Tool use:} the model can read and edit files, run shell commands,
+        execute scripts, and query data.
+  \item \textbf{Feedback loops:} it observes real output (errors, test failures,
+        regression tables) and corrects course.
+  \item \textbf{Context:} it can hold a project's structure in view, not just a
+        single snippet.
+\end{itemize}
+
+\subsection{Claude Code}
+\href{https://www.anthropic.com/claude-code}{Claude Code} is Anthropic's agentic
+coding tool. Running in the terminal (and integrated with editors and the web),
+it operates directly inside a project: it can explore a repository, propose and
+apply edits, run analyses, execute tests, and iterate on the results. For an
+empirical researcher this means the agent can, for example, load a dataset,
+write the estimation code, run it, read the output, and refine the specification
+in a single continuous session. The model powering it belongs to the Claude
+family (e.g.\ the Opus and Sonnet tiers), chosen for strong reasoning and
+reliable tool use.
+
+\section{Applications Across the Research Pipeline}
+
+\subsection{Data preparation and cleaning}
+Merging messy administrative files, reconciling inconsistent codings, reshaping
+panels, and building reproducible cleaning scripts are time-consuming but
+well-specified tasks---exactly where an agent that can run code and inspect
+intermediate output excels.
+
+\subsection{Econometric analysis and causal inference}
+The methods at the heart of applied microeconomics map naturally onto
+agent-assisted workflows:
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Difference-in-differences}, including modern heterogeneity-robust
+        and \emph{continuous} treatment estimators.
+  \item \textbf{Synthetic control} methods (fittingly, born in the Basque Country
+        that Cunningham writes about).
+  \item \textbf{Instrumental variables}, regression discontinuity, and event-study
+        designs.
+\end{itemize}
+The agent can scaffold the estimator, generate diagnostic plots, run placebo and
+robustness checks, and help interpret coefficients---while the researcher owns
+the identifying assumptions.
+
+\subsection{Reproducibility and replication}
+Agents are well suited to rebuilding a paper's results from raw data, auditing a
+replication package, containerizing an environment, and flagging where reported
+numbers do not reproduce.
+
+\subsection{Literature review and writing}
+Summarizing papers, drafting and refactoring \LaTeX{}, tightening prose, and
+generating referee-report scaffolding are natural uses---provided the researcher
+verifies every claim and citation.
+
+\subsection{Simulation and Monte Carlo work}
+Designing simulation studies to probe an estimator's finite-sample behavior is a
+tight, verifiable loop that agents handle well: write the data-generating
+process, run thousands of replications, tabulate bias and coverage.
+
+\section{Principles for Using AI in Research}
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item \textbf{Learning over grades.} Cunningham's stance is that the goal is
+        \emph{always and everywhere learning}. Using an agent for research is
+        endorsed; leaning on AI in coursework tends to tilt incentives toward
+        grades and away from mastering econometrics.
+  \item \textbf{The method is the hard part.} ``Having a conversation with Claude
+        Code'' is trivially easy; understanding identification, estimation, and
+        inference is not. Invest where the difficulty---and the value---lies.
+  \item \textbf{Verify everything.} Treat agent output as a capable draft, never
+        as ground truth. Re-run, cross-check numbers, and confirm assumptions.
+  \item \textbf{Keep humans on identification.} The agent can execute a design; it
+        cannot certify that the design is credible for your question.
+  \item \textbf{Democratize access.} Agents can lower the barrier to modern
+        methods for researchers in places where these techniques have lagged---a
+        core motivation in Cunningham's global teaching work.
+\end{enumerate}
+
+\section{Limitations and Risks}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Confident errors.} Models can produce plausible but wrong code,
+        statistics, or citations; silent mistakes are the real danger.
+  \item \textbf{Reproducibility drift.} Non-deterministic assistance must be
+        pinned down into versioned, re-runnable scripts.
+  \item \textbf{Over-delegation.} Skipping the reasoning erodes exactly the skills
+        research depends on.
+  \item \textbf{Data governance.} Sensitive or restricted data requires care about
+        what is shared with any external service.
+\end{itemize}
+
+\section{Conclusion}
+AI agents such as Claude Code are becoming a standard part of the empirical
+researcher's toolkit---accelerating data work, estimation, reproduction, and
+writing. The productive posture is neither hype nor refusal: use agents freely to
+\emph{do} research faster, but keep the intellectual core---the econometrics, the
+identifying assumptions, the judgment---firmly in human hands. As Cunningham puts
+it, the conversation with the agent is the easy part; the econometrics is not.
+
+\vspace{1em}
+\hrule
+\vspace{0.6em}
+\small
+\noindent\textbf{Further reading / resources}
+\begin{itemize}[leftmargin=1.4em, itemsep=1pt]
+  \item Scott's Mixtape Substack --- \url{https://causalinf.substack.com/}
+  \item \emph{Causal Inference: The Mixtape} --- \url{https://mixtape.scunning.com/}
+  \item Mixtape Sessions (workshops) --- \url{https://mixtapesessions.io/}
+  \item Claude Code --- \url{https://www.anthropic.com/claude-code}
+  \item Claude Code documentation --- \url{https://code.claude.com/docs/}
+\end{itemize}
+
+\end{document}
