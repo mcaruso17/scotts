@@ -1,0 +1,182 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: Claude Code and the Agentic
+%  Empirical Workflow
+%
+%  A concept summary compiled from Scott Cunningham's "Scott's
+%  Mixtape" Substack and the open-source MixtapeTools project.
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue,citecolor=black]{hyperref}
+
+\setlist[itemize]{itemsep=2pt,topsep=3pt}
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\newcommand{\keyword}[1]{\textbf{#1}}
+
+\title{\bfseries AI Applications in Research:\\[2pt]
+\large Claude Code and the Agentic Empirical Workflow}
+\author{Concept summary compiled from Scott Cunningham's work\\
+\small (Scott's Mixtape Substack \& the MixtapeTools project)}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind applying
+large-language-model (LLM) agents---specifically \keyword{Claude Code}---to
+empirical and applied research. The material is drawn primarily from the
+economist Scott Cunningham's ongoing ``Claude Code'' series on his
+\emph{Scott's Mixtape} Substack and from his open-source
+\href{https://github.com/scunning1975/MixtapeTools}{MixtapeTools} repository.
+The unifying thesis is that an AI agent is most valuable as a
+\keyword{thinking partner} embedded in a disciplined, verifiable research
+process---not as an autonomous researcher that replaces human judgment.
+\end{abstract}
+
+\section{Framing: research as a production function}
+Cunningham frames the cognitive output of science as a
+\keyword{production function}---a formal model of how inputs (data, code,
+theory, attention, tools) combine to produce output (findings, papers,
+teaching). AI agents change the shape of that function: they lower the cost
+of certain inputs (writing code, reading papers, building slides, checking
+citations) while raising the return to human inputs that remain scarce---
+directional judgment, question selection, and the willingness to be wrong in
+public. The practical question is therefore not ``can the agent do research?''
+but ``which tasks should be delegated, and under what verification regime?''
+
+\section{Core philosophy}
+\begin{itemize}
+  \item \keyword{Claude as a thinking partner, not an autonomous agent.} The
+  researcher steers iteratively; the agent surfaces ambiguity and executes
+  once the next move is clear. ``\emph{The dialogue is the work, not just the
+  delivery mechanism for the work.}''
+  \item \keyword{Design precedes analysis.} Specification correctness is
+  settled \emph{before} results are examined, so that outcomes cannot bias the
+  design.
+  \item \keyword{Verification over trust.} Correctness is demonstrated, not
+  assumed---most concretely through cross-language replication.
+  \item \keyword{Structural independence for audits.} Adversarial review runs
+  in a \emph{fresh} session that has never seen the work, to defeat
+  confirmation bias.
+  \item \keyword{Documentation as a first-class output.} ``\emph{If it's not
+  documented, it didn't happen}''---unfiled work does not count.
+\end{itemize}
+
+\section{Criteria for delegating to an agent}
+A recurring theme (developed explicitly in the ``four criteria'' installment
+on using agents for referee reports) is that delegation should be
+\keyword{principled rather than reflexive}. Good candidate tasks tend to be
+those that are:
+\begin{itemize}
+  \item \keyword{Verifiable} --- correctness can be checked independently
+  (e.g.\ replicated numerically or against a canonical source);
+  \item \keyword{Well-specified} --- the objective and success condition can be
+  stated before the work begins;
+  \item \keyword{Bounded} --- the task has a clear scope and does not require
+  the human's irreducible judgment (e.g.\ what question is worth asking);
+  \item \keyword{Reversible / low-stakes to iterate} --- mistakes are cheap to
+  detect and correct within the loop.
+\end{itemize}
+Tasks failing these tests---most importantly, \emph{authoring the intellectual
+judgment of a referee report or the thesis of a paper}---are kept with the
+human even when the agent is used heavily for supporting steps.
+
+\section{Key workflows and verification practices}
+\begin{itemize}
+  \item \keyword{Cross-software replication.} A result is trusted only when
+  independent implementations in \keyword{R, Stata, and Python} agree
+  ``\emph{to 6+ decimal places}.'' Divergence signals a bug in specification
+  or code, not a rounding nuisance.
+  \item \keyword{Adversarial, separated review.} A completed project is handed
+  to a fresh agent instance in a new terminal that replicates the pipeline
+  from scratch and files a formal report---and \emph{never} edits the author's
+  code, preserving independence.
+  \item \keyword{Persistent project context.} A \texttt{CLAUDE.md} file gives
+  the agent durable, project-specific instructions and conventions.
+  \item \keyword{Incremental deep reading.} Long PDFs are chunked
+  ($\sim$4 pages) and read incrementally, with structured notes extracted and
+  saved as reusable markdown, to avoid context overflow.
+  \item \keyword{Live, documented iteration.} Decisions are logged in markdown
+  as the work proceeds, so the reasoning trail is itself a research artifact.
+\end{itemize}
+
+\section{The MixtapeTools toolkit}
+The following named tools/skills operationalize the philosophy above:
+
+\begin{description}[leftmargin=1.4em,style=nextline]
+  \item[Referee~2] A five-audit protocol run by an independent, fresh
+  session---covering code correctness, cross-language replication, directory
+  structure, output automation, and econometric specification. It creates only
+  replication scripts and \emph{never modifies author code}.
+  \item[Blindspot] A ``peripheral vision'' audit (invoking Shklovsky's idea
+  that intense focus creates blindness) that surfaces overlooked
+  \emph{vices} (unexplained features, convenient absences) and \emph{virtues}
+  (unasked questions, unexploited strengths). Run in the same session because
+  it amplifies the author's own perception.
+  \item[Bibcheck] A many-agent bibliography auditor that spawns a narrow-focus
+  agent per citation (or per field) to verify entries against canonical
+  sources, without auto-correcting the source files.
+  \item[Split-PDF] A deep-reading pipeline that acquires, chunks, and
+  incrementally reads papers, extracting structured notes across multiple
+  dimensions.
+  \item[Beautiful Deck / Compile Deck] Presentation generation encoding a
+  ``rhetoric of decks'' (audience-first, one idea per slide, titles as
+  assertions, pedagogical ordering) with zero-warning Beamer compilation.
+  \item[TikZ Collision Audit] A six-pass, measurement-based inspection of
+  LaTeX/TikZ figures for label overlaps---rules over visual intuition.
+  \item[GTD Research Harness] A ``warrant-first'' system for filing
+  hypotheses, tracking evidence, and maintaining a live research dashboard.
+\end{description}
+
+\section{Broader implications for knowledge work}
+Cunningham has taken these ideas beyond his own bench---presenting to the
+Federal Reserve Board of Governors (March 2026) with live, agent-assisted
+economic research, and developing them into a book project,
+\emph{AI Agents for Research Workers}. A related and more speculative strand
+concerns \keyword{peer review}: as model capability rises, agent-generated
+work becomes harder to distinguish from human work, straining a review system
+built for scarce human effort. His stance is to use agents to \emph{support}
+reviewing (replication, citation checks, blindspot audits) while keeping the
+\emph{judgment} of the referee report human---a concrete instance of the
+delegation criteria in Section~3.
+
+\section{Practical takeaways}
+\begin{enumerate}[leftmargin=1.5em]
+  \item Treat the agent as a collaborator you \emph{steer}; keep the questions
+  and the judgment yours.
+  \item Fix the design and the success criterion before you look at results.
+  \item Trust only what you can independently reproduce---ideally in a second
+  language to many decimal places.
+  \item Audit with a fresh, uncontaminated session; never let the reviewer edit
+  the reviewed.
+  \item Make documentation part of the deliverable, not an afterthought.
+\end{enumerate}
+
+\section*{Sources}
+\small
+\begin{itemize}
+  \item Scott's Mixtape Substack --- \emph{Claude Code} series:
+  \url{https://causalinf.substack.com/s/claude-code}
+  \item MixtapeTools (open-source): \url{https://github.com/scunning1975/MixtapeTools}
+  \item Substack home: \url{https://causalinf.substack.com/}
+  \item Forbes, ``An Economist Lectures the Fed on AI and the Future of
+  Knowledge Work'' (Apr.\ 2026).
+\end{itemize}
+
+\vspace{1em}
+\noindent\footnotesize\emph{Note:} Direct retrieval of the Substack was blocked
+by the execution environment's network policy at compile time; the summary
+above is reconstructed from the openly accessible MixtapeTools repository and
+public reporting/search results describing the series.
+
+\end{document}
