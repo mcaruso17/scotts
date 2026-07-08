@@ -1,0 +1,181 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: The Use of Claude Code
+%  A conceptual summary synthesised from Scott Cunningham's
+%  "Scott's Mixtape" Claude Code essay series.
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue!60!black,
+    citecolor=black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\setlist[itemize]{itemsep=2pt, topsep=3pt}
+
+\title{\textbf{AI Applications in Research}\\[2pt]
+\large Core Concepts and the Use of Claude Code in Empirical Work}
+\author{Summary compiled from Scott Cunningham's \emph{Scott's Mixtape} essay series}
+\date{July 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent This document summarises the main concepts surrounding the use of
+AI agents---and specifically \emph{Claude Code}---in academic and empirical
+research. It draws on the themes developed across Scott Cunningham's
+long-running essay series on the subject, which documents in public the
+practical, economic, and pedagogical consequences of integrating agentic AI
+into the daily work of an applied econometrician. The goal is to give a
+scannable, conceptual map: what these tools change, where the new bottlenecks
+lie, and how researchers can adopt them responsibly.
+\end{abstract}
+
+\section{Introduction}
+
+Agentic coding assistants such as Claude Code have moved AI from a
+conversational novelty to a genuine part of the research \emph{workflow}. Rather
+than answering isolated questions, an agent can read a codebase, run analyses,
+inspect data, replicate published results, and iterate toward a verified answer.
+For empirical researchers this represents a shift in how work is produced, not
+merely a faster way of typing. The sections below organise the recurring
+concepts into five clusters: the economics of research production, practical
+workflows, verification and quality control, pedagogy, and the risks that
+accompany adoption.
+
+\section{The Economics of Research Production}
+
+The most consequential ideas are economic. When the marginal cost of producing
+analysis falls sharply, both the volume of output and the profile of errors
+change.
+
+\begin{itemize}
+  \item \textbf{Falling marginal costs of production.} Once an agent can carry
+        out a large share of the mechanical labour of empirical work, the cost
+        of producing an additional analysis, table, or replication drops toward
+        zero, dramatically increasing potential output.
+  \item \textbf{Aggregate errors scale with output.} Cheaper production means
+        \emph{more} production, and if per-task error rates stay constant, the
+        total number of errors in circulation can rise even as individual work
+        improves---making quality control a first-order concern.
+  \item \textbf{The zero-profit condition.} As the tools diffuse and the cost of
+        competent empirical output collapses, the ``economic rent'' that once
+        accrued to technical skill alone is competed away, pushing the source of
+        value elsewhere (judgement, questions, verification, credibility).
+  \item \textbf{Research and publishing are diverging.} The act of \emph{doing}
+        research and the act of \emph{publishing} it are becoming distinct
+        activities, with different bottlenecks, timelines, and value.
+\end{itemize}
+
+\section{Verification as the New Bottleneck}
+
+A central and repeated theme is that generation is no longer the constraint---
+\emph{trust} is.
+
+\begin{itemize}
+  \item \textbf{Verification is the new bottleneck.} When output is cheap and
+        abundant, the scarce input becomes confidence that the output is
+        correct; the researcher's time shifts from producing to checking.
+  \item \textbf{Checklists for agentic research.} Reliable applied econometrics
+        with AI agents benefits from explicit, staged checklists (design,
+        estimation, robustness) that make each analytical decision auditable
+        rather than implicit.
+  \item \textbf{Multi-agent audits.} One agent's work can be independently
+        checked by another, adversarial pass---replicating and cross-examining
+        results (e.g.\ auditing an estimator implementation) to surface errors a
+        single run would miss.
+  \item \textbf{Replication as method.} Reproducing published results end-to-end
+        becomes a practical, teachable exercise---a way both to validate the
+        tooling and to learn the underlying method deeply.
+\end{itemize}
+
+\section{Practical Workflows and Tooling}
+
+Alongside the ``big think'' economics runs a stream of concrete, reusable
+practice---the ``how-to'' layer that makes adoption real.
+
+\begin{itemize}
+  \item \textbf{Skills and reusable prompts.} Packaging repeated tasks (slide
+        decks, PDF handling, formatting) as named, reusable skills turns one-off
+        prompting into durable infrastructure.
+  \item \textbf{MCP integrations.} The Model Context Protocol lets an agent
+        connect to external services and data sources---so the tool can act on a
+        researcher's actual corpus, not just answer in the abstract.
+  \item \textbf{Harness principles.} Thinking carefully about the ``harness''---
+        how the agent is given context, tools, and guardrails---matters as much
+        as the model itself for getting dependable results.
+  \item \textbf{Artifacts as deliverables.} Increasingly the output itself
+        (a deck, a video, a formatted document) \emph{is} the product, produced
+        directly by the agent.
+\end{itemize}
+
+\section{Pedagogy and Integration into Teaching}
+
+A distinctive concept is that these tools do not just change research---they
+change how research \emph{skills} are taught.
+
+\begin{itemize}
+  \item \textbf{Teaching AI-agentic research.} Graduate curricula are beginning
+        to pair deep methodological knowledge (econometrics, causal inference)
+        with applied competence in \emph{using} AI agents to do research.
+  \item \textbf{A textbook drafted in public.} Writing openly and iteratively
+        about the tools---``thinking out loud''---doubles as pedagogy and as raw
+        material for structured teaching resources.
+  \item \textbf{Documenting progress transparently.} Keeping an ongoing,
+        honest record of experiments, failures, and audits builds a body of
+        material others can learn from and reproduce.
+\end{itemize}
+
+\section{Risks and Open Questions}
+
+Adoption is presented as a genuine double-edged sword, not an unambiguous win.
+
+\begin{itemize}
+  \item \textbf{Amnesia and lost context.} Agents do not persist memory across
+        sessions by default, so continuity, context, and reproducibility must be
+        engineered deliberately.
+  \item \textbf{Volume without discipline.} The ease of producing analysis can
+        encourage over-production and, without checklists and verification,
+        undermine rigour.
+  \item \textbf{Erosion of technical rents.} As competent output becomes cheap,
+        researchers must find new sources of distinctive value---questions,
+        judgement, credibility---rather than technical execution alone.
+  \item \textbf{The essayist's discipline.} Careful writing and reasoning remain
+        the mechanism by which a researcher actually thinks a problem through;
+        the tool accelerates execution but does not replace understanding.
+\end{itemize}
+
+\section{Conclusion}
+
+The recurring message across the series is pragmatic optimism tempered by
+caution. Claude Code and similar agents collapse the marginal cost of empirical
+production and, in doing so, relocate the binding constraint from \emph{doing}
+the work to \emph{trusting} it. The researcher's comparative advantage moves
+upward: toward asking the right questions, designing auditable workflows,
+verifying results, and teaching others to do the same. Handled with explicit
+checklists, independent verification, and honest documentation, these tools
+expand what a single researcher can credibly accomplish; handled carelessly,
+they simply multiply errors faster than before.
+
+\vspace{1em}
+\noindent\rule{\linewidth}{0.4pt}\\[4pt]
+\small\emph{Source material:} Scott Cunningham, \emph{Scott's Mixtape} Substack,
+Claude Code essay series (Dec.\ 2025--Jul.\ 2026),
+\href{https://causalinf.substack.com/}{causalinf.substack.com}.
+
+\end{document}
