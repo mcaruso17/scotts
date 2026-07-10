@@ -1,0 +1,165 @@
+\documentclass[11pt]{article}
+
+% ----------------------------------------------------------------------
+%  AI Applications in Research: The Rise of Claude Code
+%  A conceptual summary inspired by Scott Cunningham's Mixtape Substack
+% ----------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{parskip}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue!60!black,
+  citecolor=black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+       \large Concepts, Workflows, and the Emergence of Claude Code
+       as a Research Companion}
+\author{Automated Research Digest\\
+        \small Compiled from Scott's Mixtape Substack and related sources}
+\date{July 10, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts surrounding the use of
+artificial intelligence in research, with a particular focus on
+\emph{Claude Code}---an agentic command-line assistant---as a tool for
+empirical and quantitative work. Drawing on the extended body of essays
+published by economist Scott Cunningham (\href{https://causalinf.substack.com}{Scott's Mixtape Substack}),
+it distills a working philosophy in which the researcher--AI \emph{dialogue}
+is itself the intellectual work, rather than a mere delivery mechanism. We
+cover core capabilities, representative research workflows, best practices,
+and the open challenges of reproducibility, verification, and scholarly
+credit.
+\end{abstract}
+
+\section{Introduction: AI as a Research Instrument}
+Large language models (LLMs) have moved from novelty to infrastructure in the
+research process. Rather than serving only as chat interfaces, modern
+\emph{agentic} systems can read and write files, run code, execute analyses,
+and iterate on results within a project. This shifts the role of AI from a
+question-answering oracle toward a \emph{collaborator} embedded in the
+researcher's actual environment. The central question is no longer
+\emph{whether} AI can assist research, but \emph{how} to integrate it so that
+it improves---rather than dilutes---the quality of reasoning.
+
+\section{What Is Claude Code?}
+\textbf{Claude Code} is an agentic coding assistant that operates in the
+terminal (and via IDE and web integrations). Unlike a passive autocomplete,
+it can:
+\begin{itemize}[leftmargin=1.4em, itemsep=2pt]
+  \item Explore a codebase or dataset, reading files and searching directories.
+  \item Write, edit, and execute scripts, then inspect the output.
+  \item Chain multi-step tasks (clean data $\rightarrow$ estimate $\rightarrow$
+        visualize $\rightarrow$ write up) with the researcher steering.
+  \item Surface ambiguity and ask for direction when the next move is unclear.
+\end{itemize}
+Its defining feature for research is \emph{iterative, tool-using dialogue}:
+the assistant acts within the same environment the researcher inhabits, so its
+suggestions are grounded in the actual state of the project.
+
+\section{The Core Philosophy: ``The Dialogue Is the Work''}
+A recurring theme in Cunningham's essays is that thinking \emph{through} the
+AI---rather than \emph{at} it---is where the value lies:
+\begin{quote}
+\itshape ``I think more clearly when I am thinking through Claude rather than
+at Claude. The dialogue is the work, not just the delivery mechanism for the
+work.''
+\end{quote}
+This implies a deliberately \textbf{lower-automation} stance than many users
+adopt. The researcher steers iteratively; the assistant executes when the next
+step is clear and pauses to surface ambiguity when it is not. The friction of
+articulating a problem clearly enough for the model is not overhead---it is the
+reasoning made explicit.
+
+\section{Representative Research Workflows}
+\subsection{Empirical / Causal Inference}
+Claude Code is well suited to the applied econometrics pipeline: constructing
+panels, implementing estimators (e.g.\ difference-in-differences, event
+studies, synthetic control), producing diagnostic plots, and drafting the
+accompanying prose. Notably, in Cunningham's own audience,
+\emph{difference-in-differences} explainers rank among the most valued
+content---evidence that AI-assisted methodological writing meets real demand.
+
+\subsection{Reproducible Analysis}
+Because the assistant works inside the project directory, it naturally
+encourages script-based, re-runnable analysis over ad-hoc manual steps,
+supporting reproducibility and version control.
+
+\subsection{Writing and Dissemination}
+Beyond code, the same agentic loop extends to authoring: summarizing results,
+drafting essays, and---as in the newsletter's own example---integrating with
+publishing platforms (e.g.\ connecting Claude Code directly to Substack).
+
+\subsection{Meta-Analysis of One's Own Corpus}
+A striking illustration: Cunningham used an AI model to \emph{value his own
+essay series}, classifying $\sim$55 posts ($\sim$152{,}000 words) by genre and
+estimating their relative social value---a conversational, AI-driven analysis
+of the researcher's own output.
+
+\section{Best Practices}
+\begin{enumerate}[leftmargin=1.6em, itemsep=3pt]
+  \item \textbf{Steer, don't abdicate.} Keep a human in the loop on every
+        substantive decision; treat the model's output as a draft to interrogate.
+  \item \textbf{Make the dialogue explicit.} Articulating the problem precisely
+        is itself analytical work; do not shortcut it.
+  \item \textbf{Prefer scripts to manual steps} so analyses remain reproducible
+        and auditable.
+  \item \textbf{Verify empirically.} Re-run, cross-check estimates, and confirm
+        that results reproduce before trusting them.
+  \item \textbf{Document the process}, including the prompts and decisions, so
+        the provenance of results is clear.
+\end{enumerate}
+
+\section{Challenges and Open Questions}
+\begin{itemize}[leftmargin=1.4em, itemsep=2pt]
+  \item \textbf{Verification.} AI output can be confidently wrong; empirical
+        checking is non-negotiable.
+  \item \textbf{Reproducibility.} Non-deterministic models complicate exact
+        replication; pinning workflows and seeds matters.
+  \item \textbf{Attribution and credit.} Norms for acknowledging AI
+        contribution in scholarship are still forming.
+  \item \textbf{Skill atrophy vs.\ augmentation.} The lower-automation,
+        dialogue-first stance is partly a guard against outsourcing the thinking.
+\end{itemize}
+
+\section{Conclusion}
+The most productive framing of AI in research is neither ``autopilot'' nor
+``fancy autocomplete,'' but \emph{collaborative dialogue}. Tools like Claude
+Code let researchers keep their hands on the analysis while offloading
+mechanical friction---accelerating empirical work, reproducible pipelines, and
+writing alike. The enduring lesson from practitioners such as Scott Cunningham
+is that the value comes from thinking \emph{with} the model, deliberately and
+iteratively, so that the conversation itself becomes a form of research.
+
+\section*{Selected Resources}
+\begin{itemize}[leftmargin=1.4em, itemsep=2pt]
+  \item Scott's Mixtape Substack --- \url{https://causalinf.substack.com}
+  \item Claude Code essay collection ---
+        \url{https://causalinf.substack.com/s/claude-code}
+  \item ``Deriving the Value of these Claude Code Essays'' ---
+        \url{https://causalinf.substack.com/p/deriving-the-value-of-these-claude}
+  \item MixtapeTools (GitHub) --- \url{https://github.com/scunning1975/MixtapeTools}
+  \item \emph{Causal Inference: The Mixtape} --- \url{https://mixtape.scunning.com}
+\end{itemize}
+
+\vspace{1em}
+\noindent\small\textit{Compiled automatically on July 10, 2026 from publicly
+available summaries of Scott's Mixtape Substack. Direct source text was
+paraphrased; see links above for originals.}
+
+\end{document}
