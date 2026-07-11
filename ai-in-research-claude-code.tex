@@ -1,0 +1,167 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+% AI Applications in Research: Concepts and the Use of Claude Code
+% A concept summary compiled from Scott Cunningham's "Scott's Mixtape"
+% Claude Code series and general agentic-AI-for-research practice.
+% Compiles with a standard LaTeX distribution: pdflatex ai-in-research-claude-code.tex
+% ---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue!55!black,
+  citecolor=black,
+  pdftitle={AI Applications in Research and the Use of Claude Code},
+  pdfauthor={Compiled summary}
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\setlist{itemsep=2pt, topsep=3pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small AI in Research \& Claude Code}
+\lhead{\small Concept Summary}
+\cfoot{\thepage}
+
+\title{\textbf{AI Applications in Research}\\[2pt]
+\large Core Concepts and the Use of Claude Code}
+\author{Concept summary compiled from public sources\\
+\small (Scott Cunningham, \emph{Scott's Mixtape}; \texttt{scunning1975/MixtapeTools})}
+\date{11 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind applying artificial
+intelligence---particularly \emph{agentic} coding assistants such as \textbf{Claude Code}---to
+empirical and quantitative research. It draws on the practical, publicly documented workflow
+that economist Scott Cunningham has been developing in his ``Claude Code for quantitative
+social scientists'' series and the accompanying \texttt{MixtapeTools} repository. The unifying
+theme is a shift in where research effort is spent: producing analysis becomes cheap and fast,
+so the scarce, high-value activity moves to \emph{design, verification, and interpretation}.
+\end{abstract}
+
+\section{What ``AI in research'' now means}
+The recent wave of AI in research is defined less by standalone models answering questions and
+more by \textbf{agentic assistants} that read a project directory, run code, inspect outputs,
+and iterate. Three capabilities matter for researchers:
+\begin{itemize}
+  \item \textbf{Tool use / execution.} The agent can run shell commands, execute scripts in
+        Python, R, or Stata, read the results, and correct itself.
+  \item \textbf{Long-horizon context.} It can hold an entire project---data, code, drafts,
+        and notes---in view and reason across files.
+  \item \textbf{Orchestration.} It can coordinate external services (e.g.\ batch classification
+        APIs) and sub-agents to parallelize large tasks.
+\end{itemize}
+
+\section{Claude Code: the agentic assistant in the terminal}
+\textbf{Claude Code} is a command-line coding agent that operates directly inside a project
+folder. Rather than pasting snippets into a chat window, the researcher points the agent at a
+repository and collaborates with it \emph{in place}. Salient features for research use:
+\begin{itemize}
+  \item Reads and edits real files, runs the project's own tests and analysis scripts, and
+        reports what it observed---closing the loop between writing code and checking it.
+  \item Configurable project context via a \texttt{CLAUDE.md} file that encodes conventions,
+        data locations, and house rules the agent should follow every session.
+  \item Reusable \emph{skills} and \emph{slash commands} that package repeated workflows
+        (compile a deck, start a new project, run an audit) into one instruction.
+  \item Sub-agents for decomposing a large task into independent, parallel pieces.
+\end{itemize}
+
+\section{A philosophy: partner, not autopilot}
+A central lesson from Cunningham's series is to treat the model as a
+\textbf{thinking partner, not an autonomous agent}. The human sets the research design and
+makes the judgment calls; the agent executes once the next move is clear. This yields several
+working principles:
+\begin{itemize}
+  \item \textbf{Design first.} Decide the estimand, identification strategy, and checks before
+        asking the agent to produce anything.
+  \item \textbf{Steer iteratively.} Short cycles of instruction, execution, and inspection beat
+        one large ``do the whole paper'' request.
+  \item \textbf{Documentation as output.} Treat the written record of decisions and results as a
+        primary deliverable, not an afterthought.
+\end{itemize}
+
+\section{The shifting bottleneck: verification over production}
+When an agent can generate a full analysis pipeline in minutes, the binding constraint stops
+being \emph{producing} results and becomes \emph{trusting} them. Consequently the
+\textbf{returns to methodological expertise rise}: someone must still know what a valid design
+looks like and how to falsify a wrong result. Practices that operationalize this include:
+\begin{itemize}
+  \item \textbf{Cross-language / cross-package replication.} Re-implement the same pipeline
+        independently across Python, R, and Stata (and multiple packages) and require that
+        non-random results agree to many decimal places.
+  \item \textbf{Structural separation of author and referee.} Run audits in a \emph{fresh,
+        separate} agent instance that may write parallel replication scripts but never edits the
+        author's code, preserving adversarial independence.
+  \item \textbf{Systematic post-project review.} A staged protocol (e.g.\ \texttt{Referee~2})
+        covering code, replication, directory structure, output automation, and econometrics.
+\end{itemize}
+
+\section{Using LLMs as measurement: promise and hazard}
+A large application area is using LLMs to \emph{measure} concepts from text---classifying
+sentiment, topic, or stance at scale. Cunningham's motivating example classified roughly
+\textbf{305,000 historical speeches} with zero-shot prompts via a batch API in about
+\textbf{2.6 hours}. The methodological warning, formalized in Ludwig, Mullainathan, and
+Rambachan's \emph{applied econometric framework for LLMs}, is essential:
+\begin{itemize}
+  \item \textbf{LLM error is not classical measurement error.} If classification mistakes
+        correlate with the outcome being studied, downstream estimates can be severely biased.
+  \item \textbf{Validation samples are required.} Combine LLM outputs with hand-labeled
+        validation data to obtain valid inference rather than trusting raw model labels.
+  \item \textbf{Guard against training leakage} when LLMs are used for prediction from text.
+\end{itemize}
+
+\section{A concrete toolkit (\texttt{MixtapeTools})}
+The publicly shared \texttt{MixtapeTools} repository packages these ideas as Claude Code
+commands, skills, and audit ``personas'':
+\begin{description}[leftmargin=1.4cm, style=nextline]
+  \item[Referee 2] Five-audit, independent post-project review protocol.
+  \item[Blindspot] ``Peripheral vision'' audit surfacing overlooked risks and opportunities.
+  \item[Bibcheck] Multi-agent bibliography verification against DOI / journal / author records.
+  \item[Split-PDF] Ingests papers into chunks with structured, persistent notes.
+  \item[Beautiful Deck / TikZ audit] Beamer generation and LaTeX figure cleanup with
+        zero-warning compilation.
+\end{description}
+
+\section{Takeaways}
+\begin{enumerate}
+  \item Agentic AI collapses the cost of \emph{producing} empirical analysis; it does not
+        collapse the cost of \emph{being right}.
+  \item The researcher's comparative advantage moves to design, adversarial verification, and
+        interpretation.
+  \item Build independence into the workflow---separate author and referee, replicate across
+        stacks, and validate any LLM used as a measurement instrument.
+  \item Capture reusable practice as project context (\texttt{CLAUDE.md}), skills, and audit
+        protocols so quality scales with the tooling.
+\end{enumerate}
+
+\section*{Selected sources}
+\begin{itemize}\small
+  \item Scott Cunningham, \emph{Scott's Mixtape} --- Claude Code series:
+        \url{https://causalinf.substack.com/s/claude-code}
+  \item \texttt{scunning1975/MixtapeTools}: \url{https://github.com/scunning1975/MixtapeTools}
+  \item Ludwig, Mullainathan \& Rambachan, \emph{Large Language Models: An Applied Econometric
+        Framework}, NBER w33344: \url{https://www.nber.org/papers/w33344}
+  \item Claude Code documentation: \url{https://code.claude.com/docs}
+\end{itemize}
+
+\vfill
+\noindent\footnotesize\emph{Compiled from public search-indexed content and public repositories;
+gated newsletter posts were not read in full. Figures such as the 305{,}000-speech example and
+the 2.6-hour runtime are as reported in Cunningham's public posts.}
+
+\end{document}
