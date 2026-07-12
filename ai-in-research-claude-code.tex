@@ -1,0 +1,148 @@
+\documentclass[11pt]{article}
+
+% ----------------------------------------------------------------------
+%  AI Applications in Research: The Use of Claude Code
+%  A concept summary informed by Scott Cunningham's Mixtape Substack series
+% ----------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\setlist{itemsep=2pt, topsep=3pt}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+       \large The Use of Agentic Coding Assistants (Claude Code) in Empirical Work}
+\author{Compiled summary --- Scott Cunningham newsletter routine}
+\date{July 12, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the use of
+artificial intelligence in research, with an emphasis on \emph{agentic}
+coding assistants such as \textbf{Claude Code}. It draws on themes from
+Scott Cunningham's ongoing ``Claude Code'' series on his Mixtape Substack,
+which documents, in near-real time, how a working empirical social
+scientist integrates an AI agent into causal-inference and quantitative
+research. The aim is a compact, practitioner-oriented map of what these
+tools do, how to work with them responsibly, and where their value and
+limits lie.
+\end{abstract}
+
+\section{What Claude Code Is}
+Claude Code is a command-line \emph{agentic} assistant: rather than
+returning isolated snippets, it operates inside a project directory,
+reads and edits files, runs code and tests, inspects the results, and
+iterates. For researchers this reframes the AI from an autocomplete tool
+into a collaborator that can navigate an entire analysis pipeline.
+\begin{itemize}
+  \item \textbf{Repository-aware:} it acts on the real project files, not
+        a copy pasted into a chat window.
+  \item \textbf{Tool-using:} it can execute Stata, R, Python, or shell
+        commands and read the output back.
+  \item \textbf{Iterative:} it forms a plan, acts, observes, and revises.
+  \item \textbf{Extensible:} via the Model Context Protocol (MCP) it can
+        connect to external systems (e.g.\ Substack, databases, GitHub).
+\end{itemize}
+
+\section{Core Applications in Research}
+\begin{description}[leftmargin=1.2em, style=nextline]
+  \item[Pipeline construction \& refactoring] Building, cleaning, and
+        modularizing analysis code across languages from a messy or
+        decade-old project directory.
+  \item[Replication \& code audits] Re-implementing a result from scratch
+        in several languages/packages independently to check that a
+        finding is robust to the tooling that produced it.
+  \item[Learning new methods] Working through unfamiliar estimators
+        (e.g.\ continuous difference-in-differences) with the agent as a
+        patient, executable tutor.
+  \item[Teaching \& communication] Generating lecture slides, decks, and
+        explanatory material derived from one's own research.
+  \item[AI-assisted peer review] Running structured, multi-audit checks on
+        a completed project with a \emph{fresh} agent instance --- while the
+        human, not the AI, still writes the referee report.
+  \item[Meta-analysis of one's own work] Using the MCP integration to
+        quantify the reach and value of a body of writing.
+\end{description}
+
+\section{Working Principles (a Responsible-Use Stance)}
+Cunningham's recurring theme is \textbf{``Claude as a thinking partner,
+not an autonomous agent.''} The following principles capture the stance:
+\begin{enumerate}
+  \item \textbf{Steer iteratively.} Let the agent execute when the next
+        move is clear; make it surface ambiguity rather than guess.
+  \item \textbf{Think \emph{through} the tool, not \emph{at} it.} Less
+        automation, more deliberate reasoning at each step.
+  \item \textbf{Verification is the bottleneck.} The scarce human input is
+        checking, not generating --- the researcher owns correctness.
+  \item \textbf{Independence for audits.} Robustness checks are only
+        credible when run by an instance that has not seen the original
+        work.
+  \item \textbf{Keep human judgment in the loop.} Interpretation,
+        peer-review conclusions, and authorship remain human
+        responsibilities.
+\end{enumerate}
+
+\section{Benefits and New Frictions}
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{Benefits}
+\begin{itemize}
+  \item Faster iteration on messy, real-world code.
+  \item Lower cost to try alternative specifications.
+  \item Cross-language replication becomes cheap.
+  \item Lowers the barrier to learning new methods.
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{New frictions}
+\begin{itemize}
+  \item New failure modes even as old ones are solved.
+  \item Risk of automating past one's own understanding.
+  \item Verification burden shifts and can grow.
+  \item Reproducibility of agent sessions is itself a challenge.
+\end{itemize}
+\end{minipage}
+
+\section{Economic Framing}
+A distinctive thread treats AI-in-research as an \emph{economics} question:
+how agents reshape the returns to research skill, the ``zero-profit''
+pressure on routine analytical labor, and the emerging \textbf{verification
+bottleneck} --- where the binding constraint moves from producing results to
+credibly checking them. This positions AI adoption not merely as a
+productivity tweak but as a change in the structure of knowledge work.
+
+\section{Documenting in Public: A Method in Itself}
+The series models a research practice worth noting: \emph{learning in the
+open}. By publishing workflow tutorials, experiment/audit logs, and
+argument-driven essays as the tools evolve, the practitioner both refines
+their own method and creates a shared, reproducible record --- an approach
+well suited to a fast-moving toolchain.
+
+\section*{Key Resources}
+\begin{itemize}
+  \item Scott's Mixtape Substack --- \url{https://causalinf.substack.com/}
+  \item Claude Code series hub --- \url{https://causalinf.substack.com/s/claude-code}
+  \item MixtapeTools (templates \& tooling) --- \url{https://github.com/scunning1975/mixtapetools}
+\end{itemize}
+
+\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}\\
+{\small Compiled automatically as part of a scheduled newsletter-summary
+routine. Content synthesizes publicly available themes from Scott
+Cunningham's Claude Code series; interpretations are the routine's own.}
+
+\end{document}
