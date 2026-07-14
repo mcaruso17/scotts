@@ -1,0 +1,278 @@
+\documentclass[11pt]{article}
+
+% ============================================================
+%  AI Applications in Research: Concepts and the Role of
+%  Claude Code
+% ============================================================
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=[rgb]{0.10,0.30,0.65},
+  citecolor=black,
+  pdftitle={AI Applications in Research and Claude Code},
+  pdfauthor={Compiled summary}
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\newcommand{\term}[1]{\textbf{#1}}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Core Concepts and the Emerging Role of Claude Code}
+\author{Compiled summary}
+\date{14 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarises the main concepts behind the use of
+artificial intelligence in academic and applied research, with particular
+attention to \term{agentic coding assistants} and, specifically,
+\term{Claude Code}. It surveys where large language models (LLMs) now sit
+in the research workflow, the distinction between chat-based and agentic
+tools, concrete applications across the research lifecycle, and the
+methodological, reproducibility, and epistemic questions these tools raise.
+A short case study draws on economist Scott Cunningham's ongoing public
+documentation of using Claude Code for quantitative social science.
+\end{abstract}
+
+% ------------------------------------------------------------
+\section{Overview: AI as a Research Instrument}
+% ------------------------------------------------------------
+
+AI systems, and LLMs in particular, have moved from a curiosity to a
+routine instrument in the research process. Rather than a single
+application, they act as a general-purpose layer that touches nearly every
+stage of the research lifecycle: ideation, literature review, data
+acquisition and cleaning, analysis and modelling, code generation,
+writing, and peer critique.
+
+Three shifts distinguish the current moment:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \term{From retrieval to reasoning.} Modern models do not merely
+        surface text; they can plan multi-step tasks, decompose problems,
+        and justify intermediate steps.
+  \item \term{From chat to agency.} Tools have gained the ability to
+        \emph{act}---read and edit files, run code, call external tools,
+        and iterate on the results---rather than only produce text for a
+        human to copy.
+  \item \term{From assistant to collaborator.} The unit of work is
+        shifting from a single prompt-and-response toward sustained
+        sessions in which the model maintains context over an entire
+        project.
+\end{itemize}
+
+% ------------------------------------------------------------
+\section{Key Concepts and Terminology}
+% ------------------------------------------------------------
+
+\begin{description}[leftmargin=0em, style=nextline]
+  \item[Large Language Model (LLM)] A model trained on large text corpora
+    that predicts and generates language; the substrate for most current
+    research-AI tools.
+  \item[Agentic AI] A system that pursues a goal through a loop of
+    planning, tool use, observation, and revision, rather than emitting a
+    single response.
+  \item[Agentic coding assistant] An agent specialised for software work
+    that can read a codebase, edit files, execute commands, run tests, and
+    respond to their output. \term{Claude Code} is a canonical example.
+  \item[Context window / context management] The span of text a model can
+    consider at once; effective research use depends on curating what
+    enters this window (code, data schemas, prior results).
+  \item[Retrieval-Augmented Generation (RAG)] Supplying a model with
+    retrieved documents at inference time so answers are grounded in a
+    specific corpus rather than parametric memory alone.
+  \item[Tool use / function calling] The mechanism by which a model invokes
+    external capabilities (a shell, a search API, a database) and
+    incorporates the results.
+  \item[Reproducibility pipeline] The end-to-end, re-runnable path from raw
+    data to published result; a central concern when AI generates analysis
+    code.
+  \item[Human-in-the-loop] A workflow in which the researcher reviews,
+    corrects, and authorises the agent's actions, retaining accountability.
+\end{description}
+
+% ------------------------------------------------------------
+\section{What Claude Code Is}
+% ------------------------------------------------------------
+
+\term{Claude Code} is an agentic command-line coding tool built on
+Anthropic's Claude models. Unlike a chat window, it operates \emph{inside}
+a project directory: it can inspect the file tree, read and edit source
+files, run programs and tests, use version control, and iterate against the
+output it observes. For a researcher, the practical consequence is that the
+model can be pointed at an existing project---data, scripts, and
+notes---and work with the whole thing as context rather than a pasted
+snippet.
+
+Salient properties for research use:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \term{Whole-project context.} It reasons over an entire repository,
+        not an isolated cell or function.
+  \item \term{Execution and feedback.} It can run analyses and read errors,
+        closing the loop between writing code and checking whether it works.
+  \item \term{Multi-language pipelines.} It can coordinate across R,
+        Python, Stata, shell, and build tools within one project.
+  \item \term{Persistence via configuration.} Project-level instruction
+        files let a researcher encode conventions the agent should follow.
+\end{itemize}
+
+% ------------------------------------------------------------
+\section{Applications Across the Research Lifecycle}
+% ------------------------------------------------------------
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}p{0.28\linewidth}p{0.64\linewidth}@{}}
+\toprule
+\textbf{Stage} & \textbf{Representative AI / Claude Code uses} \\
+\midrule
+Ideation \& framing & Surfacing related literature, stress-testing a
+hypothesis, generating rival explanations. \\
+Literature review & Summarising and comparing papers; RAG over a personal
+library; extracting structured facts. \\
+Data acquisition \& cleaning & Writing scrapers and parsers, reconciling
+messy files, documenting variable definitions. \\
+Analysis \& modelling & Drafting estimation code, implementing methods
+(e.g.\ difference-in-differences, synthetic control), and sanity-checking
+results. \\
+Replication \& audit & Re-implementing a pipeline from scratch to test
+whether results hold across languages and packages. \\
+Writing \& communication & Drafting prose, figures, and tables; translating
+results into explainer essays. \\
+Review \& critique & Acting as an adversarial reader that probes
+assumptions and identifies weaknesses. \\
+\bottomrule
+\end{tabular}
+\caption{AI applications mapped to the research lifecycle.}
+\end{table}
+
+% ------------------------------------------------------------
+\section{Case Study: Scott Cunningham's Claude Code Series}
+% ------------------------------------------------------------
+
+Economist Scott Cunningham (Baylor University; author of \emph{Causal
+Inference: The Mixtape}) has, since December 2025, publicly documented his
+use of Claude Code for quantitative social science on his Substack,
+\emph{Scott's Mixtape}. The series---roughly 55 essays and over 150{,}000
+words---is an unusually candid, real-time field log of an experienced
+empirical researcher adopting an agentic tool.
+
+Recurring themes from the series:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \term{Workflow documentation.} He shows the concrete mechanics of
+        opening a directory (including a decade-old project), pointing the
+        agent at it, and walking through an initial workflow.
+  \item \term{Coding audits and replication.} He uses the agent to
+        replicate an analysis pipeline from scratch across multiple
+        languages and packages---a stress test of both the method and the
+        tool.
+  \item \term{New problems, not just old solutions.} He is explicit that
+        agentic tools \emph{create} new problems (e.g.\ around verification,
+        trust, and workflow discipline) even as they solve old ones, and
+        even when they do not obviously save time.
+  \item \term{The future of research labour.} In more speculative pieces he
+        imagines a near future in which human researchers no longer hold a
+        clear comparative advantage, and asks what institutions such as
+        peer review are \emph{for}.
+  \item \term{Valuing the output.} His 8 July 2026 essay attempts an
+        economic valuation of the essays themselves, using measurable
+        audience growth as a proxy for social value.
+\end{itemize}
+
+The broader lesson of the series is methodological humility: the tools are
+powerful, the productivity claims are real but uneven, and the honest
+posture is to ``take all with a grain of salt'' and keep verifying.
+
+% ------------------------------------------------------------
+\section{Methodological and Epistemic Considerations}
+% ------------------------------------------------------------
+
+\begin{description}[leftmargin=0em, style=nextline]
+  \item[Verification burden] Generated code and prose can be confidently
+    wrong; the researcher must still read, test, and validate every result.
+    Speed at producing artefacts can outrun capacity to check them.
+  \item[Reproducibility] Non-deterministic outputs and undocumented
+    prompting can undermine replicability; sessions, prompts, and generated
+    code should be version-controlled like any other research artefact.
+  \item[Hallucination and grounding] Models can fabricate citations,
+    results, or APIs; grounding via RAG and execution feedback mitigates but
+    does not eliminate this.
+  \item[Attribution and authorship] Norms are unsettled around disclosing
+    AI assistance in analysis and writing.
+  \item[Comparative advantage] As Cunningham's series dramatises, the
+    diffusion of capable agents raises questions about the distinctive human
+    contribution to research and about the function of peer review.
+  \item[Data governance] Sensitive or confidential data may not be
+    appropriate to expose to external services; local and policy constraints
+    matter.
+\end{description}
+
+% ------------------------------------------------------------
+\section{Practical Guidance}
+% ------------------------------------------------------------
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item \term{Keep a human in the loop.} Treat the agent as a fast, fallible
+        collaborator; review its actions and own the results.
+  \item \term{Version everything.} Commit generated code, and record the
+        prompts and configuration that produced it.
+  \item \term{Prefer executable checks.} Let the agent run tests and
+        replications; observed behaviour beats plausible-looking text.
+  \item \term{Encode conventions.} Use project instruction files to make the
+        agent follow your standards for style, methods, and structure.
+  \item \term{Replicate to trust.} For important results, have the pipeline
+        rebuilt independently and compare.
+  \item \term{Disclose.} Be transparent about where and how AI contributed.
+\end{enumerate}
+
+% ------------------------------------------------------------
+\section{Summary}
+% ------------------------------------------------------------
+
+AI---and agentic coding assistants such as Claude Code in
+particular---has become a general-purpose instrument across the research
+lifecycle, shifting the tools from passive chat to active collaborators
+that can read a whole project, run code, and iterate. The gains in
+literature review, data work, analysis, replication, and writing are
+tangible, but they come paired with a heavier verification burden and open
+questions about reproducibility, authorship, and the future division of
+labour between humans and machines in research. Scott Cunningham's public
+Claude Code series illustrates both the promise and the honest caveats of
+this transition in practice.
+
+% ------------------------------------------------------------
+\section*{Selected References}
+% ------------------------------------------------------------
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Scott's Mixtape Substack, \emph{Claude Code for Quantitative Social
+        Science} series, Dec.\ 2025--present.
+        \url{https://causalinf.substack.com/}
+  \item S.\ Cunningham, \emph{Deriving the Value of these Claude Code Essays
+        (and All Other Essays) using Claude Code Integration to Substack},
+        8 July 2026.
+        \url{https://causalinf.substack.com/p/deriving-the-value-of-these-claude}
+  \item S.\ Cunningham, \emph{Causal Inference: The Mixtape}, Yale
+        University Press.
+  \item Anthropic, \emph{Claude Code} documentation.
+        \url{https://docs.anthropic.com/en/docs/claude-code}
+\end{itemize}
+
+\end{document}
