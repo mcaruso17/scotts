@@ -1,0 +1,233 @@
+\documentclass[11pt]{article}
+
+% ============================================================
+%  AI Applications in Research: The Use of Claude Code
+%  A conceptual summary synthesized from Scott Cunningham's
+%  "Scott's Mixtape Substack" Claude Code essay series (2025-2026)
+% ============================================================
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{colorlinks=true, linkcolor=blue!55!black, urlcolor=blue!55!black}
+
+\title{\textbf{AI Applications in Research}\\[4pt]
+\large Main Concepts and the Use of Claude Code}
+\author{Compiled for M.~Caruso \\ \small Synthesized from Scott Cunningham's \emph{Mixtape} Claude Code essays}
+\date{16 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts surrounding the use of AI
+agents---and Claude Code in particular---in empirical and social-scientific
+research. It draws on the ongoing ``Claude Code'' essay series (56+ essays since
+November 2025) by economist Scott Cunningham (Baylor University), whose weekly
+newsletter documents, in near-real-time, how AI agents are reshaping the
+production of research. The framing throughout is economic: AI agents change the
+\emph{production function} of cognitive output, and in doing so relocate the
+binding constraint from production to \emph{verification}.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ------------------------------------------------------------
+\section{What Claude Code Is}
+% ------------------------------------------------------------
+Claude Code is a command-line AI \emph{agent} built on Anthropic's Claude
+models. Unlike a chat interface that only exchanges text, an agent operates
+within an ecosystem of tools, memory stores, and orchestrated workflows,
+enabling it to read and write files, run code, search the web, and act on
+external systems (e.g., via the Model Context Protocol, MCP). For a researcher,
+this turns the model from a conversational assistant into a collaborator that
+can execute an entire empirical pipeline: cleaning data, estimating models,
+producing tables and figures, drafting manuscripts, and building slide decks.
+
+% ------------------------------------------------------------
+\section{The Central Economic Framework}
+% ------------------------------------------------------------
+
+\subsection{Production functions and the machine/human mix}
+Consider the task of producing a single unit of \emph{cognitive output}---a
+table of regression coefficients, a figure, a poem, or a worked-out manuscript.
+That unit can be produced with different ratios of machine time $M$ to human
+time $H$. Historically, before AI agents, the production of research was
+extremely \textbf{human-time intensive}: machine time was little more than the
+seconds Stata needed to invert a matrix.
+
+Cunningham models this with an isoquant---a level surface of a quasi-concave
+production function $Q = f(M, H)$:
+\[
+  \bar{Q} = f(M, H).
+\]
+\textbf{Before AI agents}, the isoquant was sharply convex and human-intensive.
+\textbf{After AI agents}, it straightens toward linearity, approximating
+\emph{perfect substitutes}:
+\[
+  Q = \alpha M + \beta H .
+\]
+When machine and human time become close substitutes, the cost-minimizing
+choice is to push the input mix as far toward the machine-time intercept $M^{*}$
+as possible---i.e., to let the agent produce as much as it can, as cheaply as it
+can.
+
+\subsection{Falling marginal cost of cognitive output}
+The immediate consequence is that the \textbf{marginal cost of producing
+cognitive output falls dramatically}. Research artifacts that once took days of
+skilled human labor can be generated in minutes. This is the engine behind the
+``research and publishing are now two different things'' theme in the essays:
+when production is nearly free, the scarce, valuable activity shifts elsewhere.
+
+\subsection{Production is not verification}
+The pivotal idea in the series is that \textbf{the production function is not the
+verification function}. AI agents collapse the cost of \emph{producing} output
+but do nothing---directly---to reduce the cost of \emph{checking} that the output
+is correct, or even that it is what the researcher intended. This opens a wedge:
+\begin{quote}
+\emph{``Verification is the new bottleneck.''}
+\end{quote}
+As production cost $\to 0$, the aggregate error rate can \emph{rise} unless
+verification scales with output. More output produced faster means more
+opportunities for silent, plausible-looking mistakes. The researcher's
+comparative advantage migrates from \emph{writing} the analysis to
+\emph{validating} it.
+
+% ------------------------------------------------------------
+\section{The Manager / Individual-Contributor Shift}
+% ------------------------------------------------------------
+Cunningham borrows a distinction from the tech industry: there are
+\textbf{managers} and \textbf{individual contributors}. AI agents push
+researchers up the org chart. Using the metaphor of a Michelin-starred kitchen,
+the founder (e.g., Paulo Airaudo of Amelia) no longer cooks every dish but is
+still indispensable---without him there is no meal. By analogy, a principal
+investigator such as Raj Chetty at Opportunity Insights directs a lab of research
+assistants rather than writing every line of code.
+
+With Claude Code, an \textbf{individual researcher becomes the manager of a lab
+of AI research assistants}. Human capital reallocates from execution toward:
+\begin{itemize}[leftmargin=1.4em]
+  \item posing the research question and forming conjectures;
+  \item specifying tasks precisely enough for agents to execute;
+  \item verifying, auditing, and interpreting results;
+  \item exercising taste and judgment---the parts that remain irreducibly human.
+\end{itemize}
+A newcomer with a \$200/month subscription can now ``skip the line'' on
+apprenticeship that once required years of moving up a hierarchy.
+
+% ------------------------------------------------------------
+\section{The Human-in-the-Loop Problem and the ``Harness''}
+% ------------------------------------------------------------
+Because production has been externalized to agents, a new design problem
+appears: \textbf{where does the human insert themselves into the new production
+function?} Cunningham frames this as building a \emph{harness}.
+
+\paragraph{Agent harness.}
+An agent harness is the software infrastructure wrapping the large language model
+that handles \emph{everything except the model itself}---``the complete
+architectural system surrounding an LLM that manages the lifecycle of context:
+from intent capture through specification, compilation, execution, verification,
+and persistence.'' It is what connects the model to the outside world, lets it
+use tools, and lets it remember information between steps.
+
+The open research question the essays pursue is what an \emph{optimal harness for
+empirical social science} looks like: how to record conjectures and
+interpretations now that the human is further removed from typing code; how to
+visualize ideas (dashboards, ``beautiful decks,'' markdown notes); and how to
+draw the ``property rights'' boundary between researcher and agent over which
+tasks. The philosophy is taken to precede the tooling---the essays start from a
+productivity philosophy (e.g., David Allen's \emph{Getting Things Done}) and
+treat the specific tools as endogenous to it.
+
+% ------------------------------------------------------------
+\section{Concrete Workflows and Practices}
+% ------------------------------------------------------------
+
+\subsection{Skills}
+A \emph{skill} is a packaged, reusable instruction set for a recurring task. The
+early workflow was ``atomistic'': keep doing the normal task, but invoke a skill
+to do it---\texttt{/beautiful\_deck} to build slides, \texttt{/referee2} to
+check and validate code. Skills leave the researcher with something concrete and
+copyable they can run on their own side.
+
+\subsection{Multi-agent audits and replication}
+A recurring, high-value pattern is using multiple agents to \textbf{audit and
+replicate} empirical work: e.g., replication arcs of published papers, a
+multi-agent audit of the Callaway--Sant'Anna difference-in-differences
+estimator, and apples-to-apples comparisons across six packages implementing the
+same estimator. These ``lab-notebook'' experiments let a single researcher take
+on validation work that would previously have been impractical.
+
+\subsection{Checklists to control error}
+Because verification is the bottleneck, the essays argue that \textbf{applied
+econometrics will increasingly require detailed checklists}---explicit,
+enumerated validation steps that agents (and humans) run to drive the error rate
+toward zero. Structured protocols substitute for the tacit checking that used to
+happen implicitly while a human typed the code.
+
+\subsection{Integration and measurement (MCP)}
+Newer essays connect Claude Code to external platforms via MCP (for example,
+Substack's own integration) and use agents to \emph{measure} outcomes---such as
+estimating the ``social value'' of the essay series itself from subscriber and
+readership data. This closes the loop: agents are used not only to do research
+but to evaluate the research process.
+
+% ------------------------------------------------------------
+\section{A Taxonomy of the Claude Code Essays}
+% ------------------------------------------------------------
+An agent-generated genre taxonomy of the 55+ essays identifies five types,
+useful as a map of \emph{how} researchers engage with AI agents:
+\begin{enumerate}[leftmargin=1.6em]
+  \item \textbf{Economic essays} (\raisebox{0pt}{$\sim$}19): argument-driven
+        pieces on what AI does to research, publishing, and the profession
+        (e.g., ``Zero Profit Condition,'' ``Verification Is the New Bottleneck,''
+        ``Falling Marginal Costs'').
+  \item \textbf{Workflow tutorials} ($\sim$16): practical, copyable how-to's
+        (skills, deck prompts, harness principles).
+  \item \textbf{Experiment / audit logs} ($\sim$13): lab-notebook write-ups of
+        empirical results (replication and estimator-audit arcs).
+  \item \textbf{Field notes} ($\sim$4): diary entries and talk recaps.
+  \item \textbf{Artifact showcases} ($\sim$3): the output \emph{is} the post
+        (videos, decks).
+\end{enumerate}
+
+% ------------------------------------------------------------
+\section{Key Takeaways}
+% ------------------------------------------------------------
+\begin{itemize}[leftmargin=1.4em]
+  \item AI agents like Claude Code make machine time and human time near-perfect
+        substitutes in producing cognitive output, driving its marginal cost
+        toward zero.
+  \item The binding constraint moves from \textbf{production} to
+        \textbf{verification}; without scaling verification, aggregate error
+        rises.
+  \item Researchers become \textbf{managers of AI research assistants},
+        reallocating human capital toward questions, specification, judgment, and
+        auditing.
+  \item Realizing the gains requires designing a \textbf{harness}---the
+        human-in-the-loop infrastructure around the model---rather than merely
+        collecting one-off tricks.
+  \item Practical levers today: reusable \textbf{skills}, \textbf{multi-agent
+        audits}, explicit \textbf{checklists}, and \textbf{MCP integrations} for
+        acting on and measuring the research pipeline.
+\end{itemize}
+
+% ------------------------------------------------------------
+\section*{Sources}
+\addcontentsline{toc}{section}{Sources}
+% ------------------------------------------------------------
+\small
+Synthesized from Scott Cunningham, \emph{Scott's Mixtape Substack}
+(\url{https://causalinf.substack.com}), Claude Code essay series, including:
+\begin{itemize}[leftmargin=1.4em, itemsep=1pt]
+  \item CC51, ``Harnessing AI Agents for Economic Research'' (21 May 2026).
+  \item CC56, ``Falling marginal costs of production, output, and aggregate
+        errors'' (6 July 2026).
+  \item ``Deriving the Value of these Claude Code Essays'' (8 July 2026).
+  \item Related essays on skills, multi-agent audits, and verification.
+\end{itemize}
+
+\end{document}
