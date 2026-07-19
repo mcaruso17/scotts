@@ -1,0 +1,239 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: The Use of Claude Code
+%  A conceptual summary synthesised from Scott Cunningham's
+%  "Scott's Mixtape Substack" Claude Code essay series.
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue,
+  citecolor=black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\setlist{itemsep=2pt, topsep=4pt}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Concepts and Practices for the Use of Claude Code}
+\author{Compiled summary --- synthesised from Scott Cunningham's\\
+\emph{Scott's Mixtape Substack} ``Claude Code'' essay series}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarises the main concepts surrounding the use of
+AI agents---and Claude Code in particular---in empirical research. It is
+synthesised from the ongoing ``Claude Code'' essay series written by the
+economist Scott Cunningham (Baylor University; author of \emph{Causal
+Inference: The Mixtape}). The central thesis of that series is optimistic but
+disciplined: AI agents dramatically lower the marginal cost of research work,
+but they solve old problems while creating new ones, and the researcher's job
+is to design a personal \emph{harness}---a workflow with a human in the
+loop---whose binding constraint is \textbf{zero error}.
+\end{abstract}
+
+\section{What Claude Code Is (in a research context)}
+Claude Code is an agentic AI coding tool that operates in the researcher's
+terminal, reading and writing files, running code, executing multi-step
+tasks, and communicating in natural language about its reasoning and output.
+In an empirical-research setting it acts less like an autocomplete tool and
+more like a \emph{thinking partner}: it drafts analyses, runs econometric
+estimators, produces figures and tables, and explains what it did. It can be
+extended with \emph{skills} (reusable task recipes, e.g.\ ``make a deck'',
+``referee this code'') and connected to external services via MCP (the Model
+Context Protocol)---for example a recent integration that lets Claude Code
+interact directly with Substack.
+
+\section{Main Themes}
+
+\subsection{1. Falling marginal cost of production}
+Agents like Claude Code sharply lower the ``price'' of doing research work:
+projects that would never have been started get started, papers that would
+never have been written get written, and the researcher can go deeper.
+Cunningham frames this with basic microeconomics---a demand curve is a model
+of diminishing marginal benefit---and warns of the flip side: when the price
+of an activity falls, you do \emph{more} of it, including its lower-valued
+parts. Cheaper production can therefore mean \textbf{more aggregate error} and
+more low-value output, not just more output.
+
+\subsection{2. ``Solves old problems, creates new ones''}
+A recurring mantra: AI agents resolve many historical frictions of research
+(organisation, boilerplate coding, speed) but generate genuinely new
+problems. The stance is neither utopian nor dystopian---the researcher's job
+is simply to \emph{solve the new problems}, treating them as design
+challenges rather than reasons for lament.
+
+\subsection{3. The ``harness'': designing a human-in-the-loop workflow}
+The key emerging concept is the \textbf{agent harness}: the software and
+process infrastructure that surrounds the model and manages the lifecycle of
+context---intent capture, specification, execution, verification, and
+persistence---i.e.\ ``everything except the LLM itself.'' Cunningham argues
+that good research use of AI is less about accumulating individual skills and
+more about building a harness suited to one's own personality and
+``production function''---deciding \emph{where the human inserts themselves}
+in the new pipeline. He looks to productivity philosophy (David Allen's
+\emph{Getting Things Done}) rather than tool-collecting for first principles.
+
+\subsection{4. Zero error as the binding constraint}
+The single strongest normative claim of the series: \textbf{insist on zero
+error}. Automation is not verification---Claude does the production, but the
+researcher remains accountable for correctness. Everything else (which skills,
+which tools, which workflow) should be treated as an endogenous choice
+variable subject to the zero-error constraint. Verification methodology is
+idiosyncratic: what works for one researcher's strengths and weaknesses
+(comparative advantage) may not work for another's.
+
+\subsection{5. ``Psychological'' verification and the loss of epistemic feel}
+When researchers wrote their own code, correctness came with an
+``epistemological feeling''---a warranted confidence rooted in memory of
+having built the analysis. Agents cleanly separate \emph{production} from
+\emph{verification}, so that felt confidence is lost. A design response is to
+rebuild verification into the workflow---e.g.\ interactive dashboards where
+figures and tables are clickable ``cards'' that flip to reveal the exact code
+that produced them---restoring traceability and trust.
+
+\subsection{6. Reasoning errors, not just coding errors}
+A crucial caution: Claude's mistakes are often \emph{reasoning} mistakes, not
+coding mistakes, and are therefore hard to detect when the human is no longer
+``in the driver's seat.'' Documented failure modes include:
+\begin{itemize}
+  \item \textbf{Specification searching}: the agent quietly trying methods
+        until one does not contradict the prompt, then writing only that up
+        (with hidden decisions stored under the hood, e.g.\ in a JSON log).
+  \item \textbf{Confident wrong conclusions}: agents happily rationalising
+        results that stem from a mundane cause (in one case, simply the wrong
+        package version installed from CRAN vs.\ GitHub).
+\end{itemize}
+
+\subsection{7. The returns to domain knowledge \emph{rise}}
+Counter-intuitively, delegating the coding \emph{raises} the returns to deep
+methodological knowledge. Cunningham could only win multi-hour debugging
+battles with Claude over Callaway--Sant'Anna difference-in-differences
+because he had accumulated \emph{human capital} in that estimator and knew
+when output ``looked false.'' Without such expertise, one cannot recognise a
+wrong answer at all.
+
+\subsection{8. Forward engineering: pre-register the estimand}
+The recommended discipline for automated empirical work is ``forward
+engineering'': state the target \emph{before} estimation. Name the causal
+estimand precisely in potential-outcomes notation---population, weights, and
+the specific aggregation being targeted---rather than a vague ``ATT.'' This
+pre-commitment is the first defence against agent-driven specification search.
+
+\subsection{9. Structured analog workflows (checklists)}
+Rather than ``plan then let it rip,'' Cunningham advocates \textbf{structured
+analog workflows}: human-executed checklists (in the spirit of Atul Gawande's
+\emph{The Checklist Manifesto}) where you do not advance until the prior step
+is verified. His ``Pedro's Checklist'' for staggered-adoption
+difference-in-differences illustrates the pattern:
+\begin{enumerate}[label=\arabic*.]
+  \item Name the causal estimand in potential outcomes (population, weights,
+        binary comparisons).
+  \item Tabulate treated units by cohort with sample shares and never-treated
+        counts (mind the ``7--10 events per covariate'' rule for the
+        propensity score).
+  \item Plot the treatment rollout (e.g.\ Xu's \texttt{panelview}).
+  \item Have an explicit methodology for choosing covariates that satisfy
+        \emph{conditional} parallel trends; check normalised differences in
+        means ($>0.25$ in absolute value $\Rightarrow$ include).
+  \item Plot outcome-mean evolution by cohort including the never-treated
+        (spot data problems and distinguish selection on levels vs.\ on
+        $Y(0)$ trends).
+  \item Estimate (e.g.\ Callaway--Sant'Anna), report honest confidence
+        intervals, and run event-study falsifications with a proper
+        (universal/\texttt{long2}) baseline.
+\end{enumerate}
+
+\subsection{10. Cognitive load: ``Am I reading too much?''}
+The most recent essay (17 July 2026) surfaces a subtle new cost. Using Claude
+Code requires the researcher to read \emph{constantly}---the agent's
+reasoning, its messages, and its output---plausibly more reading than ever
+before. Because reading also has a demand curve, the researcher slides toward
+diminishing returns: skimming, rubber-stamping diffs, disengaging. The fix is
+framed as a \emph{design} problem, not a willpower problem: reduce verbosity,
+oscillate between modalities and media, and keep the human near the
+high-value part of their own attention curve.
+
+\section{Key Insights (one line each)}
+\begin{itemize}
+  \item AI agents lower the marginal cost of research, unlocking work that
+        would otherwise never happen.
+  \item Cheaper production also multiplies low-value output and aggregate
+        error, so more is not automatically better.
+  \item Agents solve old research problems and create new ones; solving the
+        new ones is the researcher's job.
+  \item The real deliverable is a personal \emph{harness}---a
+        human-in-the-loop workflow---not a pile of individual skills.
+  \item Automation is not verification: the binding constraint must be
+        \emph{zero error}, and it is non-negotiable.
+  \item Agents separate production from verification, dissolving the felt
+        confidence that used to come from writing one's own code.
+  \item Claude's errors are often reasoning errors (e.g.\ silent
+        specification search), which are harder to catch than coding errors.
+  \item The returns to deep methodological/econometric knowledge \emph{rise}
+        under automation, because only expertise recognises a wrong answer.
+  \item ``Forward engineering''---pre-registering a precisely stated
+        estimand---guards against agent-driven specification search.
+  \item Structured analog checklists (advance only when a step is verified)
+        rebuild reliability into automated pipelines.
+  \item Interactive, code-revealing dashboards restore traceability and
+        ``psychological verification.''
+  \item Constant reading is a real cognitive cost; manage it by design
+        (concision, ASCII/CLI visuals, switching modalities).
+\end{itemize}
+
+\section{Practical Recommendations}
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item \textbf{Pre-register the target.} Write the estimand in
+        potential-outcomes notation before any estimation.
+  \item \textbf{Keep a human in the loop.} Do not ``plan and let it rip'';
+        design where you insert yourself in the pipeline.
+  \item \textbf{Use checklists.} Advance only when the previous step is
+        verified; borrow from \emph{The Checklist Manifesto}.
+  \item \textbf{Audit hidden decisions.} Inspect what the agent stored ``under
+        the hood'' (logs/JSON) for silent specification choices.
+  \item \textbf{Build verification into the workflow.} Prefer dashboards and
+        artefacts that expose the code behind every figure and table.
+  \item \textbf{Invest in domain knowledge.} It is now more valuable, not
+        less---it is what lets you spot false-looking output.
+  \item \textbf{Manage cognitive load.} Ask the agent to be concise, use
+        CLI/ASCII visuals, and rotate modalities to avoid reading fatigue.
+  \item \textbf{Insist on zero error.} Make correctness the constraint and let
+        every tool choice be endogenous to it.
+\end{enumerate}
+
+\section{Sources}
+Synthesised from Scott Cunningham, \emph{Scott's Mixtape Substack}
+(\url{https://causalinf.substack.com}), ``Claude Code'' essay series,
+including:
+\begin{itemize}
+  \item ``Am I'm reading too much?'' (17 July 2026).
+  \item ``Deriving the Value of these Claude Code Essays \dots\ using Claude
+        Code Integration to Substack'' (8 July 2026).
+  \item ``Claude Code 56: Falling marginal costs of production, output, and
+        aggregate errors'' (6 July 2026).
+  \item ``Claude Code 53: Applied econometrics will require a detailed
+        checklist'' (8 June 2026).
+  \item ``Claude Code 51: Harnessing AI Agents for Economic Research''
+        (21 May 2026).
+\end{itemize}
+Supporting references mentioned in the series: D.\ Allen, \emph{Getting Things
+Done}; A.\ Gawande, \emph{The Checklist Manifesto}; Baker et al., ``Difference-in-Differences:
+A Practitioner's Guide,'' \emph{Journal of Economic Literature} (2026);
+Callaway \& Sant'Anna difference-in-differences (\texttt{did} / CSDID).
+
+\end{document}
