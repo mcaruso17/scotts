@@ -1,0 +1,180 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: The Use of Claude Code
+%  A concept summary distilled from Scott Cunningham's
+%  "Scott's Mixtape Substack" essays on working with Claude Code.
+% ---------------------------------------------------------------
+
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{parskip}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black,
+  pdftitle={AI Applications in Research: The Use of Claude Code},
+  pdfauthor={Summary compiled from Scott Cunningham's Substack}
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+       \large The Use of Claude Code as a Research Partner}
+\author{Concept summary distilled from \emph{Scott's Mixtape Substack}}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts around the use of
+artificial intelligence in empirical research, with a focus on the
+agentic coding tool \emph{Claude Code}. The synthesis draws on the
+economist Scott Cunningham's ongoing series of essays (60+ since
+December 2025) documenting how AI agents are reshaping the day-to-day
+craft of applied research. The recurring economic framing---falling
+marginal costs, demand curves, diminishing returns, and workflow
+(``harness'') design---is used to organize the ideas.
+\end{abstract}
+
+\section{Overview: AI as a Research Partner}
+
+Modern coding agents such as Claude Code have moved beyond autocomplete
+and debugging into the role of a genuine \emph{thinking partner} for
+research. Rather than merely writing snippets, the agent reads context,
+reasons out loud, executes multi-step empirical work, produces figures,
+and communicates its reasoning back to the researcher in natural
+language. The central claim across the literature is that this changes
+not only \emph{how fast} research gets done, but \emph{which} research
+becomes possible at all.
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Ideation and scope.} Projects that would never have been
+        started---because the setup cost was prohibitive---become
+        feasible, expanding the researcher's opportunity set.
+  \item \textbf{Depth.} The researcher can go deeper on empirical
+        questions, iterating through more specifications, robustness
+        checks, and visualizations than would otherwise be practical.
+  \item \textbf{Joy and engagement.} A frequently reported effect is
+        renewed enjoyment of the work itself, which sustains
+        productivity.
+\end{itemize}
+
+\section{The Economics of AI-Assisted Research}
+
+\subsection{Falling Marginal Cost of Production}
+AI agents dramatically lower the marginal cost of producing research
+output---code, tables, figures, and prose. When the price of an activity
+falls, the quantity undertaken rises. This is why researchers using
+Claude Code report a surge in output: more essays, more papers, more
+analyses per unit of time.
+
+\subsection{Output, Aggregate Error, and Quality Control}
+Lower production cost is not a free lunch. As raw output rises, the
+\emph{aggregate} number of errors can rise too, even if the error
+\emph{rate} per unit falls. This makes verification, review discipline,
+and human judgment more---not less---important. The bottleneck migrates
+from \emph{producing} work to \emph{checking} it.
+
+\subsection{Demand Curves and Diminishing Marginal Returns}
+A demand curve is not just a description of a causal effect (raise
+price $\rightarrow$ reduce quantity); underneath it lies a model of
+humans valuing an activity. Marginal benefit is high when an activity is
+done a little ($X_1$) and low when done a lot ($X_2$)---diminishing
+marginal returns.
+
+Applied to AI-assisted research, because the agent lowers the price of
+work, the researcher does far \emph{more} of certain activities and
+slides down the demand curve toward the low-value region. A concrete
+example: the researcher must now \emph{read constantly}---the agent's
+reasoning, its explanations, and its output---often more than ever
+before. Past a point, reading suffers diminishing returns: the human
+starts skimming, mindlessly approving diffs, and disengaging. The finite
+human mind cannot absorb infinite words while maintaining comprehension.
+
+\section{Designing the Workflow (the ``Harness'')}
+
+A key insight is that when the researcher trips up, the right response is
+often \emph{not} to ``work harder'' but to recognize a \emph{failed
+design} and fix it. Building a personal ``harness'' that fits one's own
+cognition---and repairs one's own broken production function---is central
+to using these tools well.
+
+\subsection{Concise, Warm Communication}
+\begin{itemize}[leftmargin=1.4em]
+  \item Instruct the agent to be more succinct---``if I write 10
+        characters, write 9''---while remaining warm and collaborative.
+  \item Prefer terse, in-terminal communication, including ASCII
+        graphics in the command-line interface, over long prose
+        speeches.
+  \item Codify durable preferences globally in a \texttt{CLAUDE.md} file
+        (e.g., banning pet-peeve phrases) so they need not be repeated.
+\end{itemize}
+
+\subsection{Oscillating Across Modalities}
+To stay near the high-value part of the ``reading'' demand curve
+($X_1$), deliberately rotate among modalities and mediums---text,
+figures, checklists, and visual output---rather than consuming one
+continuous stream of prose. Having the agent generate figures more
+intensively and move through a well-designed checklist keeps the human
+engaged and comprehending.
+
+\subsection{Beware the Meta-Trap}
+Time spent fixing designs is itself subject to a demand curve: one can
+over-invest in tuning the workflow and reach the bottom of \emph{that}
+curve. The recommended posture is balance---enough design work to
+unblock real research, not so much that meta-work crowds out the work
+itself.
+
+\section{Tooling and Integrations}
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Agentic execution.} Claude Code runs multi-step
+        empirical work end to end---reading files, editing code, running
+        analyses, and reporting results.
+  \item \textbf{MCP integrations.} The Model Context Protocol (MCP) lets
+        the agent connect to external platforms and services (for
+        example, publishing integrations), extending its reach beyond
+        the local codebase.
+  \item \textbf{Figures over text.} Offloading communication to
+        generated figures and ASCII visuals reduces the reading burden
+        while preserving information.
+  \item \textbf{Version-control discipline.} Reviewing commit
+        ``diffs''---attentively rather than mindlessly---is the frontline
+        of quality control in an agent-driven workflow.
+\end{itemize}
+
+\section{Key Takeaways}
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item AI agents like Claude Code act as research \emph{partners}, not
+        just code generators, expanding both the feasibility and depth
+        of empirical work.
+  \item By lowering the marginal cost of production, they raise output
+        volume---and shift the binding constraint to human review and
+        judgment.
+  \item Economic intuition (demand curves, diminishing marginal returns)
+        explains why more output can slide the researcher into low-value
+        activity such as excessive, low-comprehension reading.
+  \item The remedy is \emph{design}: build a personal harness---concise
+        communication, \texttt{CLAUDE.md} conventions, checklists, and
+        modality rotation---that keeps the human at the high-value part
+        of the curve.
+  \item Guard against over-optimizing the workflow itself; balance
+        design effort against the research it is meant to enable.
+\end{enumerate}
+
+\section*{Source}
+\noindent Distilled from Scott Cunningham, \emph{Scott's Mixtape
+Substack}, including ``Am I'm reading too much?'' (July 17, 2026),
+``Claude Code 56: Falling marginal costs of production, output, and
+aggregate errors,'' and the Claude Code essay series. Newsletter:
+\url{https://causalinf.substack.com/}.
+
+\end{document}
