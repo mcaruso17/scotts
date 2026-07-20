@@ -1,0 +1,227 @@
+\documentclass[11pt]{article}
+
+%========================================================
+%  AI Applications in Research: The Case of Claude Code
+%  A conceptual summary, informed by Scott Cunningham's
+%  "Scott's Mixtape" Substack series on Claude Code for
+%  quantitative social scientists.
+%========================================================
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue,
+  citecolor=black,
+  pdftitle={AI Applications in Research: The Case of Claude Code},
+  pdfauthor={Compiled summary}
+}
+\usepackage{parskip}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large The Case of Claude Code for Empirical and Quantitative Work}
+\author{Compiled summary\\ \small informed by Scott Cunningham's \emph{Scott's Mixtape} Substack series}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This document summarizes the main concepts behind the use of artificial
+intelligence in research, with an emphasis on agentic coding assistants and
+Anthropic's \textbf{Claude Code} in particular. It draws on themes from Scott
+Cunningham's ongoing Substack series documenting his use of Claude Code as a
+``thinking partner'' for causal inference and applied empirical work. The goal
+is to give researchers a conceptual map: what these tools do, why they change
+the economics of research, how to work with them well, and where their limits
+and risks lie.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+%--------------------------------------------------------
+\section{Introduction}
+\label{sec:intro}
+
+Large language models (LLMs) have moved from text generators to \emph{agents}
+that can read files, run code, inspect results, and iterate toward a goal.
+\textbf{Claude Code} is an agentic command-line tool from Anthropic that
+operates directly inside a researcher's project directory: it can read and edit
+source files, execute scripts, run statistical analyses, interpret output, and
+carry a multi-step task to completion while narrating its reasoning.
+
+For empirical researchers---economists, social scientists, epidemiologists,
+data scientists---this represents a shift from AI as an \emph{autocomplete}
+toward AI as a \emph{collaborator} embedded in the full research workflow: data
+cleaning, estimation, visualization, writing, and replication.
+
+%--------------------------------------------------------
+\section{Core Concepts}
+\label{sec:concepts}
+
+\subsection{Agentic AI vs.\ chat AI}
+A chat assistant answers a prompt; an \emph{agent} pursues a goal. Claude Code
+plans, takes actions (reads/writes files, runs commands), observes the results
+of those actions, and revises---closing the loop between intention and outcome
+without the human copying text back and forth.
+
+\subsection{The research loop as a tool-use loop}
+Empirical research is itself a loop: hypothesize $\rightarrow$ specify a model
+$\rightarrow$ estimate $\rightarrow$ inspect diagnostics $\rightarrow$ revise.
+Agentic tools map naturally onto this loop because they can execute and read
+back each step, letting the researcher supervise at the level of \emph{decisions}
+rather than \emph{keystrokes}.
+
+\subsection{Context and memory}
+The agent works from a \emph{context window} (the files, instructions, and
+history it can currently ``see''). Persistent project instructions---for Claude
+Code, a \texttt{CLAUDE.md} file---let a researcher encode standing preferences
+(coding style, estimators to prefer, phrases to avoid) so that behavior is
+consistent across sessions.
+
+\subsection{The Model Context Protocol (MCP)}
+MCP is an open standard that connects an agent to external tools and data
+sources (databases, document stores, publishing platforms). It is the plumbing
+that lets Claude Code reach beyond raw files---e.g.\ integrating with a writing
+or publishing platform---turning the assistant into a hub for the whole
+pipeline.
+
+%--------------------------------------------------------
+\section{Applications in the Research Workflow}
+\label{sec:applications}
+
+\begin{description}[style=nextline,leftmargin=1.5em]
+  \item[Data preparation] Cleaning, merging, reshaping, and validating datasets;
+    catching silent errors in transformations.
+  \item[Estimation \& identification] Implementing estimators (e.g.\
+    difference-in-differences, event studies, IV/LATE, synthetic control) and
+    stress-testing identifying assumptions such as parallel trends.
+  \item[Diagnostics \& robustness] Generating specification curves, placebo
+    tests, and sensitivity analyses far faster than by hand.
+  \item[Visualization] Producing and iterating on figures quickly, including
+    lightweight in-terminal (ASCII) summaries for fast comprehension.
+  \item[Writing \& exposition] Drafting explainers, documenting methods, and
+    translating code into prose (and vice versa).
+  \item[Reproducibility] Structuring projects, writing scripts and READMEs, and
+    building checklists so that an analysis can be re-run end to end.
+\end{description}
+
+%--------------------------------------------------------
+\section{The Economics of AI-Assisted Research}
+\label{sec:economics}
+
+A recurring theme in Cunningham's writing is that these tools \textbf{lower the
+marginal cost of doing research work}. This has predictable consequences that
+every researcher should reason about explicitly.
+
+\subsection{Falling marginal cost, rising output}
+When the cost of executing an analysis falls, researchers do \emph{more} of it:
+more specifications, more figures, more exploratory branches, and projects that
+would previously never have been started. Access to the ``impossible'' expands.
+
+\subsection{Diminishing marginal returns and the demand curve}
+Cunningham frames a caution using a standard demand curve. The curve traces the
+\emph{marginal benefit} of an activity: doing a little of it ($X_1$) yields high
+marginal benefit; doing a lot ($X_2$) yields low marginal benefit. Formally, for
+an activity level $q$ with marginal benefit $MB(q)$,
+\[
+  MB'(q) < 0, \qquad \text{so that} \qquad MB(X_2) < MB(X_1) \;\; \text{for} \;\; X_2 > X_1 .
+\]
+Because AI lowers the ``price'' of work, the researcher is pushed toward $X_2$:
+producing---and especially \emph{reading}---far more than before. Past a point,
+the extra output is low-value, and comprehension degrades (skimming diffs,
+checking out of long explanations). The corrective is not to ``work harder'' but
+to redesign the workflow so one stays nearer the high-value region $X_1$.
+
+\subsection{Aggregate error and supervision}
+Lower per-task cost multiplies the number of tasks, so even a low per-task error
+rate can accumulate into meaningful \emph{aggregate} error. The scarce input
+becomes \textbf{human attention and verification}, not code production.
+
+%--------------------------------------------------------
+\section{Working Well with an AI Research Partner}
+\label{sec:practices}
+
+The following practices distill the ``harness'' idea---designing a workflow that
+fits the researcher rather than fighting the tool.
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item \textbf{Design the workflow, don't just work harder.} Treat friction as a
+    signal of a \emph{failed design} to fix, not a demand for more effort.
+  \item \textbf{Manage the reading load.} Ask the agent to be concise, to prefer
+    figures and compact (ASCII) summaries, and to communicate at the altitude of
+    decisions rather than narrating every line.
+  \item \textbf{Oscillate across modalities.} Alternate between prose, code,
+    figures, and interactive checks to avoid fatigue in any single channel and
+    keep comprehension high.
+  \item \textbf{Encode standing preferences.} Use a persistent instruction file
+    (\texttt{CLAUDE.md}) to fix conventions once---style, preferred estimators,
+    banned phrases---rather than repeating them each session.
+  \item \textbf{Verify, don't rubber-stamp.} Read diffs and results critically;
+    the failure mode of cheap production is mindless acceptance.
+  \item \textbf{Work in checklists.} Move deliberately through well-designed,
+    ordered steps so that supervision stays tractable.
+  \item \textbf{Keep the human in the loop on identification.} Delegate execution,
+    but retain judgment over assumptions, interpretation, and what counts as
+    credible evidence.
+\end{enumerate}
+
+%--------------------------------------------------------
+\section{Limitations and Risks}
+\label{sec:risks}
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Cognitive overload.} Continuous, verbose machine communication can
+    exceed a finite human's capacity to read and retain (the ``reading too much''
+    problem).
+  \item \textbf{Automation bias.} The temptation to accept plausible-looking
+    output without verification grows as volume grows.
+  \item \textbf{Design overhead.} Time spent tuning workflows has its own
+    diminishing returns; over-optimizing the harness can crowd out the research.
+  \item \textbf{Correctness and hallucination.} Generated code and claims must be
+    checked against data and theory; the agent can be confidently wrong.
+  \item \textbf{Reproducibility \& provenance.} Fast, branchy exploration must be
+    disciplined with version control and documentation to remain replicable.
+\end{itemize}
+
+%--------------------------------------------------------
+\section{Conclusion}
+\label{sec:conclusion}
+
+Agentic AI tools such as Claude Code make previously impossible research
+accessible by collapsing the cost of execution. The same force can push
+researchers past the point of useful return---most acutely as an overwhelming
+\emph{reading} burden---and can let small errors aggregate. The central skill,
+then, is not prompting but \textbf{design}: building a personal ``harness'' that
+keeps attention on high-value work, oscillates across modalities, encodes
+standing preferences, and preserves rigorous human judgment over identification
+and interpretation. Used this way, the tool amplifies a researcher's thinking; used
+carelessly, it merely amplifies volume.
+
+%--------------------------------------------------------
+\section*{Sources \& Further Reading}
+\addcontentsline{toc}{section}{Sources \& Further Reading}
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Scott Cunningham, \emph{Scott's Mixtape Substack}:
+    \url{https://causalinf.substack.com/} --- ongoing series on Claude Code for
+    quantitative social scientists (begun December 2025), including the essays
+    ``Am I reading too much?'' (July 2026) and ``Claude Code 56: Falling marginal
+    costs of production, output, and aggregate errors'' (July 2026).
+  \item Anthropic, \emph{Claude Code} documentation:
+    \url{https://docs.anthropic.com/en/docs/claude-code}.
+  \item \emph{Model Context Protocol (MCP)}: \url{https://modelcontextprotocol.io/}.
+  \item Angrist, Graddy \& Imbens, ``The Interpretation of Instrumental Variables
+    Estimators in Simultaneous Equations Models with an Application to the Demand
+    for Fish'' (\emph{Review of Economic Studies}, 2000) --- the LATE
+    interpretation of the demand curve referenced in the newsletter.
+\end{itemize}
+
+\end{document}
