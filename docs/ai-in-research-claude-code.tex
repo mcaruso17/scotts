@@ -1,0 +1,257 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+%  AI Applications in Research: The Use of Claude Code
+%  A conceptual summary distilled from Scott Cunningham's "Scott's Mixtape
+%  Substack" (the "Claude Code" essay series), July 2026.
+%
+%  Compile with:  pdflatex ai-in-research-claude-code.tex
+% ---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage[colorlinks=true, linkcolor=blue!55!black, urlcolor=blue!55!black,
+            citecolor=blue!55!black]{hyperref}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries\color{black!85}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{black!75}}{\thesubsection}{0.6em}{}
+
+\newcommand{\concept}[1]{\textbf{\textcolor{blue!45!black}{#1}}}
+
+\title{\textbf{AI Applications in Research} \\[2pt]
+       \large The Use of Claude Code as an Agentic Partner for\\
+       Applied Empirical Social Science}
+\author{A conceptual summary of Scott Cunningham's ``Claude Code'' essay series\\
+        \textit{Scott's Mixtape Substack} (\texttt{causalinf.substack.com})}
+\date{Compiled 22 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+This document summarises the main concepts around using AI agents --- and
+\concept{Claude Code} in particular --- for quantitative and empirical research,
+as developed across the 56+ essays economist Scott Cunningham has published on
+his newsletter since November 2025. The central claim is that agentic AI does
+not merely speed up existing research tasks; it changes the \emph{production
+function} of research itself, shifting the scarce resource from producing
+cognitive output to \emph{verifying} it, and thereby demanding new workflows,
+harnesses, and curation rituals. The concepts below are organised as a small
+theory of how careful empirical researchers can capture the gains from these
+tools while controlling their characteristic failure modes.
+\end{abstract}
+
+\section{The Core Economic Reframing}
+
+Cunningham frames AI agents through the lens of production economics rather than
+software tooling.
+
+\begin{description}[leftmargin=1.4em, style=nextline]
+  \item[The production isoquant.] A single unit of ``cognitive output'' --- a
+    regression table, a figure, a paragraph, or an entire manuscript --- can be
+    produced with different ratios of \concept{machine time ($M$)} to
+    \concept{human time ($H$)}. Historically the isoquant was steeply
+    \emph{human-time intensive}: the only machine time was, say, waiting for
+    Stata to invert a matrix.
+  \item[Perfect substitutes.] With agents such as Claude Code, the isoquants
+    ``straighten out'' toward linearity. Machine and human time become closer to
+    \emph{perfect substitutes}, so the cost-minimising equilibrium pushes the
+    mix as close to the machine-time intercept $M^\ast$ as possible.
+  \item[Falling marginal cost of production.] Because agents lower the price of
+    producing output, quantity rises --- more projects started, more papers
+    drafted, deeper exploration. Cunningham reports doing work he ``would not
+    have started'' otherwise.
+\end{description}
+
+\subsection{Production is not verification}
+
+The pivotal insight is that the \concept{production function is not the
+verification function}. Lowering the cost of \emph{producing} output does not
+lower the cost of confirming that the output is \emph{correct}, or even that it
+is what the researcher intended. Agents therefore drive a widening
+\concept{wedge between production and verification}: output volume explodes while
+the human's ability to check it does not scale, so \emph{aggregate errors can
+rise even as average quality per unit is high}. Verification, not production,
+becomes the binding constraint on serious research.
+
+\section{The Researcher as ``CEO of the Kitchen''}
+
+To describe the shift in the researcher's role, Cunningham uses the metaphor of
+a Michelin restaurant (Amelia, San Sebasti\'an). The head and executive chefs
+physically make the food, yet every apron bears the name of the
+\emph{founder}, who no longer cooks. The founder is the \concept{CEO of the
+kitchen}: without him no meal is made, even though he makes none of them.
+
+\medskip
+\noindent
+The analogy: when Claude Code produces the code, tables, and prose, the
+researcher stops being the ``line cook'' and becomes the accountable author and
+curator --- responsible for the output, its correctness, and its meaning,
+without having typed most of it. Authorship becomes an act of
+\emph{direction and verification} rather than of manual production.
+
+\section{Characteristic Failure Mode: ``AI Agent Drift''}
+
+Agentic research introduces a signature pathology Cunningham calls
+\concept{AI Agent drift}:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Sample drift.} On a long project the analytical sample silently
+    changed from $N$ to $N+k$ observations with no explanation --- caught only
+    because of a disciplined habit of regenerating ``beautiful tables and
+    figures.''
+  \item \textbf{File / code proliferation.} What the researcher assumed was
+    in-place editing of one program turned out to be $\sim\!5K$ near-duplicate
+    programs with confusing, similar-sounding names --- a return of the old
+    ``copies of the same code with weird naming conventions'' problem, now
+    generated at machine speed and at greater distance from the author.
+  \item \textbf{Forgetful improvisation.} The agent improvises without full
+    awareness of prior state, so results and samples can shift between sessions
+    unless the process is tightly harnessed.
+\end{itemize}
+
+\section{The Response: A Rigid Harness and Workflow}
+
+Drift is treated as a \concept{design problem}, not a discipline problem
+(echoing Don Rubin's dictum that ``design trumps analysis''). The remedy is an
+explicit \concept{harness}: a rigid, ritualised checklist plus a dashboard that
+makes state visible. Cunningham's causal-inference checklist runs to roughly
+13--14 mandatory stages:
+
+\begin{center}
+\small
+\begin{tabular}{@{}rll@{}}
+\toprule
+\# & Stage & Purpose \\
+\midrule
+1  & \texttt{PKG}        & Declare all software packages used up front \\
+2  & \texttt{TARGET}     & Define the causal estimand in potential-outcomes terms \\
+3  & \texttt{BITE}       & Document the treatment's real-world ``bite'' (2--3 exhibits) \\
+4  & \texttt{COVARIATES} & Select controls for unconfoundedness / parallel trends \\
+5  & \texttt{ROLLOUT}    & Document treatment timing and cohorts (e.g.\ \texttt{panelview}) \\
+6  & \texttt{OUTCOME}    & Present the outcome to match the intended analysis \\
+7  & \texttt{POWER}      & Power calculations, minimum detectable effect \\
+8  & \texttt{ESTIMATOR}  & Choose and estimate, flowing from TARGET + BITE \\
+9  & \texttt{EVENT}      & Produce event-study graphics \\
+10 & \texttt{FALSIFY}    & Run falsification / placebo tests \\
+11 & \texttt{MECHANISM}  & Investigate candidate mechanisms \\
+12 & \texttt{PIPELINE}   & Re-run end to end; confirm replication \\
+13 & \texttt{DELIVER}    & Storyboard and draft the findings \\
+14 & \texttt{SIGN}       & Sign off \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{The dashboard: locks, colours, and ``you are here''}
+
+Each stage is a \concept{lock} on a visual dashboard, rendered as a row of
+colour-coded circles:
+\begin{itemize}[leftmargin=1.4em, itemsep=1pt]
+  \item \textcolor{green!55!black}{\textbf{green}} = closed (verified and complete);
+  \item \textcolor{red!75!black}{\textbf{red}} = open (not yet closed --- and no
+    project may ship with a red circle);
+  \item \textcolor{orange!85!black}{\textbf{amber}} = ``you are here'' --- the
+    pulsing marker of where to resume.
+\end{itemize}
+The dashboard is a manifestation of the checklist so that both the researcher's
+future self \emph{and future Claude sessions} can always resume with full
+knowledge of project state.
+
+\subsection{Custom skills}
+
+The workflow is extended with bespoke, invokable ``skills'' (slash-commands),
+e.g.\ \texttt{/covariates} (proposes candidate covariates from a stated modelling
+philosophy), \texttt{/referee2} (an adversarial reviewer pass), and
+\texttt{/blindspot} (surfaces overlooked threats). Global preferences (tone,
+concision, banned phrases) are pinned in a \texttt{CLAUDE.md} configuration file.
+
+\section{Curating the ``Canon''}
+
+Because agents generate an abundance of files, figures, tables, and code with
+overlapping names and near-identical stories, the researcher needs an explicit
+\concept{canonisation} process. Cunningham draws the analogy to the early church
+selecting the biblical canon from a mass of circulating texts:
+
+\begin{itemize}[leftmargin=1.4em, itemsep=1pt]
+  \item \concept{Canon} --- the curated pipeline of code that produces the
+    exhibits supporting the final manuscript.
+  \item \concept{Apocryphal} --- tolerated but not part of the canonical
+    pipeline.
+  \item \concept{Heresy / deprecated} --- explicitly excluded.
+\end{itemize}
+The claim is that before AI agents researchers curated their work
+\emph{unconsciously}; agentic volume forces this curation to become an
+intentional, rule-governed step (in the spirit of Gentzkow and Shapiro's
+guidance on code, directories, and version control). The goal: the exhibits you
+keep are exhibits you \emph{chose}, and they mean what you think they mean.
+
+\section{The Human Bottleneck: Diminishing Returns to Reading}
+
+A subtler cost is cognitive. Using Claude Code means \emph{reading constantly}
+--- the agent's reasoning, its explanations, and its output --- more, Cunningham
+suspects, than he has ever read before. He analyses this with a demand curve:
+reading has \concept{diminishing marginal returns}, and because the agent has
+lowered the price of work, the researcher slides down the curve into the
+low-value region ($X_2$), skimming diffs and disengaging.
+
+\medskip
+\noindent
+\textbf{Design responses (staying near high-value $X_1$):}
+\begin{itemize}[leftmargin=1.4em, itemsep=1pt]
+  \item Ask the agent to be \emph{concise} --- ``if I write 10 characters, write 9.''
+  \item Shift \emph{modality}: prefer figures and in-terminal ASCII visuals over
+    long prose, and oscillate deliberately between mediums.
+  \item Treat overload as a \emph{failed design to be fixed}, not a reason to
+    ``work harder'' --- while recognising that design-fixing has its own
+    diminishing-returns demand curve.
+\end{itemize}
+
+\section{Publishing, Costs, and the Broader Shift}
+
+Cunningham argues that agentic AI decouples \concept{research} from
+\concept{publishing}: producing results and packaging them for dissemination
+become two separate activities with independent economics. Falling marginal
+costs raise total output but require the verification, harness, and canon
+disciplines above to keep aggregate error under control. He frames this less as
+a new toolset than as a \emph{paradigm} for how empirical work is organised ---
+one still actively being discovered, with each researcher likely to build a
+personal harness shaped by their own comparative advantage.
+
+\section*{Key Takeaways}
+\addcontentsline{toc}{section}{Key Takeaways}
+\begin{enumerate}[leftmargin=1.6em, itemsep=2pt]
+  \item Agents make \emph{machine time and human time near-substitutes},
+    collapsing the cost of \emph{producing} cognitive output.
+  \item The binding constraint moves from production to \concept{verification};
+    the production--verification wedge is the central management problem.
+  \item The researcher becomes the accountable \concept{``CEO of the kitchen''}
+    --- director and verifier, not manual producer.
+  \item \concept{AI Agent drift} (silent sample changes, file proliferation) is
+    the signature failure mode.
+  \item The countermeasure is a \concept{rigid harness}: a staged checklist, a
+    colour-coded lock dashboard, custom skills, and \texttt{CLAUDE.md} config.
+  \item Abundant output demands an explicit \concept{canonisation} process to
+    separate canon from apocrypha/heresy.
+  \item Human attention is finite: manage \concept{diminishing returns to
+    reading} by demanding concision and shifting modality --- and fix the
+    \emph{design}, not the effort.
+\end{enumerate}
+
+\vfill
+\noindent\rule{\linewidth}{0.4pt}\\[2pt]
+{\footnotesize
+Sources: essays from \textit{Scott's Mixtape Substack}, incl.\
+``Claude Code 56: Falling marginal costs of production, output, and aggregate
+errors'' (6 Jul 2026), ``Am I'm reading too much?'' (17 Jul 2026), and
+``Stale code, deprecation, and the canon'' (21 Jul 2026).
+\url{https://causalinf.substack.com/s/claude-code}. This is an independent
+summary for study purposes and is not affiliated with or endorsed by the author.}
+
+\end{document}
