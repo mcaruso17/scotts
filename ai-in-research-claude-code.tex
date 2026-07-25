@@ -1,0 +1,232 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: Concepts and the Use of Claude Code
+%  A concept summary inspired by Scott Cunningham's "Mixtape" work
+%  on agentic coding for empirical social science.
+%
+%  Compiles with a standard TeX distribution:
+%      pdflatex ai-in-research-claude-code.tex
+%      pdflatex ai-in-research-claude-code.tex   % (twice for TOC/refs)
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,urlcolor=blue!55!black,citecolor=blue!55!black]{hyperref}
+
+\setlist{itemsep=2pt, topsep=3pt}
+
+\newcommand{\concept}[1]{\textbf{#1}}
+\newcommand{\claudemd}{\texttt{CLAUDE.md}}
+
+\title{\textbf{AI Applications in Research}\\[4pt]
+\large Core Concepts and the Use of Claude Code as a Research Partner}
+\author{Prepared as a concept summary\\ \small (inspired by Scott Cunningham's ``Mixtape'' work on agentic coding for empirical research)}
+\date{July 25, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the use of
+artificial intelligence---and \concept{agentic coding tools such as Claude
+Code} in particular---in the day-to-day practice of research. It is organized
+around a single working thesis drawn from applied practice in empirical
+economics: an AI agent is most valuable not as an autopilot that replaces the
+researcher, but as a \emph{disciplined thinking partner} that makes reasoning,
+verification, and documentation cheaper and more systematic. The concepts below
+generalize well beyond economics to any code-and-evidence discipline.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ================================================================
+\section{Why AI in research, and why now}
+% ================================================================
+Modern research is a pipeline of \emph{reading} (literature, prior code),
+\emph{building} (data acquisition, cleaning, estimation), \emph{verifying}
+(replication, auditing, robustness), and \emph{communicating} (figures, slides,
+papers). Large language models operating as \concept{agents}---able to read a
+repository, run commands, edit files, and iterate against feedback---can act at
+every stage of this pipeline. The shift from a chat window to an
+\concept{in-terminal agent} (the model class Claude Code belongs to) is what
+turns AI from a text generator into a collaborator that can actually do the work
+in the researcher's own project directory.
+
+\medskip
+\noindent Three properties make this useful for research specifically:
+\begin{itemize}
+  \item \concept{Context grounding:} the agent reads the actual files, so its
+    output is anchored to the real project rather than to a generic prompt.
+  \item \concept{Executable iteration:} it can run code, read the error, and
+    correct itself---a loop that mirrors how researchers debug.
+  \item \concept{Cheap verification:} independent second opinions (re-implement,
+    re-check, re-read) become fast enough to do routinely rather than never.
+\end{itemize}
+
+% ================================================================
+\section{The central principle: partner, not autopilot}
+% ================================================================
+The most important concept is a stance, not a feature:
+\begin{quote}
+\emph{``I think more clearly when I am thinking \textbf{through} Claude rather
+than \textbf{at} Claude. The dialogue is the work, not just the delivery
+mechanism for the work.''}
+\end{quote}
+Treat the agent as a \concept{thinking partner, not a code monkey}. Practical
+consequences:
+\begin{itemize}
+  \item Favor \concept{iterative steering} over one-shot automation; keep the
+    researcher in the loop at each consequential decision.
+  \item Optimize for \concept{understanding}, not just output---if you cannot
+    explain what the agent produced, it is not yet a result.
+  \item Use the agent to \concept{externalize reasoning}: the back-and-forth
+    forces you to state assumptions you would otherwise leave implicit.
+\end{itemize}
+
+% ================================================================
+\section{External memory: markdown as shared state}
+% ================================================================
+Agents are stateless across sessions; research is not. The bridge is
+\concept{documentation-as-memory}.
+\begin{itemize}
+  \item A \claudemd{} file at the project root is read automatically at session
+    start; it encodes conventions, directory structure, and standing
+    instructions (``the constitution'' of the project).
+  \item \concept{Session routines}: begin by reading the state files; end by
+    updating a \texttt{README.md} or log with decisions made and open questions
+    for next time.
+  \item \concept{Timestamped correspondence / session logs} turn ephemeral chat
+    into permanent, recoverable artifacts---so a project is auditable months
+    later and hand-off between collaborators (or between you and a future
+    session) is lossless.
+\end{itemize}
+The guiding idea: \emph{persistent markdown files are the shared state between
+human and agent}, and keeping them current is itself part of the research work.
+
+% ================================================================
+\section{Verification as a first-class step}
+% ================================================================
+The failure mode of AI-assisted research is \concept{plausible-but-wrong}
+output. The countermeasures are structural rather than trusting.
+
+\subsection{Design before results}
+Get the \concept{specification and identification strategy} right before
+trusting any point estimate. Focus review on whether the design answers the
+question, not on whether a number looks nice.
+
+\subsection{Cross-language replication}
+Re-implement key analyses in more than one language/package (e.g., R and Stata
+or Python). The rationale is statistical:
+\[
+\text{errors}_{R} \perp \text{errors}_{\text{Stata}}
+\]
+The mistakes an agent makes in one ecosystem are largely \concept{orthogonal
+error vectors} to those it makes in another, so agreement across independent
+implementations is strong evidence of correctness.
+
+\subsection{Author / reviewer separation}
+Run verification with a \concept{fresh, independent agent instance} that acts as
+a skeptical referee---auditing code, replicating results, and checking outputs
+\emph{without editing the author's code}. Separating the ``author'' role from
+the ``reviewer'' role prevents the agent from grading its own homework.
+
+\subsection{Peripheral-vision and citation audits}
+\begin{itemize}
+  \item \concept{Blindspot audit}: deliberately look for overlooked problems,
+    convenient absences, and under-exploited strengths in a draft or result.
+  \item \concept{Bibliography checking}: spawn many narrow agents, each
+    verifying one citation against canonical sources, to catch systematic
+    transcription errors.
+\end{itemize}
+
+% ================================================================
+\section{A reusable workflow pattern}
+% ================================================================
+Putting the concepts together yields a repeatable loop:
+\begin{enumerate}[label=\arabic*.]
+  \item \concept{Frame} the question and design in \claudemd{}; state the
+    identification strategy explicitly.
+  \item \concept{Build} the pipeline with the agent, steering iteratively and
+    reading what it runs.
+  \item \concept{Cross-replicate} the key estimates in a second language.
+  \item \concept{Audit} with a fresh reviewer instance (Referee-style) plus a
+    Blindspot pass; never let the author instance approve itself.
+  \item \concept{Interpret} the output in writing---the interpretation, not the
+    number, is the deliverable.
+  \item \concept{Log} decisions and open issues to the session file so the next
+    session resumes with full context.
+\end{enumerate}
+
+% ================================================================
+\section{Beyond code: communication and reading}
+% ================================================================
+AI agents also compress the non-estimation parts of research:
+\begin{itemize}
+  \item \concept{Deep reading} of papers: split long PDFs into chunks and
+    extract structured notes across fixed dimensions (question, data,
+    identification, findings, threats, \dots).
+  \item \concept{Presentations}: generate Beamer/TikZ slides under a ``one idea
+    per slide, titles as assertions'' rhetoric, with zero-warning compile loops
+    and automated detection of visual overlaps.
+  \item \concept{Live, public research}: conducting and narrating a real project
+    end-to-end (data acquisition, mapping, drawing the design) makes the
+    method---and its pitfalls---teachable.
+\end{itemize}
+
+% ================================================================
+\section{Limits, risks, and good practice}
+% ================================================================
+\begin{itemize}
+  \item \concept{Hallucination and silent error} are the default risk; the
+    entire verification apparatus above exists to convert trust into evidence.
+  \item \concept{Automation bias}: the more fluent the output, the more it must
+    be independently checked, not less.
+  \item \concept{Reproducibility and provenance}: keep prompts, logs, and code
+    under version control so results can be regenerated and attributed.
+  \item \concept{Scope discipline}: use agents to accelerate judgment, not to
+    outsource it---the researcher remains accountable for every claim.
+\end{itemize}
+
+% ================================================================
+\section*{Key takeaways}
+\addcontentsline{toc}{section}{Key takeaways}
+% ================================================================
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item Use the agent as a \concept{thinking partner}; the dialogue is the work.
+  \item Give it \concept{external memory} via \claudemd{} and session logs.
+  \item Make \concept{verification structural}: design-first, cross-replicate,
+    and separate author from reviewer.
+  \item Treat \concept{documentation and provenance} as part of the result, not
+    an afterthought.
+\end{enumerate}
+
+% ================================================================
+\section*{Sources \& further reading}
+\addcontentsline{toc}{section}{Sources \& further reading}
+% ================================================================
+\begin{itemize}
+  \item Scott's Mixtape Substack --- \url{https://causalinf.substack.com/}
+    (Claude Code series: \url{https://causalinf.substack.com/s/claude-code}).
+  \item \emph{Claude Code 51: Harnessing AI Agents for Economic Research} ---
+    \url{https://causalinf.substack.com/p/claude-code-51-harnessing-ai-agents}.
+  \item MixtapeTools (open-source workflows: Referee~2, Blindspot, Bibcheck,
+    deck and PDF tools) --- \url{https://github.com/scunning1975/MixtapeTools}.
+  \item \emph{AI in Business \& Economic Research} community wiki ---
+    \url{https://velikov-mihail.github.io/ai-econ-wiki/}.
+  \item Claude Code documentation --- \url{https://code.claude.com/docs/}.
+\end{itemize}
+
+\vfill
+\noindent\rule{\linewidth}{0.4pt}\\
+\footnotesize This is an independent concept summary compiled for study
+purposes. Direct newsletter pages were not reachable at compile time; post-level
+attributions are drawn from public secondary sources and should be treated as
+best-effort.
+
+\end{document}
