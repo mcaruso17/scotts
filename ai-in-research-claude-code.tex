@@ -1,0 +1,194 @@
+\documentclass[11pt]{article}
+
+% ------------------------------------------------------------------
+%  AI Applications in Research: The Use of Claude Code
+%  A conceptual summary inspired by Scott Cunningham's
+%  "Scott's Mixtape Substack" essays on AI agents for empirical work.
+% ------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue!60!black,
+  citecolor=black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\newcommand{\keyword}[1]{\textbf{#1}}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Concepts and Workflows for Using Claude Code in Empirical Work}
+\author{Summary compiled from Scott Cunningham's ``Scott's Mixtape Substack''}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts surrounding the use of
+artificial intelligence (AI) agents---particularly \keyword{Claude Code}---in
+academic and applied research. Drawing on the reflections of economist Scott
+Cunningham, it distills how AI coding agents are reshaping the practice of
+empirical research, the problems they introduce, and the emerging workflows,
+``harnesses,'' and disciplines that researchers are developing in response. The
+running theme is that AI raises productivity dramatically while also creating a
+new class of reproducibility and quality-control challenges that demand
+deliberate, structured processes.
+\end{abstract}
+
+\section{Why AI Agents Matter for Research}
+
+AI coding agents such as Claude Code allow a researcher to conduct data analysis
+conversationally: describing a task in natural language and having the agent
+write, execute, and revise code. This changes the economics of empirical work.
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \keyword{Falling marginal cost of production.} Once a workflow is set
+        up, the cost of producing an additional table, figure, robustness check,
+        or falsification test falls sharply. Researchers can explore far more of
+        the analytical space than was previously feasible.
+  \item \keyword{Shift from writing code to specifying intent.} The researcher's
+        comparative advantage moves toward defining the causal question,
+        selecting estimators, and judging output---rather than typing syntax.
+  \item \keyword{Volume and abundance.} A lengthy empirical study now generates
+        an \emph{abundance} of files, figures, tables, and code---often far more
+        than a human would have created by hand.
+\end{itemize}
+
+\section{The Core Problem: AI Agent Drift}
+
+The central risk Cunningham identifies is what he calls \keyword{AI agent drift}:
+the tendency of an agent, over a long project, to silently change the analysis in
+ways the researcher does not notice.
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \keyword{Silent sample changes.} An analytical sample can drift from $N$
+        to $N+k$ observations with no explanation, corrupting inter-temporal
+        comparisons even when contemporaneous results look correct.
+  \item \keyword{Code proliferation.} What feels like editing one program can
+        quietly become thousands of near-duplicate programs with confusing,
+        similar-sounding names---a return of the old ``copies of the same code''
+        problem, now at machine speed.
+  \item \keyword{Distance from the work.} Automation can put the researcher at a
+        greater remove from the underlying analysis, making errors harder to
+        catch precisely because the surface output looks polished.
+\end{itemize}
+
+\noindent The lesson: productivity gains are real, but without controls they come
+bundled with a heightened risk of untracked, unintended change.
+
+\section{The Response: A Harness and a Rigid Checklist}
+
+Cunningham's solution is to impose a \keyword{structured workflow}---a
+``harness''---around the agent. He hypothesizes that a general
+\emph{harness-workflow-for-empirical-research-using-AI-agents} will eventually be
+articulated and widely adopted, while individual researchers still customize
+their own dashboards by comparative advantage.
+
+His own checklist runs to roughly 12--14 rigid stages for a causal-inference
+project:
+
+\begin{enumerate}[leftmargin=1.8em, label=\textbf{\arabic*.}]
+  \item \keyword{PKG} --- enumerate all software packages used.
+  \item \keyword{TARGET} --- define the causal parameter(s) in potential-outcomes
+        notation, with populations and weights.
+  \item \keyword{BITE} --- document the treatment's ``bite'' with 2--3 exhibits
+        illustrating the intervention in the world.
+  \item \keyword{COVARIATES} --- select covariates for unconfoundedness,
+        conditional parallel trends, or a factor model; assess balance.
+  \item \keyword{ROLLOUT} --- document the treatment rollout by cohort
+        (e.g.\ via Xu's \texttt{panelview}).
+  \item \keyword{OUTCOME} --- present the outcome, matched to the intended analysis.
+  \item \keyword{POWER} --- run power calculations, minimum detectable effects,
+        and over-rejection checks.
+  \item \keyword{ESTIMATOR} --- choose and estimate the estimator, flowing from
+        TARGET, COVARIATES, and BITE.
+  \item \keyword{EVENT} --- produce event-study graphics.
+  \item \keyword{FALSIFY} --- run falsification tests (placebo outcomes and groups).
+  \item \keyword{MECHANISM} --- investigate candidate mechanisms.
+  \item \keyword{PIPELINE} --- re-run everything to confirm replication.
+  \item \keyword{DELIVER} --- storyboard and draft deliverables.
+  \item \keyword{SIGN} --- sign off.
+\end{enumerate}
+
+\noindent The checklist is simultaneously a statement of \emph{design principles}
+and a direct \emph{reaction to agent drift}. It draws on established
+methodological guidance: Rubin's ``Design Trumps Analysis,'' difference-in-differences
+checklists (e.g.\ Sant'Anna), and Imbens's survey recommendations.
+
+\section{Tooling: Dashboards, Skills, and Hooks}
+
+Around the checklist, Cunningham builds concrete tooling to enforce discipline:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \keyword{A visual dashboard} with color-coded status circles---green
+        (closed / verified), red (open), and a pulsing amber (``you are here'').
+        No project can close while any circle is red.
+  \item \keyword{Custom skills} such as \texttt{/covariates} (candidate-covariate
+        selection from a stated modeling philosophy), \texttt{/referee2}, and
+        \texttt{/blindspot}, run repeatedly as compulsive double-checks.
+  \item \keyword{Rituals per stage}---a fixed set of steps that must be completed
+        before a stage's circle turns green.
+  \item \keyword{Hooks, locks, and maps}---mechanisms that let both the
+        researcher's future self and ``future Claudes'' pick up exactly where
+        work left off.
+\end{itemize}
+
+\section{The Canon Metaphor: Curating a Replicable Pipeline}
+
+Cunningham's most striking framing likens the researcher's task to how the early
+church settled its \keyword{canon}. Faced with many overlapping letters and
+books---similar names, similar but non-identical stories---a process of
+\emph{selection and curation} decided what belonged and what was
+\keyword{deprecated} (labeled ``apocryphal'' or ``heresy'').
+
+\begin{quote}
+The canon is the pipeline of code that produces the exhibits (tables and figures)
+supporting the final manuscript the author presents as their own.
+\end{quote}
+
+AI agents produce an analogous flood of near-duplicate artifacts. Researchers
+therefore need an \keyword{explicit criterion, process, and rule} for canonizing
+code into a replicable pipeline and deprecating the rest. Before AI, much of this
+curation happened unconsciously; established guidance on file naming, directory
+structure, and version control (e.g.\ Gentzkow and Shapiro's manual) foreshadows
+it, but the AI-era version will be more deliberate and, at first, unfamiliar.
+
+\section{Key Takeaways}
+
+\begin{enumerate}[leftmargin=1.8em]
+  \item AI agents like Claude Code sharply raise research productivity by lowering
+        the marginal cost of analysis.
+  \item Their main hazard is \keyword{drift}: silent, untracked changes to samples,
+        code, and results over long projects.
+  \item The remedy is a deliberate \keyword{harness}: rigid, staged checklists that
+        encode both methodological design and error control.
+  \item \keyword{Tooling}---dashboards, custom skills, hooks, and status locks---operationalizes
+        the checklist and preserves continuity across sessions and agents.
+  \item Researchers must consciously \keyword{curate a canon}, choosing which code
+        and exhibits enter the replicable pipeline and deprecating the rest, so
+        that results provably mean what the author claims.
+  \item A shared, general workflow standard for AI-assisted empirical research is
+        likely to emerge, even as individuals tailor their own dashboards.
+\end{enumerate}
+
+\vfill
+\begin{center}
+\small\itshape
+Compiled from Scott Cunningham's ``Scott's Mixtape Substack''
+(\href{https://causalinf.substack.com}{causalinf.substack.com}),
+notably the essays ``Stale code, deprecation, and the canon'' and the
+``Claude Code'' series, July 2026.
+\end{center}
+
+\end{document}
