@@ -1,0 +1,241 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: Claude Code as a Research Partner
+%  A concept summary synthesised from Scott Cunningham's
+%  "Scott's Mixtape" Substack "Claude Code" essay series (2025-2026).
+% ---------------------------------------------------------------
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,urlcolor=blue!55!black,citecolor=blue!55!black]{hyperref}
+
+\definecolor{accent}{RGB}{40,80,140}
+\titleformat{\section}{\large\bfseries\color{accent}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{accent!85!black}}{\thesubsection}{0.6em}{}
+\setlist[itemize]{leftmargin=1.4em,itemsep=2pt,topsep=3pt}
+\setlength{\parskip}{0.4em}
+\setlength{\parindent}{0pt}
+
+\title{\vspace{-1.2cm}\textbf{AI Applications in Research}\\[2pt]
+\large Claude Code as a Research Partner for Empirical Social Science}
+\author{Prepared for the ``Scott Cunningham newsletter'' routine}
+\date{27 July 2026}
+
+\begin{document}
+\maketitle
+\vspace{-0.6cm}
+
+\begin{abstract}
+\noindent This note summarises the main concepts behind using AI agents --- and
+\textbf{Claude Code} in particular --- in empirical research. It synthesises themes
+developed across Scott Cunningham's \emph{Scott's Mixtape} Substack ``Claude Code''
+essay series, framing the shift from writing code to \emph{directing} an agent, the
+economics of near-zero-cost cognitive output, the failure modes this creates, and the
+disciplined ``harness'' researchers build to keep agent-assisted work correct and
+reproducible.
+\end{abstract}
+
+\tableofcontents
+\vspace{0.4cm}
+
+% ---------------------------------------------------------------
+\section{What changes when an agent enters the workflow}
+
+An \emph{agentic} coding assistant such as Claude Code is qualitatively different
+from a chat model. It runs in a loop --- reading files, running code (Python, R,
+Stata), inspecting output, and editing --- so the researcher increasingly
+\emph{specifies intent} rather than typing every line. The practical consequences:
+
+\begin{itemize}
+  \item \textbf{Machine time and human time become near substitutes.} Tasks that
+  once cost hours of a researcher's attention can be delegated, so the same person
+  can attempt far more analyses in the same calendar time.
+  \item \textbf{The unit of work shifts from ``code'' to ``instruction.''} The scarce
+  skill becomes clearly specifying the estimand, the sample, and the checks --- not
+  recalling syntax.
+  \item \textbf{Output becomes abundant.} Tables, figures, robustness checks, and
+  even draft prose can be produced faster than a human can carefully read them.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{The economics: falling marginal cost, rising verification cost}
+
+A recurring frame in the series is a simple production story for \emph{cognitive
+output} --- a regression table, a figure, a paragraph, or a whole worked manuscript.
+
+\begin{itemize}
+  \item \textbf{Marginal cost of production collapses.} Where producing a unit of
+  output once cost $MC_0$ (human attention and time), agents push the \emph{private}
+  marginal cost toward $MC_1 \approx \varepsilon$.
+  \item \textbf{Private vs.\ social cost diverge.} Cheap private production does not
+  imply cheap social cost: if verification lags production, errors can accumulate in
+  the aggregate scientific record.
+  \item \textbf{Verification is the new bottleneck.} Because output is generated
+  rather than hand-built, the binding constraint moves from \emph{making} results to
+  \emph{trusting} them. The researcher's comparative advantage shifts toward
+  specification, judgement, and verification.
+\end{itemize}
+
+\noindent A useful way to see the aggregate-error point: even if an agent's per-task
+error rate is \emph{lower} than a human's, decoupling production from verification
+plus a large increase in the \emph{quantity} of output can still raise the total
+number of errors entering the literature, depending on how elastic output is to cost.
+
+% ---------------------------------------------------------------
+\section{The defining failure mode: AI agent drift}
+
+The series names a characteristic hazard --- \textbf{agent drift} --- where an
+assisted project silently wanders away from the analysis the researcher believes they
+are running:
+
+\begin{itemize}
+  \item \textbf{Silent sample changes} ($N \to N+k$): a stray or stale cleaning step
+  quietly alters the analytical sample, so estimates change for reasons the author
+  never authored.
+  \item \textbf{Code and file proliferation}: near-duplicate scripts, figures, and
+  ``fixed'' versions multiply until it is unclear which artifacts are canonical.
+  \item \textbf{Growing distance from the work}: the more the agent produces, the
+  less first-hand contact the researcher has with each step --- exactly the contact
+  that once caught mistakes.
+\end{itemize}
+
+\noindent This is the modern echo of a classic hazard: a single stale line in a
+cleaning file can flip a result, and it is easiest to miss precisely when you did not
+type it yourself.
+
+% ---------------------------------------------------------------
+\section{The harness: a rigid, staged checklist}
+
+The proposed remedy is not to trust the agent less \emph{ad hoc}, but to build a
+\textbf{harness} --- an explicit, staged workflow that the human designs and the
+agent executes within. For causal-inference projects the harness is a checklist of
+locked stages, roughly:
+
+\begin{center}
+\small
+\texttt{PKG $\to$ TARGET $\to$ BITE $\to$ COVARIATES $\to$ ROLLOUT $\to$ OUTCOME
+$\to$ POWER $\to$ ESTIMATOR $\to$ EVENT $\to$ FALSIFY $\to$ MECHANISM $\to$ PIPELINE
+$\to$ DELIVER $\to$ SIGN}
+\end{center}
+
+Each stage is defined before estimation and is ``locked'' once agreed, so the agent
+cannot silently revisit an earlier decision. Supporting devices include:
+
+\begin{itemize}
+  \item \textbf{A status dashboard} --- a colour-coded view of which stages are
+  open, locked, or stale, so drift is visible at a glance.
+  \item \textbf{Custom skills / slash-commands} --- e.g.\ \texttt{/covariates},
+  \texttt{/referee2}, \texttt{/blindspot} --- that package a repeatable audit or step.
+  \item \textbf{Hooks and locks} --- automated guards that fire on defined events
+  (e.g.\ a changed sample size) to force a human check.
+  \item \textbf{Design-first / pre-registered estimand} --- fixing the target
+  parameter and identification strategy \emph{before} the agent produces numbers.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{Verification as a first-class step}
+
+Because verification is the scarce good, the series treats it as its own workflow,
+not an afterthought:
+
+\begin{itemize}
+  \item \textbf{Author/reviewer separation}: use one agent (or pass) to produce and a
+  separate, adversarial pass to check --- a ``\texttt{Referee 2}'' protocol that
+  writes a formal referee report and demands a revise-and-resubmit.
+  \item \textbf{Cross-language replication}: re-implement the same estimator across
+  Stata, R, and Python (and across packages, e.g.\ multiple Callaway--Sant'Anna
+  implementations) and require the numbers to agree.
+  \item \textbf{Blind-spot and falsification checks}: deliberately search for what the
+  main specification hides --- placebo/event-study leads, alternative covariate sets,
+  and sensitivity to the sample definition.
+  \item \textbf{Read the diff, not the vibe}: review the actual code and output
+  changes an agent makes rather than trusting a fluent summary of them.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{Managing abundance: the canon and the reading load}
+
+Two late-series essays address the \emph{consequences} of cheap output rather than
+its production:
+
+\begin{itemize}
+  \item \textbf{Stale code, deprecation, and the canon.} With agents generating many
+  artifacts, the researcher must deliberately \emph{curate} which code and exhibits
+  are canonical (enter the replicable pipeline) and \emph{deprecate} the rest ---
+  treating a project like a maintained canon rather than an ever-growing pile.
+  \item \textbf{Am I reading too much?} Abundant output can pull a researcher toward
+  low-value, low-comprehension reading. The fix is to manage finite attention: prefer
+  concision, shift modalities (figures over prose, summaries over raw dumps), and stay
+  at the high-value part of the task.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{The human question: do mistakes still matter?}
+
+The most recent essay (\emph{Which research mistakes matter for human capital?},
+27 July 2026) turns from mechanics to epistemics. It weighs two ledgers:
+
+\begin{itemize}
+  \item \textbf{Output value.} Catching coding errors before publication is good in
+  aggregate --- for every caught error, many uncaught ones reach the record --- so an
+  agent that surfaces errors is a clear plus.
+  \item \textbf{Human-capital value.} Yet the author's most durable lessons ---
+  folder hygiene, pipelined code, version control, and above all \emph{scientific
+  integrity} --- came \emph{from} making and suffering a real mistake. As with poker,
+  you learn because there are stakes.
+\end{itemize}
+
+\noindent The essay deliberately reaches no verdict: we want accuracy (that is why we
+wear seat belts), but a workflow that prevents every mistake may forfeit the
+failure-driven knowledge that classrooms and mentorship cannot supply. It is an open
+tension for anyone adopting agents in research, not a solved problem.
+
+% ---------------------------------------------------------------
+\section{Key takeaways}
+
+\begin{enumerate}[leftmargin=1.6em,itemsep=2pt]
+  \item Claude Code turns the researcher into a \emph{director and verifier} of
+  analysis rather than a line-by-line producer.
+  \item The marginal cost of producing results falls toward zero; the scarce input
+  becomes \emph{verification and judgement}.
+  \item The signature risk is \emph{drift} --- silent sample changes and artifact
+  proliferation that move a project away from its intended analysis.
+  \item Discipline comes from a \emph{harness}: locked, staged checklists, status
+  dashboards, custom skills, and hooks that make drift visible and force human checks.
+  \item Verification deserves its own adversarial workflow --- author/reviewer
+  separation, cross-language replication, falsification, and diff-level review.
+  \item Abundance must be \emph{curated} (a canon) and \emph{read selectively},
+  because attention, not output, is now the constraint.
+  \item Whether removing the ability to make mistakes is entirely good remains an
+  open, genuinely unresolved question about how researchers accumulate skill.
+\end{enumerate}
+
+% ---------------------------------------------------------------
+\section*{Sources \& further reading}
+\addcontentsline{toc}{section}{Sources \& further reading}
+
+\begin{itemize}
+  \item Scott Cunningham, \emph{Scott's Mixtape} Substack, ``Claude Code'' series,
+  \url{https://causalinf.substack.com/s/claude-code}. Essays synthesised here include
+  \emph{Claude Code 56: Falling marginal costs of production, output, and aggregate
+  errors}; \emph{Am I reading too much?} (17 Jul 2026); \emph{Stale code, deprecation,
+  and the canon} (21 Jul 2026); and \emph{Which research mistakes matter for human
+  capital?} (27 Jul 2026).
+  \item \texttt{scunning1975/MixtapeTools} --- public repository of Claude Code
+  templates, the \texttt{Referee 2} audit protocol, a PDF-reading skill, and a
+  \texttt{CLAUDE.md} session template. \url{https://github.com/scunning1975/mixtapetools}
+  \item Scott Cunningham, \emph{Causal Inference: The Mixtape} (Yale University Press),
+  \url{https://mixtape.scunning.com/}.
+\end{itemize}
+
+\vfill
+\begin{center}\footnotesize\color{gray}
+Concept summary compiled from publicly described themes of the newsletter series;
+figures and quotations are paraphrased for summary purposes.
+\end{center}
+
+\end{document}
