@@ -1,0 +1,211 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+% AI Applications in Research: Concepts and the Use of Claude Code
+%
+% A concept summary synthesised from Scott Cunningham's "Scott's Mixtape
+% Substack" essays on using AI coding agents (in particular Claude Code) for
+% empirical social-science research, together with general background on
+% agentic tooling for research.
+% ---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+
+\setlist{itemsep=2pt, topsep=3pt}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Core Concepts and the Use of Claude Code in Empirical Work}
+\author{Prepared as a concept summary}
+\date{28 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarises the main concepts behind the use of
+artificial-intelligence coding agents in research, with an emphasis on
+\emph{Claude Code}, Anthropic's command-line agent for software and data work.
+It synthesises themes recurring in Scott Cunningham's ongoing ``Claude Code''
+essay series on empirical causal-inference practice, and organises them into a
+set of transferable principles: treating the agent workflow as a
+\emph{research harness}, guarding against \emph{agent drift}, using custom
+skills for adversarial self-checking, and weighing the economics and scientific
+integrity of agent-assisted research. It is intended as a conceptual map, not a
+tutorial.
+\end{abstract}
+
+\section{Motivation: agents enter the research workflow}
+Large-language-model ``agents'' differ from chat assistants in that they can
+read a project's files, run code, inspect the output, and iterate---closing the
+loop between \emph{proposing} an analysis and \emph{executing} it. For empirical
+researchers, whose day-to-day work is dominated by data cleaning, estimation,
+table and figure production, and reproducibility checking, this loop is exactly
+where most time is spent. The central claim of the current wave of writing on
+the topic is not that agents replace the researcher's judgement, but that they
+\emph{compress the cost of executing that judgement}, shifting the binding
+constraint from typing and debugging toward specification, verification, and
+design.
+
+\section{Claude Code as a research tool}
+Claude Code is a terminal-based agent that operates directly inside a
+project directory. The properties that matter for research use are:
+\begin{itemize}
+  \item \textbf{Repository awareness.} It reads and edits the actual project
+        files, so analysis, data, and documentation live in one place under
+        version control.
+  \item \textbf{Tool use.} It runs shells, scripts, and statistical code
+        (Stata, R, Python), and reads back the results to decide what to do
+        next.
+  \item \textbf{Extensibility via MCP.} The Model Context Protocol lets the
+        agent reach external systems---publishing platforms, data stores,
+        cloud services---through typed tools. (Cunningham notes experimenting
+        with a Substack MCP integration to move analysis directly into
+        drafted essays.)
+  \item \textbf{Custom skills and slash-commands.} Reusable, named procedures
+        (e.g.\ \texttt{/covariates}, \texttt{/referee2}, \texttt{/blindspot})
+        encode a researcher's personal methodological checklist so it can be
+        invoked on demand.
+\end{itemize}
+
+\section{The workflow-as-harness concept}
+The most portable idea in the series is that productive agent use requires an
+explicit \emph{harness}: a rigid, staged checklist that the agent is driven
+through, rather than an open-ended conversation. Cunningham describes a
+personalised dashboard built around a 12--14 step pipeline for panel-data
+causal inference. A representative version of the stages:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}p{2.4cm}p{10.5cm}@{}}
+\toprule
+\textbf{Stage} & \textbf{Purpose} \\
+\midrule
+PKG        & Declare every software package the project will use. \\
+TARGET     & State the causal estimand via potential outcomes, populations, and weights. \\
+BITE       & Document the treatment's ``bite''---exhibits showing the intervention in the world. \\
+COVARIATES & Select covariates for unconfoundedness / conditional parallel trends; check balance. \\
+ROLLOUT    & Document treatment timing and cohorts (e.g.\ a \texttt{panelview} plot). \\
+OUTCOME    & Present the outcome's evolution to match the intended analysis. \\
+POWER      & Compute minimum detectable effects and power curves; assess over-rejection. \\
+ESTIMATOR  & Choose and run the estimator implied by TARGET, COVARIATES, and BITE. \\
+EVENT      & Produce event-study graphics. \\
+FALSIFY    & Run falsification tests (placebo outcomes and groups). \\
+MECHANISM  & Investigate candidate mechanisms behind the estimates. \\
+PIPELINE   & Re-run everything end-to-end to confirm replication. \\
+DELIVER    & Storyboard findings into outlines, short papers, and decks. \\
+SIGN       & Sign off once each stage is verified. \\
+\bottomrule
+\end{tabular}
+\caption{An illustrative staged research harness for causal-inference projects.}
+\end{table}
+
+\noindent The dashboard renders each stage as a status light---green (closed),
+red (open), amber (``you are here'')---so that progress and unfinished
+verification are always visible. The deeper point is a conjecture: that a
+general ``harness-workflow-for-empirical-research-using-AI-agents'' framework
+exists, and that once articulated it will look obviously correct, even as
+individual researchers keep tailoring their own dashboards by comparative
+advantage.
+
+\section{Agent drift and its controls}
+A recurring failure mode is \textbf{agent drift}: over a long session the agent
+silently accumulates artefacts and inconsistencies. Two concrete symptoms are
+reported: (i) an analytical sample quietly changing from $N$ to $N+k$
+observations with no explanation, caught only because inter-temporal results
+looked ``off''; and (ii) a proliferation of near-duplicate programs---``not $K$
+programs but $5K$''---recreating the old problem of many similarly named copies
+of the same code, now generated by the agent.
+
+The proposed discipline is borrowed as a metaphor from the formation of a
+scriptural \emph{canon}: out of many overlapping, similarly named files, a
+deliberate process of \emph{selection and curation} decides what belongs in the
+authoritative pipeline and what is \emph{deprecated}. Concretely, drift is
+controlled by:
+\begin{itemize}
+  \item A single canonical pipeline that regenerates all exhibits from source.
+  \item Explicit deprecation of stale/one-off code so it cannot silently run.
+  \item Ritualised per-stage verification before a stage is marked ``green.''
+  \item Adversarial self-checking skills run compulsively---e.g.\
+        \texttt{/referee2} (a sceptical second-referee pass) and
+        \texttt{/blindspot} (surfacing what the analysis may be missing).
+\end{itemize}
+
+\section{Error detection, integrity, and human capital}
+Agent-assisted checking cuts both ways for scientific quality.
+\paragraph{The case for.} Coding errors enter the published record more often
+than we admit---for every error caught late (say, at the revise-and-resubmit
+stage) many go undetected and are published. If agents reliably surface such
+errors early, the expected quality of the scientific record rises. This is a
+clear entry on the ``pro'' side of the ledger.
+\paragraph{The tension.} Cunningham raises a genuine dilemma: much durable
+researcher \emph{human capital}---scientific integrity, folder and pipeline
+discipline, wariness of ``liking your results,'' knowing when to trust a number
+versus recompute it---is learned precisely \emph{through} making and painfully
+fixing mistakes. If agents remove the ability to err, they may also remove the
+stakes through which that tacit knowledge is acquired. The open question is not
+whether accuracy matters (it plainly does), but how to keep the pedagogical
+value of failure while still catching consequential errors.
+
+\section{The economics of agent-assisted research}
+Framed in the author's own economic terms, agents lower the \emph{marginal cost
+of producing} research output---tables, figures, robustness checks, drafts.
+Standard reasoning then applies: as marginal cost falls, output rises. But so
+can the \emph{absolute volume of errors}, even if the error \emph{rate} falls,
+simply because far more is produced. This reframes verification not as a
+one-time gate but as the scarce, value-adding activity in an agent-heavy
+workflow, and it motivates investing in harnesses, deprecation discipline, and
+adversarial checks rather than in raw output speed.
+
+\section{Practical principles}
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item \textbf{Design before analysis.} Fix the estimand and identification
+        strategy (TARGET) before letting the agent estimate anything; ``design
+        trumps analysis.''
+  \item \textbf{Impose a harness.} Drive the agent through an explicit,
+        ordered checklist with visible completion status---not an open chat.
+  \item \textbf{Keep one canon.} Maintain a single reproducible pipeline;
+        deprecate everything else so stale code cannot run.
+  \item \textbf{Automate scepticism.} Encode referee-style and blind-spot
+        checks as reusable skills and run them at every stage.
+  \item \textbf{Verify, don't trust.} Treat verification---not generation---as
+        the researcher's core contribution.
+  \item \textbf{Version everything.} Keep raw data, cleaned data, code, and
+        outputs separated and under version control.
+  \item \textbf{Preserve judgement and stakes.} Use the agent to remove
+        drudgery, not to remove the researcher's understanding of why each
+        step is correct.
+\end{enumerate}
+
+\section{Conclusion}
+The through-line of this body of work is that AI coding agents are most useful
+in research when treated as \emph{disciplined executors inside a researcher-
+designed harness}, not as autonomous authors. Claude Code supplies the
+capabilities---repository awareness, tool use, MCP integrations, and custom
+skills---but the value comes from the surrounding structure: a staged checklist,
+active defence against drift, a curated canonical pipeline, and adversarial
+self-checking. The falling marginal cost of producing analysis makes
+verification, reproducibility, and design judgement \emph{more} valuable, not
+less, and leaves open a real question about how researchers will continue to
+build hard-won human capital once the machine catches their mistakes.
+
+\vspace{1em}
+\hrule
+\vspace{0.6em}
+\footnotesize\noindent\textbf{Sources.} Synthesised from Scott Cunningham's
+``Scott's Mixtape Substack'' Claude Code essay series, including
+\emph{``Stale code, deprecation, and the canon''} (21 Jul 2026),
+\emph{``Which research mistakes matter for human capital?''} (27 Jul 2026),
+\emph{``Claude Code 56: Falling marginal costs of production, output, and
+aggregate errors''} (6 Jul 2026), and related posts at
+\href{https://causalinf.substack.com/s/claude-code}{causalinf.substack.com/s/claude-code}.
+Background on Claude Code and the Model Context Protocol reflects Anthropic's
+public documentation.
+
+\end{document}
