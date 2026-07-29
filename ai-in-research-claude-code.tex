@@ -1,0 +1,286 @@
+\documentclass[11pt]{article}
+
+% ------------------------------------------------------------------
+%  AI Applications in Research: Concepts from the use of Claude Code
+%  A conceptual synthesis drawn from Scott Cunningham's "Scott's
+%  Mixtape Substack" essay series on AI agents for empirical research.
+% ------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black
+}
+
+\title{\textbf{AI Applications in Research}\\[4pt]
+\large Concepts for Empirical Work with AI Agents, Especially Claude Code}
+\author{Synthesis of themes from Scott Cunningham's \emph{Scott's Mixtape} essays}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main conceptual frameworks that have
+emerged for using AI coding agents---Claude Code in particular---in empirical
+research. It draws on an ongoing essay series (56+ posts) by economist Scott
+Cunningham documenting his workflow for causal-inference projects. The central
+ideas are (i) that AI agents drive the \emph{marginal cost of producing}
+cognitive output toward zero while leaving the cost of \emph{verifying} that
+output largely unchanged; (ii) that this ``production--verification cleavage''
+creates new failure modes---most notably ``agent drift''; and (iii) that a
+disciplined \emph{harness}: a checklist, a dashboard, custom skills, and a
+curation process for ``canonizing'' code---is required to keep AI-assisted
+research replicable and trustworthy.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+\hrule
+
+% ==================================================================
+\section{Motivation: why AI agents change research}
+% ==================================================================
+
+AI coding agents can now carry out large portions of an empirical project---
+cleaning data, writing estimation code, producing tables and figures, drafting
+prose---at a small fraction of the human time these tasks historically
+required. This lowers the cost of \emph{doing} research, but it also opens a gap
+between how quickly output is produced and how carefully it is checked. The
+frameworks below are attempts to name that gap and to build workflows that close
+it.
+
+% ==================================================================
+\section{The production--verification cleavage}
+% ==================================================================
+
+The organizing economic idea is a distinction between two functions:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{The production function} of cognitive output---anything from a
+        table of regression coefficients to a poem to a full manuscript.
+  \item \textbf{The verification function}---the separate task of confirming
+        that the output is \emph{correct} and is \emph{what was actually
+        intended}.
+\end{itemize}
+
+\paragraph{Isoquants and factor substitution.}
+A single unit of cognitive output can be produced with different ratios of
+\emph{machine time} $M$ to \emph{human time} $H$. Historically this production
+was extremely human-time intensive; machine time was little more than the
+seconds Stata took to invert a matrix. AI agents flatten the isoquant toward a
+straight line, i.e.\ $M$ and $H$ become closer to \emph{perfect substitutes}.
+The cost-minimizing equilibrium then moves toward the machine-intensive
+intercept $M^{*}$:
+
+\[
+q(M,H) = \bar{q}
+\quad\xrightarrow{\;\text{AI agents}\;}\quad
+\text{level curves become (near-)linear} \;\Rightarrow\;
+\min_{M,H}\; c_M M + c_H H \text{ pushed toward } M^{*}.
+\]
+
+\paragraph{The wedge.}
+Crucially, the production function is \emph{not} the verification function.
+Cheap production widens the wedge between how much output exists and the
+researcher's ability to evaluate whether it is accurate---or even whether it is
+what they meant to make. Falling marginal cost of production, without a matching
+fall in the cost of verification, tends to increase the stock of
+\emph{aggregate errors} unless deliberately managed.
+
+% ==================================================================
+\section{Manager vs.\ individual contributor: the ``CEO of the kitchen''}
+% ==================================================================
+
+Using an AI agent shifts the researcher from \emph{individual contributor}
+(writing every line of code) toward \emph{manager} (directing, reviewing,
+curating). The analogy offered is a Michelin-starred kitchen: the founder is no
+longer the one plating each dish, yet no meal exists without him---he is the
+``CEO of the kitchen.'' Likewise a lab director (e.g.\ a large research lab with
+many assistants) manages a production function of science without personally
+writing the code. AI agents let a lone researcher occupy \emph{both} roles at
+once, which is powerful but blurs the historically clear separation between
+factors of production---and therefore blurs accountability for correctness.
+
+% ==================================================================
+\section{Agent drift: the core failure mode}
+% ==================================================================
+
+\textbf{Agent drift} is the tendency of an AI agent, over a long project, to
+silently accumulate changes and artifacts that pull the work away from the
+researcher's intent. Concrete symptoms observed:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Silent sample changes} --- the analytical sample moving from
+        $N$ to $N+k$ observations with no explanation, caught only because
+        intertemporal results looked ``off.''
+  \item \textbf{Program proliferation} --- believing one is editing a single
+        script, then discovering not $K$ programs but $5K$, with near-duplicate
+        names and slightly different logic.
+  \item \textbf{Stale / deprecated code} --- old cleaning files that are no
+        longer run but still lurk in the project and can silently re-enter the
+        pipeline (an echo of a classic Stata coding error that flipped a paper's
+        results from significant to null).
+\end{itemize}
+
+Drift is dangerous precisely because production is now cheap: the agent
+``improvises'' abundantly, putting distance between the researcher and the work.
+
+% ==================================================================
+\section{The ``canon'': curating code into a replicable pipeline}
+% ==================================================================
+
+The proposed remedy is framed with a metaphor from the early church deciding
+its scriptural \textbf{canon}. AI agents generate an abundance of files,
+figures, tables, and code with similar-sounding names telling similar-but-not-
+identical stories. The researcher must run an explicit \emph{selection and
+curation} process that decides, for every artifact, whether it is:
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Status} & \textbf{Meaning} \\
+\midrule
+Canon      & Included in the pipeline that produces the final manuscript's exhibits. \\
+Apocryphal & Tolerated but not authoritative; kept aside, not in the pipeline. \\
+Heresy     & Deprecated / excluded; must not influence results. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The \emph{canon} is defined as ``the pipeline of code that produces the exhibits
+(tables and figures) that support the final manuscript the author presents as
+their own.'' Before AI agents, researchers curated this way largely
+unconsciously (good file naming, directory hygiene, version control---as in
+Gentzkow \& Shapiro's classic code manual). With agents, curation must become
+\emph{intentional and rule-governed} so that both the researcher's future self
+and ``future Claudes'' can pick up exactly where work left off.
+
+% ==================================================================
+\section{The harness: a rigid checklist and dashboard}
+% ==================================================================
+
+To fight drift, the workflow is organized as a \emph{harness}: a rigid,
+repeatable checklist paired with a visual dashboard. Each stage must be closed
+through a fixed ritual before the project can be considered complete. The
+causal-inference checklist runs to roughly 13--14 stages:
+
+\begin{enumerate}[leftmargin=2em,label=\textbf{\arabic*.}]
+  \item \textbf{PKG} --- enumerate all software packages the project will use.
+  \item \textbf{TARGET} --- state the causal parameter in potential-outcomes
+        notation (populations, weights); name each if there is more than one.
+  \item \textbf{BITE} --- document the treatment's ``bite'' with 2--3 exhibits
+        (e.g.\ time series, heat maps over a shapefile).
+  \item \textbf{COVARIATES} --- select covariates for unconfoundedness /
+        conditional parallel trends / a factor model; show balance tables and
+        propensity scores.
+  \item \textbf{ROLLOUT} --- document treatment timing by cohort; e.g.\ a
+        \texttt{panelview} figure.
+  \item \textbf{OUTCOME} --- present the outcome's evolution in a form that
+        matches the planned analysis.
+  \item \textbf{POWER} --- power calculations; minimum detectable effect at
+        $\alpha=0.05$, power $0.8$; power curves; over-rejection checks.
+  \item \textbf{ESTIMATOR} --- choose and estimate the estimator, flowing from
+        TARGET, COVARIATES, and BITE.
+  \item \textbf{EVENT} --- produce event-study graphics.
+  \item \textbf{FALSIFY} --- run falsification tests (placebo outcomes / groups).
+  \item \textbf{MECHANISM} --- investigate candidate mechanisms.
+  \item \textbf{PIPELINE} --- rerun everything to confirm replication.
+  \item \textbf{DELIVER} --- storyboard findings into deliverables.
+  \item \textbf{SIGN} --- final sign-off.
+\end{enumerate}
+
+\paragraph{The dashboard.}
+Each stage is a color-coded lock on a left-to-right dashboard:
+\textcolor{green!55!black}{\textbf{green}} (closed / verified),
+\textcolor{red!80!black}{\textbf{red}} (open---and no project may ship with a red
+lock), and \textcolor{orange}{\textbf{amber}} (``you are here''---the resumption
+point each day). The dashboard is both a set of design principles and a direct
+reaction to agent drift.
+
+% ==================================================================
+\section{Custom skills and hooks}
+% ==================================================================
+
+The workflow is extended with reusable, invocable commands (``skills'') and
+automated checks (``hooks'') that encode the researcher's methodological
+philosophy and run compulsively at each stage:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \texttt{/covariates} --- proposes candidate covariates from the
+        researcher's stated modeling beliefs.
+  \item \texttt{/referee2} --- an adversarial ``second referee'' pass over the
+        work.
+  \item \texttt{/blindspot} --- surfaces overlooked threats to validity.
+\end{itemize}
+
+These make verification cheaper and more consistent, partially counteracting the
+production--verification wedge described in Section~2.
+
+% ==================================================================
+\section{Scientific integrity and the role of mistakes}
+% ==================================================================
+
+A genuine tension is left open. On the \textbf{pro} side of the ``Claude-Code-
+for-science ledger,'' agents that catch coding errors can keep false results out
+of the published record---for every caught error, many uncaught ones are
+resubmitted and published. On the \textbf{con} side, mistakes are a source of
+irreplaceable \emph{human capital}: hard-won lessons about folder structure,
+raw-vs-cleaned data separation, automated pipelines, version control, and the
+seductive danger of ``liking your results.'' The open question: when do we want
+machines to stop us from making mistakes, and does never making them erode the
+failure-driven learning on which researcher judgment depends?
+
+% ==================================================================
+\section{Toward a general harness-workflow for AI-assisted research}
+% ==================================================================
+
+The conjecture is that a high-level, general framework---a
+\emph{harness-workflow for empirical research using AI agents}---will soon be
+articulated and, once heard, will seem obvious. It will resemble older best
+practices (naming conventions, directory hygiene, version control) but will feel
+initially strange, because its defining new requirement is an intentional,
+step-by-step process to \emph{canonize code into a replicable pipeline} and so
+neutralize agent drift. Individual researchers will still tailor their own
+dashboards and skills, driven by comparative advantage and personal style.
+
+% ==================================================================
+\section*{Key takeaways}
+\addcontentsline{toc}{section}{Key takeaways}
+% ==================================================================
+
+\begin{enumerate}[leftmargin=1.5em]
+  \item AI agents make \emph{producing} research cheap but do not make
+        \emph{verifying} it cheap---mind the wedge.
+  \item The researcher's role shifts from contributor to manager/curator.
+  \item ``Agent drift'' (silent sample changes, program proliferation, stale
+        code) is the central new risk.
+  \item Fight drift with an explicit \emph{canon}: decide what code is
+        pipeline-authoritative and what is deprecated.
+  \item Operationalize this with a rigid, stage-by-stage checklist, a
+        color-coded dashboard, and custom skills/hooks.
+  \item Preserve scientific integrity while remaining honest about the human
+        capital that mistakes historically taught.
+\end{enumerate}
+
+\bigskip
+\hrule
+\medskip
+\noindent\footnotesize
+Source material: Scott Cunningham, \emph{Scott's Mixtape Substack}
+(\url{https://causalinf.substack.com}), Claude Code essay series,
+June--July 2026---including ``Claude Code 56: Falling marginal costs of
+production, output, and aggregate errors,'' ``Stale code, deprecation, and the
+canon,'' and ``Which research mistakes matter for human capital?''
+This document is an independent conceptual synthesis for study purposes.
+
+\end{document}
