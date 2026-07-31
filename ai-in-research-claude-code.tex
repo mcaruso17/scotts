@@ -1,0 +1,268 @@
+\documentclass[11pt]{article}
+
+% ------------------------------------------------------------------
+%  AI Applications in Research: The Case of Claude Code
+%  A conceptual summary synthesised from Scott Cunningham's
+%  "Scott's Mixtape" Substack (Claude Code series, mid-2026)
+%  and Paul Goldsmith-Pinkham's NBER talk on AI in empirical research.
+% ------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black
+}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Coding Agents, Verification, and the Craft of Empirical Work\\
+\normalsize A conceptual summary, with emphasis on \texttt{Claude Code}}
+\author{Prepared from Scott Cunningham's \emph{Scott's Mixtape} Substack (Claude Code series)}
+\date{31 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent By mid-2026, coding agents such as \texttt{Claude Code} and Codex have
+sharply reduced the \emph{marginal cost of producing} empirical research, while
+the \emph{cost of verifying} that research has not fallen proportionally. This
+document summarises the main concepts emerging from applied economists'
+experience using AI agents for research---drawing on Scott Cunningham's essay
+series and Paul Goldsmith-Pinkham's NBER talk. The central organising idea is
+simple and consequential: \textbf{prose is not a constraint; structure is}.
+Because instructions written in natural language do not bind an agent, the new
+core skill of the researcher shifts from \emph{writing code} to \emph{designing
+verification}.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ------------------------------------------------------------------
+\section{The Economic Framing}
+% ------------------------------------------------------------------
+
+The starting point is a change in relative prices.
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Production is cheap.} Agents like \texttt{Claude Code} generate
+        code, tables, and figures at very low marginal cost and require little
+        human skill to \emph{drive} production.
+  \item \textbf{Verification is not.} Confirming that output is correct has not
+        become proportionally cheaper. If anything, raising verification quality
+        demands \emph{more} human skill, because the model cannot reliably
+        verify its own work without human steering.
+  \item \textbf{The objective.} Cunningham frames the goal as
+        \emph{``maximise research output subject to a zero-error constraint.''}
+        Zero errors is treated as a \emph{constraint}, not a goal---avoiding the
+        notion of ``optimal errors'' that a minimise-errors framing would
+        tolerate.
+\end{itemize}
+
+\noindent This reframing implies a division of labour in which the human's
+comparative advantage moves decisively toward \textbf{design and verification}.
+
+% ------------------------------------------------------------------
+\section{The Central Thesis: Prose Is Not a Constraint}
+% ------------------------------------------------------------------
+
+The recurring lesson from running agents at scale is that natural-language
+instructions are, at best, suggestions.
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Rules embedded in \texttt{CLAUDE.md}, in prompts, or in ``dire
+        warnings'' are treated by the agent as \emph{optional}.
+  \item An agent's willingness to exercise its own discretion appears to
+        \emph{grow} as the task gets larger, as the context window fills, or
+        seemingly at random.
+  \item There is \textbf{no consequence} to an agent that ignores an
+        instruction; the only recourse a frustrated researcher has is to
+        ``throw more prose at it.'' Prose therefore functions like
+        \emph{law without enforcement}.
+\end{itemize}
+
+\paragraph{Observed failure modes.} Concrete errors that motivated the thesis:
+\begin{itemize}[leftmargin=1.4em]
+  \item Hallucinated sample sizes (e.g.\ ``494 counties'' invented) rather than
+        values rooted in the analytical sample.
+  \item Files half-overwritten despite explicit instructions not to.
+  \item ``Programming in the air''---producing figures/tables in a terminal
+        shell without writing the code into a reproducible pipeline, breaking
+        the link between reported numbers and local source files.
+\end{itemize}
+
+% ------------------------------------------------------------------
+\section{What Actually Constrains an Agent: Tools, Not Words}
+% ------------------------------------------------------------------
+
+If prose does not bind, what does? The answer is \textbf{tooling and structure}
+that make an undesired action \emph{impossible} rather than merely discouraged.
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Packages as guardrails.} The \texttt{did} package (Callaway \&
+        Sant'Anna's estimator for staggered adoption) \emph{requires} untreated
+        or not-yet-treated units and errors out otherwise. It thereby
+        \emph{prohibits} a design that \texttt{lm}/\texttt{fixest} would silently
+        allow. The package---not the prompt---is the constraint.
+  \item \textbf{The \texttt{git diff} as the unit of verification.} Every change
+        surfaces as reviewable lines: an invented \texttt{+494} appears in green
+        and must be approved; a clobbered file shows in red and can be rejected;
+        a lost version is recoverable with \texttt{git checkout}. Version
+        control makes actions visible and reversible.
+  \item \textbf{Caveat---verification debt.} Diff review only works if the human
+        actually reads it. Under high throughput, reviewers begin
+        \emph{skimming} approvals, accumulating ``verification debt.'' A visible
+        mechanism is necessary but not sufficient.
+\end{itemize}
+
+% ------------------------------------------------------------------
+\section{Verification as the New Core Task}
+% ------------------------------------------------------------------
+
+A subtle by-product argument runs through the series: in the ``analog'' workflow,
+the act of writing one's own code \emph{generated verification knowledge}---the
+researcher simply \emph{knew} more about the data and design as a side effect of
+building it. When production is delegated to an agent, that tacit knowledge is no
+longer produced automatically and must be \textbf{deliberately reconstructed}.
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Verification must now be \emph{engineered} into the workflow rather than
+        acquired for free.
+  \item Individual ``production functions'' differ: the right amount of
+        scaffolding is idiosyncratic. The aim is to reach the edge of
+        \emph{one's own} production possibility frontier, not to copy another
+        researcher's workflow.
+\end{itemize}
+
+% ------------------------------------------------------------------
+\section{Concrete Workflow Patterns with Claude Code}
+% ------------------------------------------------------------------
+
+The essays document several reusable patterns for applying \texttt{Claude Code}
+to empirical research.
+
+\subsection{Custom Skills as Structured Elicitation}
+Rather than free-form prompting, Cunningham builds \emph{skills}
+(slash-commands) that impose structure:
+\begin{itemize}[leftmargin=1.4em]
+  \item \texttt{/covariates} --- a five-question interview (with one follow-up
+        each, max ten) grounded in Heckman--Ichimura--Todd (1997) regression
+        adjustment for difference-in-differences. It elicits the \emph{latent}
+        knowledge of which covariates (a)~predict trends in $Y(0)$ and (b)~are
+        severely imbalanced across groups, then proposes up to six candidates.
+  \item \texttt{/target} --- specifies the exact aggregated estimand (typically
+        an average causal effect) that the design and estimator will target.
+  \item \texttt{/amnesia} --- an interviewer skill that re-orients the
+        researcher on a project after time away (a deliberate hedge against
+        forgetting where a long project stands).
+\end{itemize}
+
+\subsection{Two Styles of Human--Agent Dialogue}
+\begin{center}
+\begin{tabular}{@{}p{0.30\linewidth}p{0.30\linewidth}p{0.30\linewidth}@{}}
+\toprule
+ & \textbf{Cooperative ``interview''} & \textbf{Adversarial ``grill''} \\
+ & (Cunningham's skills) & (Goldsmith-Pinkham) \\
+\midrule
+Stance      & Collect \& build            & Doubt \& attack \\
+Probes      & Your \emph{knowledge}       & Your \emph{reasoning} \\
+Trusts      & Your answers                & Nothing \\
+Stops when  & Questions answered          & The plan cannot be broken \\
+Output      & A filled-in specification   & A plan that survived attack \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The \emph{interview} extracts tacit knowledge the researcher holds but
+cannot easily articulate (an instance of Autor's reading of the ``Polanyi
+Paradox''). The \emph{grill} is adversarial planning: the agent tries to break
+the design until only its defensible core remains.
+
+\subsection{Design Trumps Analysis: A Checklist Dashboard}
+Motivated by Rubin's \emph{``For Objective Causal Inference, Design Trumps
+Analysis''}, Imbens's expositions (e.g.\ on LaLonde with Xu), and Pedro
+Sant'Anna's ``checklist,'' Cunningham operationalises causal inference as a
+\textbf{staged, visual checklist}:
+\begin{itemize}[leftmargin=1.4em]
+  \item Locked/unlocked \emph{stages} enforce an ordering on the craft of a
+        project (design before analysis).
+  \item Completed figures and tables become \emph{cards} pinned to the
+        dashboard---clickable, enlargeable, browsable---so verified artifacts
+        are stored and revisited.
+  \item \texttt{Claude Code} is embedded directly in the dashboard (a button
+        that opens the agent on the underlying ``machinery''), reducing the
+        distance between reviewing results and touching code.
+\end{itemize}
+
+\subsection{The Johari Window as a Blind-Spot Tool}
+The Johari Window (Luft \& Ingham, 1955) is repurposed as a device for
+surfacing workflow blind spots: the agent, holding substantial context from the
+researcher, is asked to map what \emph{both} parties do (shared ``spine''), what
+a reference expert does that the researcher does not (prescriptive gaps), and so
+on---turning the model into a mirror for one's own practice.
+
+% ------------------------------------------------------------------
+\section{Goldsmith-Pinkham's ``Four Habits''}
+% ------------------------------------------------------------------
+
+Cunningham credits Paul Goldsmith-Pinkham as a leader in the disciplined use of
+AI agents for empirical work. Salient practices adopted or aspired to:
+\begin{itemize}[leftmargin=1.4em]
+  \item Treat the \texttt{git diff} as the \textbf{unit of verification}.
+  \item Explicit \textbf{``grilling''} stages that stress-test a plan before
+        execution.
+  \item A small set of repeatable \textbf{habits} that hold structure in place,
+        rather than trusting the agent to remember prose rules.
+\end{itemize}
+
+% ------------------------------------------------------------------
+\section{Practical Principles (Summary)}
+% ------------------------------------------------------------------
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item \textbf{Structure binds, prose doesn't.} Encode requirements as tools,
+        packages, schemas, and tests---not as warnings.
+  \item \textbf{Make verification the deliverable.} Treat zero errors as a
+        constraint; budget explicit time and mechanisms for checking.
+  \item \textbf{Keep everything traceable.} Numbers and figures must map to
+        local source files in a pipeline; never ``program in the air.''
+  \item \textbf{Use version control as a gate.} Review diffs deliberately;
+        watch for creeping ``verification debt.''
+  \item \textbf{Elicit tacit knowledge.} Use structured interviews to pull out
+        design knowledge (covariates, estimands) you cannot easily state.
+  \item \textbf{Adopt design-first checklists.} Stage the work so design
+        precedes analysis, following Rubin and Sant'Anna.
+  \item \textbf{Fit the workflow to yourself.} Scaffolding needs are
+        idiosyncratic; optimise your own production frontier.
+\end{enumerate}
+
+% ------------------------------------------------------------------
+\section*{Sources}
+\addcontentsline{toc}{section}{Sources}
+% ------------------------------------------------------------------
+
+\begin{itemize}[leftmargin=1.4em]
+  \item S.\ Cunningham, \emph{``Prose is not constraints and other things I
+        learned from Paul Goldsmith-Pinkham's NBER talk on AI in empirical
+        research,''} Scott's Mixtape Substack, 30 July 2026.\\
+        \url{https://causalinf.substack.com/p/prose-is-not-constraints-and-other}
+  \item S.\ Cunningham, \emph{``Claude Code'' essay series}, Scott's Mixtape
+        Substack (2026). \url{https://causalinf.substack.com/}
+  \item D.\ Rubin, \emph{``For Objective Causal Inference, Design Trumps
+        Analysis.''}
+  \item J.\ Heckman, H.\ Ichimura, P.\ Todd (1997), \emph{Review of Economic
+        Studies}.
+  \item B.\ Callaway \& P.\ Sant'Anna, difference-in-differences with staggered
+        adoption (\texttt{did} package).
+\end{itemize}
+
+\end{document}
