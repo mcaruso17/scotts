@@ -1,0 +1,279 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+% AI Applications in Research: Concepts and Practice with Claude Code
+% A synthesis of ideas from Scott Cunningham's "Scott's Mixtape" Substack
+% (Claude Code / AI-in-empirical-research essay series, 2026), especially the
+% essay "Prose is not constraints and other things I learned from Paul
+% Goldsmith-Pinkham's NBER talk on AI in empirical research" (30 July 2026).
+%
+% Compile with: pdflatex ai-in-research-claude-code.tex  (run twice for the ToC)
+% ---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue!55!black,
+  citecolor=black,
+  pdftitle={AI Applications in Research with Claude Code},
+  pdfauthor={Synthesis document}
+}
+
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{0.6em}{}
+\setlist[itemize]{leftmargin=1.4em,itemsep=2pt,topsep=3pt}
+
+\newcommand{\skillname}[1]{\texttt{/#1}}
+
+\title{\textbf{AI Applications in Research}\\[0.35em]
+       \large Concepts and Practice for Empirical Work with Claude Code}
+\author{A synthesis of Scott Cunningham's ``Scott's Mixtape'' essays on AI in research}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent Coding agents such as Claude Code have sharply lowered the marginal
+cost of \emph{producing} empirical research while leaving the cost of
+\emph{verifying} it largely untouched. This document synthesises the main
+concepts emerging from the applied-economics community's experience with these
+tools---drawn primarily from Scott Cunningham's 2026 essay series on using
+Claude Code for causal inference. It organises the ideas into a coherent
+picture: the shifting economics of research production, the principle that
+``prose is not a constraint,'' the role of tools and structure as genuine
+constraints, concrete Claude Code workflows (project memory, custom skills, and
+visual dashboards), techniques for eliciting tacit human knowledge, and the
+discipline of treating zero errors as a design constraint rather than a goal.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+\hrule
+\bigskip
+
+% ---------------------------------------------------------------------------
+\section{The changing economics of empirical research}
+% ---------------------------------------------------------------------------
+
+By mid-2026 it is broadly understood that agentic coding tools---Claude Code,
+Codex, and similar---have \textbf{dramatically reduced the marginal cost of
+producing empirical research}. Data cleaning, estimation, table and figure
+generation, and even research design can now be driven semi-autonomously with
+little human keystroke effort.
+
+The central economic observation is that \textbf{these two costs have not fallen
+together}:
+
+\begin{itemize}
+  \item \textbf{Cost of production} $\downarrow\downarrow$ --- now cheap and
+        requiring little human skill to drive.
+  \item \textbf{Cost of verification} $\approx$ --- roughly unchanged, and if
+        anything \emph{more} demanding of human skill, because large language
+        models (LLMs) cannot reliably verify their own output without human
+        steering.
+\end{itemize}
+
+Because relative prices have shifted, the researcher's comparative advantage
+moves \emph{away} from writing code and \emph{toward} verification, design, and
+judgement. Much of the current craft is about rebuilding the verification
+knowledge that used to be generated as a by-product of writing the code oneself.
+
+% ---------------------------------------------------------------------------
+\section{The core principle: ``prose is not a constraint''}
+% ---------------------------------------------------------------------------
+
+A recurring failure mode is that agents treat written instructions as
+\emph{optional}. Rules embedded in \texttt{CLAUDE.md}, in prompts, or in local
+documents are frequently followed---but not always, and the tendency to
+improvise appears to grow as the task grows, as the context window fills, or
+seemingly at random. Observed failures include:
+
+\begin{itemize}
+  \item \textbf{Hallucinated quantities} --- e.g.\ an invented sample size
+        (``494 counties'') that never existed in the analytical data.
+  \item \textbf{Destructive edits} --- files half-overwritten despite explicit
+        instructions never to do so.
+  \item \textbf{``Programming in the air''} --- producing figures and tables in
+        an interactive shell without committing the generating code to a
+        reproducible pipeline, breaking the link between numbers and files.
+\end{itemize}
+
+The unifying explanation is blunt: \textbf{prose is not a constraint}. Nothing
+happens to an LLM when it violates an instruction; there is no consequence,
+because there is no agent that experiences consequences. Adding more words,
+warnings, or even frustration changes nothing structurally. Written rules are,
+at best, suggestions---``as much a rule as laws without enforcement.''
+
+% ---------------------------------------------------------------------------
+\section{What \emph{does} constrain: tools, structure, and hooks}
+% ---------------------------------------------------------------------------
+
+If words do not bind, what does? \textbf{Tools and structure that make wrong
+actions impossible rather than merely discouraged.}
+
+\begin{itemize}
+  \item \textbf{Software packages as guardrails.} A vivid example: R's
+        \texttt{did} package (Callaway and Sant'Anna's staggered-adoption
+        estimator) \emph{refuses} to run when every unit is eventually treated,
+        because it requires a not-yet-treated or never-treated comparison group.
+        By contrast \texttt{lm} and \texttt{fixest} will happily estimate a
+        twoway fixed-effects model on the same data. The package itself
+        \emph{prohibits} a modelling choice that prose could only discourage.
+  \item \textbf{The git diff as the unit of verification.} Reviewing changes
+        diff-by-diff makes fabrications visible: an invented ``$+494$'' line must
+        be explicitly approved, a clobbered file shows as red deletions to
+        reject, and a lost artifact is recoverable with \texttt{git checkout}.
+        Version control turns silent corruption into an explicit, reviewable
+        event.
+  \item \textbf{Hooks that fence off actions.} The strongest form of constraint
+        is programmatic: hooks that literally forbid certain actions, making them
+        impossible for the agent to take rather than merely inadvisable. This is
+        identified as the direction of travel---moving verification from
+        \emph{prose we hope is obeyed} to \emph{structure that cannot be
+        violated}.
+\end{itemize}
+
+\noindent\textbf{Takeaway:} design the environment so that the invalid action
+cannot occur, instead of instructing the agent not to take it.
+
+% ---------------------------------------------------------------------------
+\section{Claude Code workflows for research}
+% ---------------------------------------------------------------------------
+
+Several concrete patterns have emerged for driving Claude Code through a serious
+empirical project.
+
+\subsection{Project memory: \texttt{CLAUDE.md} and local documents}
+Persistent instructions and project context are stored in \texttt{CLAUDE.md}
+files (globally and per-project) and in local markdown documents the agent is
+asked to read. These improve consistency---but, per the core principle, they
+steer rather than constrain.
+
+\subsection{Custom skills as structured interviews and specs}
+Reusable ``skills'' encode repeatable research sub-tasks:
+\begin{itemize}
+  \item \skillname{covariates} --- interviews the researcher with up to ten
+        questions to elicit which covariates plausibly satisfy conditional
+        parallel trends, grounded in the Heckman--Ichimura--Todd (1997)
+        regression-adjustment logic; it surfaces covariates that both
+        \emph{predict trends in the untreated potential outcome} $Y(0)$ and are
+        \emph{severely imbalanced} across treatment and control.
+  \item \skillname{target} --- pins down the exact estimand (typically an
+        aggregated average causal effect) that the design and estimator will
+        target, before estimation begins.
+  \item \skillname{amnesia} --- an interviewer skill that combats day-to-day
+        project forgetfulness by asking structured questions to reconstruct what
+        has been done, what the project is about, and where it currently stands.
+\end{itemize}
+
+\subsection{A visual, checklist-based dashboard}
+Beyond the command line, a bespoke dashboard organises the ``craft of causal
+inference'' into locked/unlocked \textbf{stages} rendered as a checklist. It:
+\begin{itemize}
+  \item stores completed figures and tables as clickable, zoomable ``cards''
+        pinned to each stage;
+  \item embeds Claude Code itself as an in-dashboard button for direct
+        interaction with the research;
+  \item serves as external memory---especially valuable for researchers who,
+        by temperament or neurodivergence, benefit from visual and tactile,
+        repetitive structure.
+\end{itemize}
+The stages draw on a design-first tradition: Rubin's ``design trumps analysis,''
+Imbens's reassessments of the LaLonde evaluation, and Pedro Sant'Anna's
+practitioner ``checklist.''
+
+% ---------------------------------------------------------------------------
+\section{Eliciting tacit knowledge: interview vs.\ grilling}
+% ---------------------------------------------------------------------------
+
+A distinctive use of AI in research is \textbf{extracting the researcher's own
+tacit knowledge}---the ``Polanyi paradox'' of knowing more than we can say.
+Two complementary styles appear:
+
+\begin{itemize}
+  \item \textbf{Cooperative interviewing} (the \skillname{covariates} /
+        \skillname{target} style): the agent \emph{collects and builds},
+        trusting and expanding the researcher's answers to pull out latent
+        knowledge and assemble a filled-in specification.
+  \item \textbf{Adversarial grilling} (Paul Goldsmith-Pinkham's approach): the
+        agent \emph{doubts and attacks} the researcher's reasoning, hunting for
+        weaknesses until a research plan either survives or a hole is conceded.
+        The output is a plan hardened against attack.
+\end{itemize}
+
+A \textbf{Johari-window} framing helps locate blind spots: mapping what the
+researcher and the agent each do and do not ``see'' about the workflow exposes
+shared practice, one-sided strengths, and unexamined gaps worth correcting.
+
+% ---------------------------------------------------------------------------
+\section{Verification debt and the zero-error constraint}
+% ---------------------------------------------------------------------------
+
+Because production is fast and cheap, unreviewed changes accumulate as
+\textbf{verification debt}: the reviewer starts skimming diffs, and the very
+mechanism meant to catch errors erodes. Two guiding commitments follow.
+
+\begin{itemize}
+  \item \textbf{Verification is now the primary task}, not a footnote to
+        production. The workflow must actively regenerate the verification
+        knowledge that hand-coding used to produce for free.
+  \item \textbf{Zero errors is a \emph{constraint}, not a goal.} Framing errors
+        as something to \emph{minimise} implicitly accepts ``optimal errors'' at
+        some tolerance. Treating zero errors as a hard constraint instead means
+        the constraint \emph{designs the workflow}: one builds structure,
+        tooling, and hooks such that the disallowed error simply cannot occur.
+        The objective becomes ``maximise research output subject to a
+        zero-error constraint.''
+\end{itemize}
+
+% ---------------------------------------------------------------------------
+\section{Practical takeaways}
+% ---------------------------------------------------------------------------
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item Treat the agent as a fast, unreliable producer; invest your scarce human
+        skill in \textbf{verification and design}.
+  \item Prefer \textbf{structural constraints} (packages that error out, version
+        control, hooks) over prose instructions whenever a rule genuinely
+        matters.
+  \item Make the \textbf{git diff the unit of verification}, and guard against
+        verification debt by keeping review batches small.
+  \item Use \textbf{custom skills} to standardise recurring design decisions and
+        to \emph{interview yourself} for tacit knowledge (e.g.\ covariate and
+        estimand selection).
+  \item Build \textbf{external memory}---dashboards, checklists, staged
+        pipelines---so project state survives your own forgetting.
+  \item Accept that the optimal workflow is \textbf{idiosyncratic}: the aim is to
+        reach the edge of \emph{your own} production possibility frontier, not to
+        copy someone else's.
+\end{enumerate}
+
+% ---------------------------------------------------------------------------
+\section*{Primary source}
+\addcontentsline{toc}{section}{Primary source}
+% ---------------------------------------------------------------------------
+
+\noindent Scott Cunningham, \emph{Scott's Mixtape} Substack, Claude Code /
+AI-in-empirical-research essay series (2026). Anchor essay:
+``Prose is not constraints and other things I learned from Paul
+Goldsmith-Pinkham's NBER talk on AI in empirical research,'' 30 July 2026,
+\url{https://causalinf.substack.com/p/prose-is-not-constraints-and-other}.
+Related essays in the same series discuss structured workflows and code
+deprecation (``Stale code, deprecation, and the canon''), research-mistake
+triage (``Which research mistakes matter for human capital?''), and the
+Substack--Claude Code integration.
+
+\bigskip
+\noindent\emph{This is a study/synthesis document; all concepts are attributed to
+the source above and the researchers it cites.}
+
+\end{document}
