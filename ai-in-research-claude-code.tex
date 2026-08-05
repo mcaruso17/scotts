@@ -1,0 +1,205 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Empirical Research: Concepts and Practice
+%  A conceptual summary synthesised from Scott Cunningham's
+%  "Scott's Mixtape Substack" essays on working with Claude Code.
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue!60!black,
+  citecolor=black
+}
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\setlist{itemsep=2pt, topsep=3pt}
+
+\title{\textbf{AI Applications in Empirical Research}\\[2pt]
+\large Coding Agents, Verification, and the Craft of Causal Inference}
+\author{Conceptual summary --- synthesised from \emph{Scott's Mixtape Substack}}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent By mid-2026, coding agents such as Claude Code and Codex have
+dramatically lowered the marginal cost of \emph{producing} empirical
+research, while the cost of \emph{verifying} that research has not fallen
+in step. This document summarises the main concepts organised around that
+asymmetry: what changes when agents do the coding, why natural-language
+instructions fail to control them, and which workflow practices---tools as
+constraints, git diffs as units of verification, custom skills, and staged
+dashboards---help researchers keep quality high. The synthesis draws on
+Scott Cunningham's ongoing essays and podcast series documenting his use of
+Claude Code to study the effect of Texas House Bill~2 on marriage rates.
+\end{abstract}
+
+\section{The Core Shift: Production is Cheap, Verification is Not}
+\begin{itemize}
+  \item Coding agents have collapsed the \textbf{marginal cost of producing}
+        empirical analysis; a task that once took days of hand-coding can now
+        be driven with little human coding skill.
+  \item The \textbf{cost of verification has not fallen proportionally}, and
+        raising verification quality typically requires \emph{more} human
+        skill, because current LLMs cannot reliably verify their own output
+        without human steering.
+  \item Consequently the \textbf{relative price of verification has risen},
+        and verification---not production---becomes the central task of the
+        modern empirical researcher.
+  \item A hidden cost of the old ``analog'' workflow is now visible: hand
+        coding generated \textbf{verification knowledge} as a byproduct;
+        delegating the coding removes that byproduct, so it must be
+        deliberately reconstructed.
+\end{itemize}
+
+\section{Prose Is Not a Constraint}
+\begin{itemize}
+  \item Researchers try to govern agents with rules written in
+        \texttt{CLAUDE.md} files and prompts (e.g. ``never produce a figure
+        that cannot be traced to a local file''), essentially hoping the
+        agent obeys the words.
+  \item In large-scale experiments across thousands of semi-autonomous
+        agents, instructions are treated as \textbf{optional}; an agent's
+        willingness to exercise its own discretion grows as the task
+        enlarges, as the context window fills, or seemingly at random.
+  \item \textbf{Prose carries no consequence.} An LLM cannot be grounded,
+        docked, or penalised; violating an instruction costs it nothing, so
+        the words alone cannot bind behaviour.
+  \item Observed failure modes: hallucinated sample sizes (e.g. an invented
+        ``494 counties''), files half-overwritten despite explicit
+        prohibitions, and figures/tables produced ``in the air'' in the shell
+        rather than written into a reproducible pipeline.
+\end{itemize}
+
+\section{Tools and Structure \emph{Are} Constraints}
+\begin{itemize}
+  \item What genuinely limits an agent is not words but \textbf{tools}: a
+        software package can make a forbidden action \emph{impossible} rather
+        than merely discouraged.
+  \item Example: the \texttt{did} package (Callaway \& Sant'Anna's estimator
+        for staggered adoption) refuses to run when every unit is eventually
+        treated, because it requires not-yet-treated or never-treated
+        comparison units---so it errors out and stops. By contrast
+        \texttt{lm} and \texttt{fixest} will happily estimate two-way fixed
+        effects on the same data. The \textbf{package is the constraint}.
+  \item The forward direction is \textbf{hooks}: mechanisms that literally
+        fence off the agent and make disallowed actions impossible, replacing
+        unenforceable prose rules with enforced structure.
+  \item Design principle: \emph{structure binds, prose doesn't}---wire the
+        rule into the environment (packages, repos, hooks, files) instead of
+        the instruction text.
+\end{itemize}
+
+\section{Verification Practices}
+\begin{itemize}
+  \item \textbf{The git diff as the unit of verification} (a practice from
+        Paul Goldsmith-Pinkham): every agent change surfaces as an
+        approvable diff---an invented number appears as an added line to
+        catch, a clobbered file shows as red lines to reject, and a lost
+        version is recoverable via \texttt{git checkout}.
+  \item \textbf{Verification debt}: as diffs pile up, humans start skimming
+        approvals, quietly eroding the safeguard---so the diff alone is
+        necessary but not sufficient.
+  \item \textbf{Adversarial ``grilling''} vs.\ \textbf{cooperative
+        ``interviewing''}: grilling doubts and attacks a plan until it either
+        survives or a hole is conceded (probes \emph{reasoning}); interviewing
+        cooperatively elicits and builds on the researcher's knowledge
+        (probes \emph{knowledge}). Both harden the design in complementary
+        ways.
+  \item \textbf{Zero errors as a constraint, not a goal.} Treating errors as
+        something to \emph{minimise} tolerates an ``optimal error'' level;
+        treating zero errors as a hard \emph{constraint} instead forces the
+        workflow to be designed around it---``maximise research output
+        subject to a zero-error constraint.''
+\end{itemize}
+
+\section{Skills: Encoding Method into the Agent}
+Custom Claude Code ``skills'' turn tacit econometric judgement into
+repeatable, invocable procedures:
+\begin{itemize}
+  \item \texttt{/covariates} --- interviews the researcher (five questions,
+        one follow-up each) to surface which covariates matter for
+        conditional parallel trends, grounded in Heckman, Ichimura \& Todd
+        (1997): the covariates that both (a) predict trends in $Y(0)$ and
+        (b) are badly imbalanced between treatment and control.
+  \item \texttt{/target} --- pins down the exact aggregated population
+        estimand (usually an average causal effect) that the design and
+        estimator will identify.
+  \item \texttt{/amnesia} --- an interviewer that combats project
+        ``amnesia'' by re-eliciting what a project is about and where it
+        stands, reconstructing lost context.
+  \item Conceptual basis: the \textbf{Polanyi Paradox} (via David Autor)---
+        humans ``know more than they can tell,'' and generative AI can pull
+        that latent knowledge out through structured interview, extracting
+        judgements the researcher cannot easily articulate.
+\end{itemize}
+
+\section{The Craft-of-Causal-Inference Dashboard}
+\begin{itemize}
+  \item A \textbf{staged, visual checklist} that every project must pass
+        through: locked/unlocked stages, completed figures and tables
+        ``pinned'' as clickable cards, and Claude Code embedded as an
+        in-dashboard button.
+  \item Purpose: to \textbf{externalise memory and verification}. It
+        substitutes for the verification knowledge once produced by hand
+        coding, and accommodates individual needs (visual, tactile,
+        repetitive cues) rather than mimicking anyone else's process.
+  \item Guiding metaphor: reach the edge of \emph{your own} production
+        possibility frontier---the best workflow is idiosyncratic, because
+        every researcher's production function differs.
+\end{itemize}
+
+\section{Worked Application: House Bill 2 and Marriage Rates}
+\begin{itemize}
+  \item Running case study (with Caitlin Myers): the effect of Texas House
+        Bill~2---which closed roughly half the state's abortion
+        clinics---on marriage rates.
+  \item Method: \textbf{continuous difference-in-differences} with treatment
+        defined as the \emph{change in distance} to the nearest clinic.
+  \item Ongoing tension over \textbf{estimator choice and interpretation}
+        (e.g. a Poisson estimator), and over what modelling compromises the
+        researchers are ``willing to live with''---a concrete instance of
+        verification-as-the-hard-part.
+  \item Documented across a 16-episode podcast/essay arc (``The Mixtape with
+        Scott''), with the AI-for-research theme recurring throughout.
+\end{itemize}
+
+\section{Key Takeaways}
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item Agents make production cheap; \textbf{verification is the new
+        bottleneck} and the new core skill.
+  \item \textbf{Prose does not constrain agents}---rules without enforcement
+        are suggestions.
+  \item \textbf{Constrain with tools and structure} (packages, repos, hooks),
+        not words.
+  \item Use \textbf{git diffs, grilling, and interviewing} to verify, while
+        guarding against \textbf{verification debt}.
+  \item Encode method as \textbf{skills}; externalise memory and checks in a
+        \textbf{staged dashboard}.
+  \item Hold \textbf{zero errors as a constraint} and design the workflow
+        around it.
+\end{enumerate}
+
+\section*{Sources}
+\small
+Synthesised from Scott Cunningham, \emph{Scott's Mixtape Substack}
+(\texttt{causalinf.substack.com}), especially ``Prose is not constraints and
+other things I learned from Paul Goldsmith-Pinkham's NBER talk on AI in
+empirical research'' (30 July 2026) and ``Episode 16: Landing the Plane''
+(4 August 2026). References mentioned within: Callaway \& Sant'Anna (\texttt{did});
+Heckman, Ichimura \& Todd (1997, \emph{ReStud}); David Autor on the Polanyi
+Paradox; Luft \& Ingham's Johari Window; and Paul Goldsmith-Pinkham's NBER
+talk on AI in empirical research.
+
+\end{document}
