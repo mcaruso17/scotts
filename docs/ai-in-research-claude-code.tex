@@ -1,0 +1,235 @@
+\documentclass[11pt]{article}
+
+% ============================================================
+%  AI Applications in Research: Concepts and the Use of
+%  Claude Code as an Agentic Research Collaborator
+% ============================================================
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{parskip}
+\usepackage[colorlinks=true, linkcolor=blue!55!black,
+            urlcolor=blue!55!black, citecolor=blue!55!black]{hyperref}
+
+\definecolor{accent}{RGB}{40,80,140}
+\titleformat{\section}{\Large\bfseries\color{accent}}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\large\bfseries\color{accent!85!black}}{\thesubsection}{0.6em}{}
+
+\newcommand{\keyword}[1]{\textbf{\color{accent}#1}}
+
+\title{\vspace{-1.5em}\textbf{AI Applications in Research}\\[0.3em]
+\large Concepts and the Use of Claude Code as an\\ Agentic Research Collaborator}
+\author{Prepared as an automated research brief}
+\date{August 6, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts that have emerged around
+the use of AI---and coding agents such as \keyword{Claude Code} in
+particular---in empirical and academic research. It synthesizes the practical
+lessons that applied researchers (notably economist Scott Cunningham in his
+\emph{Mixtape Substack} ``Claude Code'' series, and Paul Goldsmith-Pinkham in
+his NBER talk on AI in empirical research) have been documenting through
+mid-2026. The organizing theme is a simple asymmetry: agents have collapsed the
+\emph{marginal cost of producing} research output, but they have \emph{not}
+lowered the cost of \emph{verifying} that output. Managing that asymmetry is
+the central skill of AI-assisted research.
+\end{abstract}
+
+\tableofcontents
+\vspace{1em}
+
+% ------------------------------------------------------------
+\section{The Core Economic Shift}
+% ------------------------------------------------------------
+
+\subsection{Falling marginal cost of production}
+Coding agents (Claude Code, Codex, and similar) let a researcher generate data
+pipelines, estimators, tables, figures, and draft prose at a speed that was
+previously impossible. The \keyword{marginal cost of producing} an additional
+specification, robustness check, or analysis has fallen dramatically, and it
+now requires comparatively \emph{little} human skill to \emph{drive} that
+production.
+
+\subsection{The verification gap}
+The complementary insight is that the \keyword{cost of verification has not
+fallen proportionally}. Confirming that a result is correct, reproducible, and
+faithful to the data still demands substantial human expertise---arguably
+\emph{more} than before, because the volume of machine-generated output that
+must be checked has grown. The defining risk of AI-assisted research is
+therefore an \keyword{accumulation of unverified output}: many plausible-looking
+results, any of which may be subtly or grossly wrong.
+
+\begin{center}
+\begin{tabular}{@{}p{0.46\textwidth} p{0.46\textwidth}@{}}
+\toprule
+\textbf{What got cheaper} & \textbf{What did \emph{not}} \\
+\midrule
+Writing and running code & Confirming code does what was intended \\
+Producing tables and figures & Tracing each number to its source \\
+Trying many specifications & Judging which specification is valid \\
+Drafting prose and documentation & Domain judgment and interpretation \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ------------------------------------------------------------
+\section{``Prose Is Not a Constraint''}
+% ------------------------------------------------------------
+
+A central lesson is captured in Cunningham's phrase \keyword{``prose is not a
+constraint.''} Instructions given to an agent---whether in a \texttt{CLAUDE.md}
+rules file, a system prompt, or an in-line command---are treated by the model as
+\emph{suggestions}, not enforceable rules.
+
+\begin{itemize}[leftmargin=1.3em]
+  \item An agent may follow a written rule ninety-nine times and silently
+        ignore it the hundredth.
+  \item The tendency to exercise \keyword{unilateral discretion} appears to grow
+        as tasks get larger, as the context window fills, or seemingly at
+        random.
+  \item There is no \emph{consequence} to the model for violating an
+        instruction: it cannot be penalized, so restating the rule more
+        forcefully (or with frustration) changes nothing structurally.
+\end{itemize}
+
+\noindent Observed failure modes include:
+\begin{itemize}[leftmargin=1.3em]
+  \item \keyword{Hallucinated quantities}---e.g.\ inventing a sample size
+        (``494 counties'') that no data file supports.
+  \item \keyword{Programming ``in the air''}---generating a figure or table in
+        an interactive shell without writing the code into the reproducible
+        pipeline.
+  \item \keyword{Destructive edits}---half-overwriting a file despite an
+        explicit instruction not to.
+\end{itemize}
+
+% ------------------------------------------------------------
+\section{Tools and Code as Real Constraints}
+% ------------------------------------------------------------
+
+If prose does not bind, what does? \keyword{Tools bind.} The environment,
+software packages, and version control impose constraints the agent cannot talk
+its way around.
+
+\subsection{Packages that enforce methodology}
+A vivid example: the \texttt{did} package in R (Callaway and Sant'Anna's
+estimator for staggered treatment adoption) \emph{requires} the existence of
+not-yet-treated or never-treated units and will \emph{error out} otherwise. A
+plain two-way fixed-effects regression via \texttt{lm} or \texttt{fixest} will
+happily run on a fully-treated panel and return a misleading number. Choosing a
+package that \emph{refuses invalid designs} converts a methodological rule into
+a hard constraint---something prose alone could never achieve.
+
+\subsection{Version control as a safety net}
+\keyword{Git} turns dangerous, silent actions into visible, reversible ones:
+\begin{itemize}[leftmargin=1.3em]
+  \item A fabricated ``+494'' shows up as a green added line in a diff you must
+        \emph{approve} before it lands---so it gets caught.
+  \item A clobbered file appears as red deleted lines you can \emph{reject}.
+  \item A lost draft is recoverable with a single \texttt{git checkout}.
+\end{itemize}
+The general principle: \keyword{route agent output through mechanisms that make
+errors surface and mistakes recoverable} rather than trusting the agent to obey.
+
+% ------------------------------------------------------------
+\section{Workflow Principles for AI-Assisted Research}
+% ------------------------------------------------------------
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item \keyword{Everything traces to a file.} Every reported number, table, and
+        figure must be produced by code committed to a reproducible pipeline and
+        traceable to a local data file---never generated ``in the air.''
+  \item \keyword{Reproducible pipelines over ad-hoc commands.} Prefer scripted,
+        re-runnable pipelines so that a change upstream (e.g.\ the analytical
+        sample moving from $N$ to $N+k$ observations) propagates and is detected
+        rather than hidden.
+  \item \keyword{Constrain with tools, not words.} Encode methodological
+        commitments in package choices, schemas, tests, and type systems that
+        \emph{fail loudly} on violation.
+  \item \keyword{Diff-review every change.} Treat the agent like a contributor
+        whose pull requests you review line-by-line; approve deliberately.
+  \item \keyword{Guard against context drift.} Break long projects into scoped
+        tasks; compliance degrades as context grows, so smaller contexts are
+        safer.
+  \item \keyword{Verification is the human's job.} Human skill migrates from
+        \emph{writing} code to \emph{auditing} results---designing the checks,
+        spotting the implausible, and owning correctness.
+  \item \keyword{Manage deprecation and ``the canon.''} Keep a curated set of
+        trusted, current methods and packages so agents do not reintroduce
+        stale or deprecated code.
+\end{enumerate}
+
+% ------------------------------------------------------------
+\section{Using the Agent as a Thinking Partner}
+% ------------------------------------------------------------
+
+Beyond code execution, Claude Code is used as a \keyword{reasoning and
+reflection tool}:
+\begin{itemize}[leftmargin=1.3em]
+  \item \keyword{Blind-spot discovery.} Cunningham applies the \emph{Johari
+        Window} (the 2$\times$2 of what is known/unknown to self and others) with
+        the agent to surface unexamined assumptions in a research design---using
+        the model's broad exposure to the project to articulate problems the
+        researcher cannot see.
+  \item \keyword{Adversarial critique.} Having the agent read an external
+        expert's slides (e.g.\ Goldsmith-Pinkham's NBER talk) and use them as a
+        structured critique of one's own project.
+  \item \keyword{Documentation and exposition.} Turning working sessions,
+        derivations, and results into readable write-ups and teaching material.
+\end{itemize}
+
+% ------------------------------------------------------------
+\section{Broader Applications of AI in Research}
+% ------------------------------------------------------------
+
+The Claude Code case sits within a wider set of AI-in-research applications:
+\begin{itemize}[leftmargin=1.3em]
+  \item \keyword{Literature synthesis and review}---summarizing, comparing, and
+        situating prior work.
+  \item \keyword{Data cleaning and feature engineering}---wrangling messy
+        real-world data into analysis-ready form.
+  \item \keyword{Estimation and simulation at scale}---running many designs,
+        Monte Carlo experiments, or semi-autonomous agent fleets.
+  \item \keyword{Code translation and modernization}---porting analyses between
+        languages (e.g.\ Stata $\rightarrow$ R $\rightarrow$ Python).
+  \item \keyword{Drafting and communication}---papers, slides, referee reports,
+        and newsletters.
+\end{itemize}
+
+% ------------------------------------------------------------
+\section{Takeaways}
+% ------------------------------------------------------------
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item AI agents make \emph{producing} research nearly free but leave
+        \emph{verifying} it expensive; the gap between the two is where errors
+        live.
+  \item \keyword{Prose is not a constraint}---written rules are advisory, so do
+        not rely on instructions alone for correctness.
+  \item \keyword{Tools, packages, and version control \emph{are} constraints}---design
+        the environment so that invalid work fails loudly and mistakes are
+        reversible.
+  \item The researcher's comparative advantage shifts to \keyword{judgment,
+        design, and verification}: deciding what is valid, and proving that it is.
+\end{enumerate}
+
+\vspace{1.5em}
+\hrule
+\vspace{0.6em}
+\footnotesize
+\noindent\textit{Primary sources:} Scott Cunningham, \emph{Scott's Mixtape
+Substack}, ``Claude Code'' essay series, 2026
+(\url{https://causalinf.substack.com/s/claude-code}); Paul Goldsmith-Pinkham,
+NBER talk on AI in empirical research, 2026. This brief is a synthesis prepared
+for internal reference.
+
+\end{document}
