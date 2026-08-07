@@ -1,0 +1,309 @@
+\documentclass[11pt]{article}
+
+% ============================================================
+%  AI Applications in Research: Concepts and the Case of
+%  Claude Code
+%
+%  A synthesis compiled from Scott Cunningham's "Scott's Mixtape
+%  Substack" essay series on using AI agents (Claude Code) for
+%  applied empirical research, together with the broader ideas
+%  circulating in that discussion.
+% ============================================================
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{parskip}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black,
+  pdftitle={AI Applications in Research: Concepts and the Case of Claude Code},
+  pdfauthor={Compiled summary}
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\newcommand{\term}[1]{\textbf{#1}}
+
+\title{\vspace{-1.5em}\textbf{AI Applications in Research:\\ Concepts and the Case of Claude Code}}
+\author{Compiled summary}
+\date{August 7, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+This document summarizes the main concepts behind using AI agents in
+research, with an emphasis on \term{Claude Code}---a command-line coding
+agent---as a tool for applied empirical work. It draws on the ongoing
+essay series by economist Scott Cunningham, who has documented a
+book-length, real-time experiment in conducting causal-inference research
+with an AI agent. The recurring themes are economic in spirit: AI lowers
+the marginal cost of producing research, which shifts the binding
+constraint away from \emph{production} and toward \emph{verification} and,
+more subtly, \emph{understanding}. The practical response is a set of
+disciplined workflows---staged checklists, reproducibility guarantees, and
+active-learning routines---designed to keep a human researcher in genuine
+command of work an agent largely produces.
+\end{abstract}
+
+\tableofcontents
+\vspace{1em}
+
+% ------------------------------------------------------------
+\section{Why AI Changes the Economics of Research}
+% ------------------------------------------------------------
+
+The cleanest way to frame AI's effect on research is as a shift in the
+\term{marginal cost of producing research}. Before capable AI agents, the
+cost of producing an additional unit of research output was effectively
+fixed by a researcher's time and human capital; output was chosen where
+the marginal benefit of research equalled that marginal cost.
+
+AI agents push the marginal cost of production down toward a small
+$\varepsilon$ above zero. Two things follow:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \term{More research gets produced.} As marginal cost falls from
+        $MC_b$ (``before AI'') to $\widehat{MC}_{AI}\approx\varepsilon$, the
+        equilibrium quantity rises from $Q^*_b$ to $Q^*_{AI}$. How much it
+        rises depends on the elasticity of research demand.
+  \item \term{New surplus appears.} Old work is now done with far fewer
+        time inputs, and additional work becomes worthwhile that previously
+        was not---generating surpluses that did not exist before.
+\end{itemize}
+
+The provocative part is what happens to the \emph{value} of the old work.
+Historically, producing a piece of research and \emph{understanding} it
+were nearly the same act: understanding was a prerequisite to doing the
+work and a near-automatic byproduct of having done it. When an agent
+produces the work instead, that automatic understanding is no longer
+guaranteed. The essay frames this as understanding possibly being an
+\term{externality} of human production---something created ``by accident''
+in the course of doing the work, the way pollution is a byproduct of
+manufacturing. If so, the time an agent saves cannot be assumed to
+automatically refill the lost understanding.
+
+% ------------------------------------------------------------
+\section{The Central Question: What Is Now the Bottleneck?}
+% ------------------------------------------------------------
+
+Two competing slogans organize the current debate:
+
+\begin{description}[leftmargin=0em, itemsep=0.4em]
+  \item[``Verification is the new bottleneck.''] If agents produce
+        cheaply, the scarce human task becomes checking that the output is
+        correct.
+  \item[``Understanding is the new bottleneck.''] A stronger claim
+        (associated with a Geoffrey Litt essay of that title): agents may
+        eventually \emph{verify} as well as they produce, yet a human still
+        may not \emph{understand} the result. Verification and
+        understanding are not the same thing.
+\end{description}
+
+Cunningham argues the second framing is more accurate. One can experience
+a result as valuable because one believes it is correct, while whether it
+is \emph{actually} correct---and socially valuable---is a separate matter.
+Closing that gap is the real challenge, and it is not obviously solved by
+having more free time.
+
+\subsection{The principal--agent problem in research}
+Delegating to an agent recreates a classic \term{principal--agent}
+problem. The researcher (principal) trusts the agent to have done the work
+well but cannot directly observe effort or competence---and, crucially, the
+agent ``is not real'' and cannot be held accountable. A frequently cited
+formulation (attributed to IBM) captures the stakes: \emph{a machine cannot
+be held accountable, therefore a machine must never make a management
+decision}. The corollary for research: an agent must actively help the
+human understand the work, or it should not be relied upon at all.
+
+\subsection{Skill atrophy and cognitive debt}
+Two related risks compound the problem:
+\begin{itemize}[leftmargin=1.4em]
+  \item \term{Skill atrophy.} If a researcher stops doing the work, their
+        ability to judge whether it was ``done well'' may decay---``the
+        blind leading the blind.''
+  \item \term{Cognitive debt.} Reviewing an agent's changes as a stream of
+        \term{git diffs} (Paul Goldsmith-Pinkham's ``the unit of
+        verification is the git diff'') is meant to discharge the debt of
+        understanding one diff at a time. In practice it is easy to skim
+        and silently accept diffs, accumulating debt rather than clearing
+        it.
+\end{itemize}
+
+% ------------------------------------------------------------
+\section{Guiding Principles for Research with AI Agents}
+% ------------------------------------------------------------
+
+\begin{enumerate}[leftmargin=1.6em, itemsep=0.45em]
+  \item \term{Zero errors is the \emph{constraint}, not the objective
+        function.} Treating error minimization as the goal quietly
+        smuggles in the notion of an ``optimal'' non-zero error rate. When
+        research output is highly elastic with respect to falling costs,
+        even a small accepted error rate scales into a large absolute
+        number of errors. Errors are a hard constraint to satisfy, not a
+        quantity to trade off.
+  \item \term{Understanding is (also) a constraint.} Beyond correctness, a
+        threshold level of human understanding of the work should be
+        treated as a requirement the workflow must meet.
+  \item \term{Optimal research output is the objective function.} The
+        target is the socially optimal quantity of research---where social
+        marginal benefit equals social marginal cost---which is only
+        meaningful once verification and understanding are guaranteed.
+  \item \term{Keep the human in the cockpit.} The preferred mode is the
+        agent as co-pilot that helps the researcher learn, not an
+        autopilot that runs while the researcher sleeps. ``Tie yourself to
+        the mast'': build guardrails that force engagement precisely
+        because skimming is so tempting.
+\end{enumerate}
+
+% ------------------------------------------------------------
+\section{Practical Workflows and Techniques}
+% ------------------------------------------------------------
+
+The essays translate these principles into concrete, repeatable practices.
+
+\subsection{Staged, detailed checklists}
+Rather than issuing open-ended prompts, work is decomposed into explicit,
+staged checklists. Each stage is small enough to verify and is checked off
+deliberately, which keeps the analytical pipeline legible and auditable.
+
+\subsection{Verification via git diffs---plus something more}
+Diff-by-diff review remains the backbone of verification, but on its own it
+invites passive acceptance. The proposed remedy is to add an
+\emph{understanding} layer on top of verification, so the goal becomes two
+things at once: confirm the change is correct \emph{and} confirm the human
+grasps it.
+
+\subsection{The \texttt{/quiz} skill: active-learning by the agent}
+A notable experiment is a custom \term{Claude Code skill} called
+\texttt{/quiz}. It has two parts:
+\begin{enumerate}[leftmargin=1.5em]
+  \item The agent generates a short set of \term{slides} that teach the
+        researcher something about the current work.
+  \item The agent then asks \term{multiple-choice questions}, one at a
+        time, based on those slides.
+\end{enumerate}
+The design is explicitly modeled on corporate ``HR training video +
+quiz'' modules: read/watch, then test. The aim is to manufacture
+\emph{continuous understanding} deliberately, replacing the understanding
+that used to arrive as a free byproduct of doing the work by hand. It
+extends an earlier practice of \term{interviews}---the agent interrogating
+the researcher to elicit their beliefs about, e.g., which covariates to
+include or what the target parameter should be.
+
+\subsection{Reproducibility and guarding against ``stale code''}
+A recurring failure mode is silent drift: an analytical sample changing
+from $N$ to $N+k$ observations without a clear, traceable reason. The
+antidote is a \term{structured, reproducible workflow}---a canonical,
+end-to-end runnable pipeline---so that code cannot silently deprecate and
+every number in the paper can be regenerated from source. This is where
+much of the value of a coding agent lies: it makes full reproducibility
+cheap enough to do by default.
+
+\subsection{Tooling and integration}
+The agent operates as a command-line tool with access to the project's
+files and can be extended through custom skills and integrations (for
+example, an MCP integration that connects the agent to external services
+such as Substack). The general pattern is to give the agent structured,
+scoped access to the artifacts of the research rather than treating it as a
+disembodied chatbot.
+
+% ------------------------------------------------------------
+\section{A Running Applied Example}
+% ------------------------------------------------------------
+
+The concepts are grounded in a real project: estimating the effect of
+Texas House Bill 2---which closed roughly half the state's abortion
+clinics---on marriage rates, using a difference-in-differences design with
+a ``continuous treatment'' (distance to the nearest clinic). Documented
+across a multi-episode series, the agent-assisted workflow covers the
+ordinary hard parts of applied causal inference: probing the
+\term{parallel-trends} assumption, hunting for \term{confounders} that
+could threaten identification, constructing the estimator, and iterating
+toward a defensible specification. The episodes make the abstract argument
+tangible---the agent accelerates production dramatically, while the
+researcher's job shifts toward interrogating assumptions and guaranteeing
+that the accelerated output is both correct and understood.
+
+% ------------------------------------------------------------
+\section{Broader Themes: AI Applications in Research}
+% ------------------------------------------------------------
+
+Stepping back from the specific tool, the same ideas generalize across
+research domains:
+
+\begin{itemize}[leftmargin=1.4em, itemsep=0.35em]
+  \item \term{Agentic coding assistants} lower the cost of data cleaning,
+        estimation, simulation, robustness checks, and visualization,
+        expanding how much analysis a single researcher can credibly run.
+  \item \term{Reproducibility as a first-class output.} Because agents work
+        directly with code and version control, fully reproducible
+        pipelines become the cheap default rather than a costly aspiration.
+  \item \term{Verification tooling matters more than raw generation.} The
+        binding constraint moves downstream, so investment should flow to
+        tests, diffs, checklists, and audit trails.
+  \item \term{Human capital is reallocated, not eliminated.} The scarce
+        human skills become framing the question, choosing the
+        identification strategy, judging assumptions, and---increasingly---%
+        maintaining genuine understanding of machine-produced results.
+  \item \term{Research integrity and trust.} Delegation raises the stakes
+        of accountability: the field's norms around who is responsible for
+        an error do not disappear simply because an agent produced it.
+\end{itemize}
+
+% ------------------------------------------------------------
+\section{Key Takeaways}
+% ------------------------------------------------------------
+
+\begin{enumerate}[leftmargin=1.6em, itemsep=0.35em]
+  \item AI agents collapse the marginal cost of \emph{producing} research;
+        the scarce resource becomes \emph{verifying} and, above all,
+        \emph{understanding} it.
+  \item Understanding may have been an accidental byproduct of doing the
+        work by hand; when an agent does the work, understanding must be
+        engineered on purpose.
+  \item ``Zero errors'' should be a binding constraint, not a quantity to
+        optimize; understanding should be a constraint too.
+  \item Practical discipline---staged checklists, diff review plus an
+        understanding layer, reproducible pipelines, and active-learning
+        routines like a \texttt{/quiz} skill---is what keeps a human in real
+        command.
+  \item The healthiest posture is the agent as \emph{co-pilot} that helps
+        the researcher keep learning, not an autopilot that hollows out the
+        researcher's judgment.
+\end{enumerate}
+
+% ------------------------------------------------------------
+\section*{Sources}
+% ------------------------------------------------------------
+\addcontentsline{toc}{section}{Sources}
+\begin{itemize}[leftmargin=1.4em]
+  \item Scott Cunningham, \emph{Scott's Mixtape Substack} ---
+        \url{https://causalinf.substack.com/}. In particular, ``How to
+        Improve Understanding with Claude Code'' (Aug.\ 7, 2026),
+        \url{https://causalinf.substack.com/p/how-to-improve-understanding-with},
+        and the ongoing Claude Code essay and podcast series (e.g.\ the
+        multi-episode Texas HB2 / marriage-rates difference-in-differences
+        project).
+  \item Geoffrey Litt, ``Understanding Is the New Bottleneck'' (referenced
+        in the newsletter).
+  \item Paul Goldsmith-Pinkham, on ``the unit of verification is the git
+        diff'' (referenced in the newsletter).
+\end{itemize}
+
+\vfill
+\noindent\footnotesize\emph{Compiled as an automated summary of publicly
+circulated ideas; paraphrased for brevity. Quotations and specific claims
+should be checked against the original essays before citation.}
+
+\end{document}
