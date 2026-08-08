@@ -1,0 +1,170 @@
+\documentclass[11pt]{article}
+
+% ----------------------------------------------------------------------
+%  AI Applications in Research: Concepts and the Use of Claude Code
+%  A concise conceptual summary.
+%  Compiles with any standard TeX distribution (pdflatex / xelatex /
+%  lualatex) using only widely available packages.
+% ----------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+
+\setlist{itemsep=2pt, topsep=4pt}
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Core Concepts and the Use of Claude Code}
+\author{Research Notes}
+\date{August 8, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the use of
+artificial intelligence in research, with an emphasis on agentic coding
+assistants and, in particular, \textbf{Claude Code}. It frames how large
+language model (LLM) agents are reshaping the empirical research workflow,
+the practices that make their use rigorous, and the emerging economic and
+epistemic questions they raise. The treatment is deliberately conceptual
+rather than tool-specific, so that the ideas remain useful as individual
+tools evolve.
+\end{abstract}
+
+\section{What Changes When AI Enters the Research Loop}
+
+Modern AI assistants move researchers from \emph{writing every line} to
+\emph{directing and verifying} work performed by an agent. The central shift
+is one of role:
+
+\begin{itemize}
+  \item \textbf{From author to reviewer.} The marginal cost of producing a
+  first draft of code, prose, or analysis approaches zero; the scarce input
+  becomes judgment about whether that output is correct and relevant.
+  \item \textbf{From single-threaded to parallel.} An agent can pursue
+  several lines of inquiry at once (multiple languages, multiple model
+  specifications, multiple robustness checks) faster than a human could
+  serially.
+  \item \textbf{From tacit to explicit.} Good AI-assisted work forces the
+  researcher to state assumptions, data-cleaning rules, and identification
+  strategies plainly enough that an agent can act on them.
+\end{itemize}
+
+\section{Claude Code: An Agentic Assistant for Research}
+
+\textbf{Claude Code} is a command-line agent that operates directly inside a
+project directory. Rather than answering questions in the abstract, it reads
+the files, runs commands, edits code, and inspects the results---closing the
+loop between suggestion and execution. Properties that matter for research:
+
+\begin{itemize}
+  \item \textbf{Repository awareness.} It works within the actual project,
+  so it can replicate a pipeline, trace a bug across files, or resurrect an
+  old, undocumented codebase.
+  \item \textbf{Tool use.} It executes real tools---compilers,
+  statistical packages (Python, R, Stata), shell utilities, and external
+  APIs---and reacts to their output.
+  \item \textbf{Sub-agents.} Specialized agents can be spawned to perform
+  narrow tasks (e.g., an adversarial referee, a replication auditor, a
+  cross-language checker), then report structured results back.
+  \item \textbf{Persistent instructions.} Project-level guidance
+  (conventions, data locations, do's and don'ts) lets the agent behave
+  consistently across sessions.
+\end{itemize}
+
+\section{Concrete Applications in Empirical Research}
+
+\subsection{Replication and cross-implementation auditing}
+Ask the agent to re-implement an analysis \emph{from scratch} in several
+languages and packages and check whether the estimates agree at each stage.
+Divergence localizes bugs or hidden assumptions; agreement raises confidence
+in a result. This is a practical instantiation of multi-language replication
+as a correctness test.
+
+\subsection{Method substitution and re-analysis}
+Re-run a published pipeline while swapping one component---for example,
+replacing a fine-tuned classifier (RoBERTa) with a general LLM
+(GPT-4o-mini) to reclassify a large corpus of text (e.g., legislative
+speeches)---to probe how sensitive conclusions are to methodological
+choices.
+
+\subsection{Adversarial self-review}
+Direct the agent to write a skeptical referee report on your own work, to
+stress-test results, and to search for specification choices that would
+overturn a finding. Automating the ``red team'' surfaces weaknesses before
+reviewers do.
+
+\subsection{Workflow acceleration}
+Typical time sinks---data cleaning, boilerplate estimation code,
+table/figure generation, and documentation---are delegated, freeing the
+researcher for design and interpretation.
+
+\section{Principles for Rigorous AI-Assisted Research}
+
+The productivity gains are real, but so are new failure modes. A disciplined
+workflow rests on a few principles:
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item \textbf{Verification is the bottleneck.} Production speeds up;
+  \emph{checking} does not. Budget explicit time to verify outputs, and
+  treat unverified agent output as a hypothesis, not a result.
+  \item \textbf{Reproducibility by construction.} Keep everything in
+  version control, pin environments, and require the agent to leave a
+  runnable trail (scripts, seeds, logged commands).
+  \item \textbf{Expertise still binds.} The agent amplifies the person
+  directing it. Domain knowledge is what lets a researcher pose the right
+  task, spot a wrong answer, and know which robustness checks matter.
+  \item \textbf{Guard against automation bias.} Fluent, confident output is
+  not evidence of correctness; independent checks (cross-language, cross-model,
+  analytic sanity tests) remain essential.
+  \item \textbf{Provenance and disclosure.} Record what the agent did and be
+  transparent about AI involvement in the research record.
+\end{enumerate}
+
+\section{New Problems Created, Not Only Solved}
+
+Even when agents solve old problems, they introduce new ones: subtle,
+plausible-looking errors that are expensive to detect; a temptation to scale
+up analyses faster than they can be validated; and an over-reliance that can
+erode the researcher's own understanding of the code. Recognizing these
+trade-offs is part of using the tools well.
+
+\section{The Economic Frame: The ``Zero-Profit Condition''}
+
+A useful way to think about the trajectory: when a powerful tool is scarce,
+early adopters earn a large surplus. But in a competitive field the tool
+diffuses---\emph{everyone} eventually gets the same agent---and by the logic
+of the \textbf{zero-profit condition}, the private advantage from merely
+\emph{having} the tool competes away. The durable edge shifts to what the
+tool cannot commoditize: good questions, credible identification, unique
+data, and the judgment to verify. In equilibrium, using AI well is table
+stakes; the returns accrue to taste and rigor, not access.
+
+\section{Takeaways}
+
+\begin{itemize}
+  \item AI agents like Claude Code turn research into a
+  \emph{direct-and-verify} activity, collapsing the cost of producing
+  analysis while raising the premium on checking it.
+  \item Their highest-value research uses are replication auditing, method
+  substitution, adversarial self-review, and workflow acceleration.
+  \item Rigor depends on verification, reproducibility, domain expertise,
+  and honest disclosure---not on the tool alone.
+  \item As access equalizes, competitive advantage returns to judgment and
+  question selection rather than to the tool itself.
+\end{itemize}
+
+\vspace{1em}
+\noindent\textit{Note: These concepts draw on the ongoing public
+documentation of AI-assisted empirical research by practitioners such as
+Scott Cunningham (Scott's Mixtape Substack, ``Claude Code'' series,
+2025--2026), among the broader literature on AI agents in knowledge work.}
+
+\end{document}
