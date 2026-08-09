@@ -1,0 +1,188 @@
+\documentclass[11pt]{article}
+
+% ----------------------------------------------------------------------
+% AI Applications in Research: The Use of Claude Code
+% A conceptual summary informed by Scott Cunningham's "Scott's Mixtape"
+% Claude Code series on quantitative social science research.
+% ----------------------------------------------------------------------
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\definecolor{linkblue}{RGB}{0,84,159}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=linkblue,
+  urlcolor=linkblue,
+  citecolor=linkblue,
+  pdftitle={AI Applications in Research: The Use of Claude Code},
+  pdfauthor={Prepared for M. Caruso}
+}
+
+\titleformat{\section}{\normalfont\Large\bfseries\color{linkblue}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{0.6em}{}
+\setlist[itemize]{leftmargin=1.4em,itemsep=2pt,topsep=3pt}
+
+\newcommand{\concept}[1]{\textbf{#1}}
+
+\title{\vspace{-1.5em}\textbf{AI Applications in Research}\\[0.3em]
+\large The Use of Claude Code in Quantitative Social Science}
+\author{Prepared as a conceptual summary\\
+\small Informed by Scott Cunningham's \emph{Scott's Mixtape} ``Claude Code'' series}
+\date{9 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts surrounding the use of
+artificial intelligence---and \concept{agentic coding tools such as Claude
+Code} in particular---in empirical and quantitative research. It draws on the
+running documentation of practice by economist Scott Cunningham, whose ongoing
+essay series treats the terminal-based coding agent not as a novelty but as a
+new instrument in the working researcher's toolkit. The emphasis is
+conceptual: what changes about the \emph{workflow}, where the new
+\emph{bottlenecks} appear, and which \emph{principles} keep AI-assisted
+research rigorous, reproducible, and trustworthy.
+\end{abstract}
+
+\section{What Claude Code Is, in a Research Context}
+Claude Code is a command-line \concept{agentic coding assistant}: it reads a
+project directory, plans, edits files, runs code, inspects output, and
+iterates---while the researcher steers. In an empirical social-science
+setting this reframes the agent as a \concept{research assistant that lives in
+the terminal}, capable of replicating pipelines, cleaning data, running
+regressions across languages, and drafting analysis and prose.
+
+\begin{itemize}
+  \item \concept{Thinking partner over autopilot.} The most productive stance
+  treats the model as a partner one \emph{thinks through}, steering
+  iteratively and letting it execute once the next move is clear---rather than
+  an autonomous system one merely delegates to.
+  \item \concept{Directory-first workflow.} A common entry point is pointing
+  the agent at an existing (even decade-old) project directory and letting it
+  build an understanding before any change is made.
+  \item \concept{Language-agnostic execution.} The same agent can drive
+  Python, R, and Stata, making cross-language replication and auditing
+  practical for a single researcher.
+\end{itemize}
+
+\section{Core Concepts and Themes}
+
+\subsection{Verification Is the New Bottleneck}
+When code is cheap to generate, the scarce resource shifts from
+\emph{writing} to \emph{checking}. The central discipline of AI-assisted
+research becomes \concept{verification}: confirming that generated code does
+what it claims, that results replicate, and that conclusions survive
+scrutiny. Speed at the keyboard is worthless without trustworthy validation.
+
+\subsection{Reproducibility and the ``Coding Audit''}
+A powerful pattern is the \concept{coding audit}: have the agent
+independently re-implement an analysis pipeline from scratch---across multiple
+languages and packages---and check that intermediate and final results agree.
+Agreement across independent implementations is strong evidence of
+correctness; divergence localizes bugs.
+
+\subsection{The Harness and Multi-Agent Workflows}
+Beyond single prompts, researchers assemble a \concept{harness}---the system
+around the model that decides how work is split, which \concept{subagents}
+spawn, what tools each receives, how output is verified, and when a job is
+truly done. Related building blocks include:
+\begin{itemize}
+  \item \concept{Skills}: reusable, packaged procedures (e.g.\ a deck-building
+  or causal-inference skill) that encode a researcher's standards.
+  \item \concept{Adversarial QA and quality gates}: dedicated review agents
+  that try to \emph{refute} a result before it is accepted.
+  \item \concept{Replication protocols}: structured steps that make an
+  analysis re-runnable end to end.
+\end{itemize}
+
+\subsection{Beauty and Story as Workflow Principles}
+A recurring, somewhat unexpected theme is that \concept{beauty and narrative}
+are not decoration but drivers of quality. Treating a slide deck as a
+\emph{performance medium}---beautiful, technically rigorous, and cleanly paced
+to the pixel---raises the standard of the underlying analysis and
+communication. The harness is designed so that clear storytelling and visual
+polish are first-class outputs, not afterthoughts.
+
+\subsection{New Problems Created, Not Only Solved}
+Adopting AI agents introduces its own failure modes even as it removes
+friction---sometimes \emph{without} even reducing total time spent. Documented
+tensions include over-trust in fluent-but-wrong output, subtle statistical
+artifacts, and the effort of steering and verifying. Honest practice logs the
+problems the tools create, not just the ones they solve.
+
+\subsection{Statistical Rigor: A Cautionary Example}
+A vivid case study concerns \concept{p-hacking and publication bias}. An
+initial claim that AI-generated papers showed p-hacking was publicly walked
+back after peer feedback: the observed bunching of $t$-statistics near
+conventional thresholds was better explained by the \concept{rounding} of
+coefficients and standard errors---a known publication-bias artifact---than by
+deliberate manipulation. The lesson: agentic tools accelerate both the
+generation \emph{and} the correction of claims, and human statistical judgment
+remains essential.
+
+\section{Doing Research ``On the Air''}
+The \concept{live-research} format---exemplified by ``The Odd Couple,''
+in which two economists conduct a real difference-in-differences project
+using Claude Code during a recorded podcast---demonstrates the workflow
+transparently. It surfaces the practical texture of collaborating with an
+AI ``colleague'': articulating prompts aloud, negotiating data decisions, and
+confronting the trappings of a third, non-human collaborator on a project.
+
+\section{Principles for Trustworthy AI-Assisted Research}
+\begin{enumerate}[leftmargin=1.6em,itemsep=3pt]
+  \item \concept{Steer, don't abdicate.} Keep a human in the loop for
+  judgment; let the agent handle execution once the direction is clear.
+  \item \concept{Verify relentlessly.} Independent re-implementation and
+  adversarial review are the price of trusting generated results.
+  \item \concept{Make replication cheap.} Encode standards as skills and
+  protocols so good practice is the default, not extra work.
+  \item \concept{Prize clarity and beauty.} Well-told, visually clean output
+  is a proxy for---and a forcing function on---rigorous analysis.
+  \item \concept{Log the new problems.} Document the failure modes the tools
+  introduce, so the community learns the costs alongside the gains.
+  \item \concept{Preserve statistical judgment.} Automation does not retire
+  the researcher's responsibility for correct inference.
+\end{enumerate}
+
+\section{Key Takeaways}
+\begin{itemize}
+  \item AI coding agents shift the research bottleneck from \emph{writing
+  code} to \emph{verifying results}.
+  \item The unit of practice is increasingly the \emph{harness}---a
+  configured system of subagents, skills, and quality gates---rather than a
+  one-off prompt.
+  \item Cross-language, cross-package replication is now feasible for an
+  individual and is a strong correctness check.
+  \item Rigor, reproducibility, and honest documentation of new failure modes
+  are what separate serious AI-assisted research from hype.
+\end{itemize}
+
+\section*{Sources and Further Reading}
+\addcontentsline{toc}{section}{Sources and Further Reading}
+\begin{itemize}
+  \item Scott Cunningham, \emph{Scott's Mixtape Substack} --- ``Claude Code''
+  series (ongoing): \url{https://causalinf.substack.com/s/claude-code}
+  \item ``Claude Code 46: Verification is the new bottleneck'';
+  ``Claude Code 55: Beauty and story are key to my workflow harness'';
+  ``Claude Code 36: I Was Wrong About P-Hacking.''
+  \item \emph{MixtapeTools} (skills and harnesses for AI-assisted research):
+  \url{https://github.com/scunning1975/MixtapeTools}
+  \item Scott Cunningham, \emph{Causal Inference: The Mixtape}:
+  \url{https://mixtape.scunning.com}
+\end{itemize}
+
+\vspace{1em}
+\noindent\rule{\linewidth}{0.4pt}\\
+{\small\itshape Prepared as a conceptual synthesis of publicly documented
+practice. Content summarizes themes from Scott Cunningham's newsletter and
+associated open-source tools.}
+
+\end{document}
