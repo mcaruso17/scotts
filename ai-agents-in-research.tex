@@ -1,0 +1,151 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+% AI Applications in Research: Concepts from Scott Cunningham's Claude Code series
+% Compiled as a conceptual summary of agentic AI for empirical research.
+% ---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue]{hyperref}
+\usepackage{titlesec}
+\usepackage{parskip}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\title{\bfseries AI Applications in Research:\\
+\large Agentic Coding and the Case of Claude Code}
+\author{Summary compiled from Scott Cunningham's \emph{Scott's Mixtape Substack}}
+\date{August 10, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts surrounding the use of
+artificial intelligence---and in particular \emph{agentic} coding tools such as
+Claude Code---in empirical and quantitative research. It draws on the ongoing
+essay series by economist Scott Cunningham, who has documented (in 60+ essays)
+how coding agents reshape the production, verification, and understanding of
+research. The central thesis is that AI agents are \emph{not} chatbots: they are
+a distinct ``harness'' that can autonomously execute an end-to-end research
+pipeline, which shifts the binding constraint in research from production to
+verification and understanding.
+\end{abstract}
+
+\section{Three Harnesses for Language Models}
+A useful framing distinguishes three ways language models are packaged for users,
+each a different \emph{harness} around the same underlying model:
+\begin{enumerate}[label=\arabic*.]
+  \item \textbf{Chatbots} --- e.g.\ ChatGPT and Claude. Conversational, text-in/text-out.
+  \item \textbf{Coding copilots} --- e.g.\ Cursor and GitHub Copilot. Inline code suggestion inside an editor.
+  \item \textbf{Coding agents} --- e.g.\ Claude Code and Codex. Autonomous tools that read and write files, run shell commands, download data, and orchestrate multi-step work.
+\end{enumerate}
+The key conceptual lesson---and one of the most valuable takeaways for a new
+audience---is that \textbf{AI agents for research are not chatbots}. Prior
+familiarity with ChatGPT can \emph{hinder} understanding, because it leads people
+to believe the goal is finding the ``right prompt.'' In practice, one does not
+``prompt-engineer'' an agent so much as \emph{converse} with it as a thinking
+partner; ``prompt engineering,'' if it ever existed, is not how agentic research
+is done.
+
+\section{What a Coding Agent Actually Does}
+Unlike a chatbot, a coding agent operates directly on your computer. Conceptually,
+it can:
+\begin{itemize}[leftmargin=1.5em]
+  \item Access the entire hard drive, files, and tools of the machine.
+  \item Execute a wide range of shell/bash commands autonomously.
+  \item Download datasets, run analyses across multiple languages and packages, and replicate pipelines from scratch.
+  \item Produce a full manuscript (e.g.\ a 20-page double-spaced draft) with tables, figures, references, robustness checks in appendices, and an accompanying slide deck.
+\end{itemize}
+Cunningham illustrates this with a live ``magic trick'': starting from an
+\emph{empty folder} (``nothing up my sleeve''), a single prompt directs the agent
+to articulate a research question and identification strategy, gather data, run
+the analysis, and write up the results---all in 20--30 minutes---while the
+presenter lectures in parallel.
+
+\section{The Three Pillars of Research with Agents}
+Once production becomes nearly costless, the intellectual work relocates.
+Cunningham frames modern research around three tasks:
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Pillar} & \textbf{Question it answers} \\
+\midrule
+Producing research   & Can the pipeline be generated and run? \\
+Verifying research   & Are the results correct---and what does ``correct'' mean here? \\
+Understanding research & Do \emph{I} understand what was done and why? \\
+\bottomrule
+\end{tabular}
+\end{center}
+The magic trick makes the stakes visceral: the audience sees figures and tables
+that \emph{exist} without anyone knowing how they were made or whether they are
+accurate. When human time inputs fall to zero, \textbf{verification and
+understanding---not production---become the binding constraints}. ``Understanding
+is the new bottleneck.''
+
+\section{An Economic Model of Research Production}
+Cunningham situates agents within standard microeconomic tools rather than
+treating hooks and skills as isolated tricks:
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Isoquants and inputs.} Research output is produced from \emph{machine time} and \emph{human time}. Agents dramatically raise the productivity of---and substitute for---human time, shifting the isoquant and lowering the marginal cost of empirical work.
+  \item \textbf{Stages of research.} He invokes Shockley's classic analysis of the productivity of scientists (the 7--8 stages of research) to locate where agents intervene.
+  \item \textbf{Supporting concepts.} Demand curves, surplus, and flow charts help visualize how the technology reallocates effort and value across the research process.
+\end{itemize}
+
+\section{Workflow: Continuous Verification and Understanding}
+Because correctness is no longer guaranteed by the labor of production, disciplined
+workflow becomes essential. Recurring elements in the series include:
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Markdown / \texttt{CLAUDE.md} instructions} --- persistent, project-level context and conventions for the agent.
+  \item \textbf{Hooks} --- automated actions the harness runs at defined points (e.g.\ before/after a step) to enforce checks.
+  \item \textbf{Skills} --- packaged, reusable procedures the agent can invoke for recurring tasks.
+  \item \textbf{A checklist-based dashboard / GUI} --- to manage the workflow and enforce \emph{continuous understanding} and \emph{continuous verification} rather than a one-time review at the end.
+  \item \textbf{Guarding against stale code and deprecation} --- structured workflows matter when, for example, an analytical sample silently changes size ($N \to N+k$) across a long project.
+  \item \textbf{Coding audits} --- independently re-implementing a pipeline in multiple languages and packages to cross-check results.
+\end{itemize}
+
+\section{Pedagogy: How to Teach Agentic Research}
+Cunningham's teaching template ``defamiliarizes the familiar'' and brings the
+median audience member forward, not just the few:
+\begin{enumerate}[label=\arabic*.]
+  \item \textbf{History of thought \& narrative} --- e.g.\ the origin story of Claude Code (created at Anthropic in late 2024 by Boris Cherny for internal use; public via the CLI in 2025; adoption by empiricists accelerating once it reached the desktop app in late 2025, since social scientists rarely used the terminal).
+  \item \textbf{Numerical examples \& interactive demos} --- the live ``magic trick'' from an empty folder, which commands undivided attention.
+  \item \textbf{Video / interactivity} --- to sustain engagement.
+  \item \textbf{Technical rigor last} --- installation, the underlying bash commands, and a conceptual framework for markdowns, hooks, and skills, positioned inside a model of what research \emph{is}.
+\end{enumerate}
+The goals on the ground are emotional and cognitive at once: emotion, insight,
+understanding, feeling personally seen and validated, and engagement---reached by
+\emph{backwards induction} from those outcomes through the five teaching principles.
+
+\section{Open Questions and Debates}
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Prompt disclosure.} Requiring authors to ``submit their prompts'' with a paper is argued to be misguided: with agents used as thinking partners, transcripts are more like private conversations with coauthors than a reproducible artifact, and mandatory disclosure raises privacy and adverse-selection concerns.
+  \item \textbf{Learning by doing.} There is ``no such thing as prompt engineering'' for agents; the relevant skill is natural, emotionally intelligent conversation, largely acquired through doing real projects.
+  \item \textbf{The verification frontier.} As production cost falls, the discipline's open problem is building reliable, continuous methods to verify and truly understand agent-produced results.
+\end{itemize}
+
+\section{Key Takeaways}
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item AI agents are a distinct harness, categorically different from chatbots.
+  \item Coding agents can autonomously execute an end-to-end empirical pipeline from an empty folder.
+  \item The marginal cost of producing empirical research has collapsed; the new bottlenecks are \emph{verification} and \emph{understanding}.
+  \item Research now rests on three pillars: producing, verifying, and understanding.
+  \item Standard micro theory (isoquants, human/machine time, stages of research) offers a rigorous frame for the shift.
+  \item Disciplined workflow---\texttt{CLAUDE.md}, hooks, skills, and checklist dashboards---delivers continuous verification and understanding.
+  \item Effective teaching leads with history and narrative and a live demonstration before technical detail.
+\end{enumerate}
+
+\section*{Source}
+\addcontentsline{toc}{section}{Source}
+Scott Cunningham, ``My strategy for talks on agents for research,''
+\emph{Scott's Mixtape Substack}, August 10, 2026, and the broader Claude Code
+essay series. \url{https://causalinf.substack.com/p/my-strategy-for-talks-on-agents-for}
+
+\end{document}
