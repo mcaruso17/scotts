@@ -1,0 +1,241 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: Claude Code and the Agentic Turn
+%  in Empirical Social Science
+%
+%  A conceptual summary distilled from Scott Cunningham's
+%  "Scott's Mixtape" Claude Code series (Nov 2025 - Aug 2026)
+%  and related public writing on AI agents for research.
+% ---------------------------------------------------------------
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\setlist{itemsep=2pt, topsep=3pt}
+
+\title{\bfseries AI Applications in Research:\\
+Claude Code and the Agentic Turn in Empirical Social Science}
+\author{Prepared as a scheduled research digest}
+\date{11 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This note summarizes the main concepts emerging from the use of
+AI coding agents---especially Anthropic's \emph{Claude Code}---in applied
+empirical research. It draws on Scott Cunningham's long-running ``Scott's
+Mixtape'' series (over fifty essays between November 2025 and August 2026)
+documenting, largely in real time, how an economist actually folds an
+autonomous coding agent into a quantitative social-science workflow. The
+recurring themes are economic and methodological rather than merely
+technical: the collapsing marginal cost of cognitive output, the
+\emph{unbundling} of the production of research from its verification, and
+a set of concrete practices---cross-language replication, independent
+reproducibility audits, reusable skills, and structured project ``canon''---
+that aim to keep quality high as volume explodes.
+\end{abstract}
+
+\section{Scope and framing}
+The material below treats research as a production process and asks how a
+capable AI agent changes that process. ``Claude Code'' is used throughout as
+the concrete instance of a terminal-native coding agent, but the concepts
+generalize to comparable agents (e.g.\ Codex-style CLIs). The emphasis is on
+\emph{applied empirical work}---data cleaning, estimation, replication,
+figure and table production, and peer review---where correctness is
+paramount and errors are costly and often invisible.
+
+\section{The central economic idea: falling marginal cost of cognition}
+The organizing metaphor of the series is an \emph{isoquant for a unit of
+cognitive output}, where a ``unit'' can be a table of regression
+coefficients, a figure, a referee report, a slide deck, or an entire worked
+manuscript.
+
+\begin{itemize}
+  \item \textbf{Marginal cost approaches $\varepsilon$.} As agents take over
+        drafting code, prose, and analysis, the marginal cost of producing
+        one more unit of cognitive output falls toward effectively zero.
+  \item \textbf{Output rises.} At a lower marginal cost, the equilibrium
+        quantity of output---papers, grant applications, patents,
+        inventions---increases, potentially sharply.
+  \item \textbf{Aggregate error rises with it.} If the per-unit probability
+        of a mistake does not fall as fast as volume rises, the
+        \emph{aggregate} number of errors embedded in the literature can
+        grow even as any single project becomes cheaper. This reframes
+        quality control from a private nuisance into a systemic concern.
+\end{itemize}
+
+\noindent The practical implication threads through the whole series: the
+scarce, valuable human activity shifts \emph{away} from production and
+\emph{toward} verification.
+
+\section{The unbundling of production and verification}
+Historically the same researcher both produced a result and vouched for it;
+production and verification were bundled inside one person's labor and
+judgment. Autonomous agents break that bundle.
+
+\begin{itemize}
+  \item Agents can now generate large portions of a project---code,
+        estimation, drafts, decks---with little human keystroke input.
+  \item The researcher's distinctive contribution therefore migrates to
+        \emph{verifying} what the agent produced, and to specifying,
+        supervising, and taking responsibility for it.
+  \item Verification cannot credibly be done by the same agent that produced
+        the work: an agent that wrote a pipeline is a poor auditor of its own
+        pipeline. \emph{Independence} becomes a first-class design goal.
+\end{itemize}
+
+\section{Cross-language replication as an error detector}
+A signature methodological move in the series is to exploit the fact that
+independent implementations tend to fail \emph{differently}.
+
+\begin{itemize}
+  \item \textbf{Orthogonality of bugs.} If an agent writes R code with a
+        subtle bug, asking a fresh agent to implement the same analysis in
+        Stata or Python will likely produce a \emph{different} bug (or none).
+        Comparing implementations surfaces errors a single-language check
+        would miss.
+  \item \textbf{Agreement as evidence.} When R, Stata, and Python
+        implementations---often across several packages---agree to six or
+        more decimal places, that concordance is strong evidence the estimand
+        was computed correctly.
+  \item \textbf{A worked example.} The series' package audits (e.g.\ comparing
+        multiple difference-in-differences estimators such as the
+        Callaway--Sant'Anna family across six packages and three languages)
+        used the agent to write dozens of scripts, build every figure,
+        diagnose numerical discrepancies, and compile the results---turning a
+        prohibitively tedious cross-check into a routine one.
+\end{itemize}
+
+\section{Independent reproducibility audits: the ``Referee 2'' protocol}
+The verification philosophy is operationalized in a reusable audit protocol
+(published as part of Cunningham's open ``MixtapeTools'').
+
+\begin{itemize}
+  \item \textbf{Independence by construction.} The audit is run \emph{after}
+        a project is complete, in a fresh terminal, by an agent instance that
+        has never seen the work---so it cannot inherit the author's blind
+        spots.
+  \item \textbf{Non-destructive.} The auditor never modifies the author's
+        code; it only writes its \emph{own} replication scripts and reports
+        discrepancies.
+  \item \textbf{Parallel dimensions.} A systematic audit runs several checks
+        at once, e.g.: (i)~a code audit, (ii)~cross-language replication,
+        (iii)~a directory / replication-package check, (iv)~output
+        automation, and (v)~an econometrics check.
+  \item \textbf{Revise and resubmit.} Findings feed a correction loop that
+        mimics journal peer review, but at a fraction of the time cost.
+\end{itemize}
+
+\section{Agents in peer review---assisting, not authoring}
+A distinct thread concerns using agents in the referee process. The stated
+discipline is to let agents \emph{assist} verification (reproduce results,
+stress-test claims, check code) \emph{without} having the agent write the
+referee report itself---keeping human judgment and accountability in the
+loop. This is framed through explicit criteria for \emph{when} delegation to
+an agent is appropriate, with peer review as the running application.
+
+\section{Workflow infrastructure that makes it repeatable}
+Much of the practical value in the series is infrastructural---turning ad hoc
+prompting into a disciplined, reproducible practice.
+
+\begin{itemize}
+  \item \textbf{Project ``canon'' (\texttt{CLAUDE.md}).} A committed,
+        version-controlled file that encodes project conventions, data
+        provenance, and standing instructions so the agent behaves
+        consistently across sessions.
+  \item \textbf{Reusable skills.} Packaged, shareable capabilities (audits,
+        code review, deck production) that can be invoked on demand rather
+        than re-explained each time.
+  \item \textbf{Sub-agents and dispatch.} Delegating bounded subtasks to
+        separate agent instances, and---via ``Dispatch''---running agent jobs
+        remotely, even from a phone.
+  \item \textbf{Deck production.} Generating presentation decks was flagged as
+        an ``app killer'' for non-programmers, because the model can extract
+        the tacit rhetoric of good slides from its training data and assemble
+        a coherent, presentable deck.
+\end{itemize}
+
+\section{New problems created, not only old ones solved}
+The series is candid that agents introduce failure modes even while removing
+others---and that speed-ups are not guaranteed.
+
+\begin{itemize}
+  \item \textbf{Silent state drift.} A recurring cautionary example is an
+        analytical sample that quietly changes from $N$ to $N+k$ observations
+        across a long project with no clear explanation---the kind of error
+        that passes casual inspection but corrupts results.
+  \item \textbf{Stale code, deprecation, and ``canon.''} As dependencies and
+        agent behavior evolve, previously-working code silently rots; without
+        a maintained project canon and disciplined workflow, reproducibility
+        degrades.
+  \item \textbf{No free lunch on time.} New overheads (specifying,
+        supervising, verifying) can offset raw generation speed; the payoff is
+        in \emph{quality and scope}, not automatically in hours saved.
+  \item \textbf{Interpretive vulnerability.} Methodologically diverse,
+        empirically consistent agent output can still be interpreted or
+        framed incorrectly---human oversight of \emph{meaning} remains
+        essential.
+\end{itemize}
+
+\section{Labor and the economics of research production}
+The series connects the workflow observations to labor economics: if the
+marginal cost of cognitive labor collapses, what happens to the demand for,
+and organization of, human research labor? Essays explicitly treat AI agents
+through the lens of standard tools (e.g.\ minimum-wage and factor-substitution
+reasoning), situating the technology within economics rather than treating it
+as sui generis.
+
+\section{Practical takeaways for a research group}
+\begin{enumerate}[label=\arabic*.]
+  \item Treat the agent as a \emph{production} engine and reserve scarce human
+        effort for \emph{verification} and interpretation.
+  \item Make verification \emph{independent}: audit finished work with a fresh
+        agent instance that never saw it being built.
+  \item Use \emph{cross-language / cross-package} replication as a cheap,
+        powerful bug detector; require numerical agreement before trusting a
+        result.
+  \item Encode project conventions in a committed \texttt{CLAUDE.md} and lean
+        on reusable skills so quality control is repeatable, not improvised.
+  \item Assume aggregate error scales with volume; invest in guardrails
+        \emph{before} scaling output.
+  \item Keep humans accountable for judgments an agent must not make on its
+        own (e.g.\ authoring a referee verdict).
+\end{enumerate}
+
+\section*{Sources and further reading}
+\addcontentsline{toc}{section}{Sources and further reading}
+\begin{itemize}
+  \item Scott Cunningham, \emph{Scott's Mixtape Substack}, ``Claude Code''
+        series (Nov 2025--Aug 2026):
+        \url{https://causalinf.substack.com/s/claude-code}
+  \item ``Claude Code 56: Falling marginal costs of production, output, and
+        aggregate errors'' (6 Jul 2026):
+        \url{https://causalinf.substack.com/p/claude-code-56-falling-marginal-costs}
+  \item ``Stale code, deprecation, and the canon'' (21 Jul 2026):
+        \url{https://causalinf.substack.com/p/stale-code-deprecation-and-the-canon}
+  \item ``Claude Code 44: My four criteria for using Agents, with an
+        application to referee reports'':
+        \url{https://causalinf.substack.com/p/claude-code-44-my-four-criteria-for}
+  \item ``Claude Code 45: AI Agents and the Minimum Wage'':
+        \url{https://causalinf.substack.com/p/claude-code-45-ai-agents-and-the}
+  \item MixtapeTools (open workflow, skills, and the Referee~2 audit protocol):
+        \url{https://github.com/scunning1975/MixtapeTools}
+\end{itemize}
+
+\vfill
+\noindent\footnotesize\emph{Compiled automatically from public search
+excerpts; direct newsletter access was unavailable at compile time, so
+specific figures and phrasings should be checked against the linked
+originals before citation.}
+
+\end{document}
