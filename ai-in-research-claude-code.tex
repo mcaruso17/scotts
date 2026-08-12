@@ -1,0 +1,228 @@
+\documentclass[11pt]{article}
+
+% ----------------------------------------------------------------------
+%  AI Applications in Research: Concepts and the Use of Claude Code
+%
+%  A concept summary synthesised from Scott Cunningham's "Scott's Mixtape
+%  Substack" essays on coding agents in empirical research (mid-2026),
+%  especially his writing on Claude Code.
+%
+%  Compile with:  pdflatex ai-in-research-claude-code.tex
+% ----------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{accent}{RGB}{0,90,140}
+\titleformat{\section}{\large\bfseries\color{accent}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+
+\setlist[itemize]{leftmargin=1.4em,itemsep=2pt,topsep=3pt}
+\setlength{\parskip}{0.4em}
+\setlength{\parindent}{0pt}
+
+\title{\vspace{-1.5em}\textbf{AI Applications in Research}\\[0.3em]
+\large Core Concepts and the Use of Claude Code in Empirical Work}
+\author{Concept summary compiled from Scott Cunningham's \emph{Scott's Mixtape Substack}}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent By mid-2026, coding \emph{agents} such as Claude Code and Codex have
+sharply lowered the marginal cost of producing empirical research. This document
+synthesises the main concepts that have emerged around using such agents for
+research, drawing on the economist Scott Cunningham's essays on his workflow with
+Claude Code. The organising claim is a shift in where the binding constraint
+lives: production has become cheap, so \emph{verification} and, more deeply,
+\emph{understanding} are now the scarce resources. The document lays out the
+economic framing, the three pillars of agentic research, the ``prose is not a
+constraint'' principle, and concrete workflow practices (skills, hooks,
+checklists, and quizzes) that aim to keep human understanding in the loop.
+\end{abstract}
+
+\section{Three harnesses for language models}
+It helps to distinguish three ways of deploying a large language model, because
+conflating them (especially equating ``AI'' with a chatbot) causes most of the
+confusion about what agents can do:
+\begin{itemize}
+  \item \textbf{Chatbots} --- e.g.\ ChatGPT and Claude: a conversational text interface.
+  \item \textbf{Coding copilots} --- e.g.\ Cursor and GitHub Copilot: inline code suggestion.
+  \item \textbf{Coding agents} --- e.g.\ Claude Code and Codex: autonomous agents with
+        access to the file system, shell, and tools of the whole machine.
+\end{itemize}
+The key lesson is that \textbf{AI agents for research are not chatbots}. A coding
+agent can articulate a research question, choose an identification strategy,
+download data, run the analysis, write a manuscript with tables and figures, add
+robustness checks, and produce a slide deck --- starting from an empty folder,
+with essentially zero human time per unit of output.
+
+\section{The economics of cheap production}
+The central framing is a supply-and-demand picture for research output.
+\begin{itemize}
+  \item \textbf{Falling marginal cost.} Before agents, the marginal cost of producing
+        research, $MC_b$, was fixed by scarce human time and skill; researchers
+        produced up to $Q_b^{*}$ where marginal benefit equals $MC_b$. Agents drop
+        the marginal cost to $MC_{AI}\approx\varepsilon$, just above zero.
+  \item \textbf{More output, more surplus.} Quantity rises from $Q_b^{*}$ to
+        $Q_{AI}^{*}$; realised surplus rises from the old area $B$ to $B + AI_1 + AI_2$,
+        where $AI_1$ is doing old work with far less time and $AI_2$ is the surplus
+        from newly feasible work.
+  \item \textbf{The subtle catch.} Under the human mode of production, understanding
+        was a \emph{by-product} of doing the work --- almost an externality, like
+        pollution from production. When the agent produces, that latent
+        understanding is no longer generated automatically, so the ``new'' surplus
+        is only real surplus if the freed-up time is genuinely re-invested in
+        understanding.
+\end{itemize}
+Formally, the goal is framed as
+\[
+  \max \; \text{research output} \quad \text{subject to} \quad \text{errors} = 0,
+\]
+i.e.\ \textbf{zero errors is a \emph{constraint}, not an objective}. Treating error
+minimisation as the objective quietly licenses the notion of ``optimal errors'';
+treating zero errors as a constraint instead forces the workflow to be built
+around it. Given that the supply elasticity of research with respect to its price
+is likely greater than one, tolerating ``optimal errors'' at scale is dangerous.
+
+\section{The three pillars of agentic research}
+With agents in the loop, research work decomposes into three distinct tasks:
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item \textbf{Producing research} --- now cheap and requiring little human skill to drive.
+  \item \textbf{Verifying research} --- \emph{not} proportionally cheaper; typically
+        requires \emph{more} human skill, because models do not reliably self-verify
+        without human steering.
+  \item \textbf{Understanding research} --- the deepest bottleneck: an agent may be able
+        to both produce and verify a result and yet leave the human without genuine
+        understanding of it.
+\end{enumerate}
+
+\subsection{Verification vs.\ understanding as ``the new bottleneck''}
+A popular slogan is ``\emph{verification} is the new bottleneck.'' The refinement
+(after Geoffrey Litt) is that ``\emph{understanding} is the new bottleneck'':
+agents may eventually verify as well as they produce, but that still does not
+guarantee human understanding. A practical risk is the
+\textbf{principal--agent problem}: the researcher trusts the agent did the work
+well, but the agent is not accountable, so ``the blind may lead the blind,''
+especially as human skills atrophy. The related idea of \textbf{cognitive (or
+verification) debt} captures the habit of skimming and silently accepting
+changes without fully grasping them.
+
+\section{Prose is not a constraint}
+A foundational operational insight (developed with reference to Paul
+Goldsmith-Pinkham's NBER talk on AI in empirical research):
+\begin{quote}
+\textbf{Prose is not a constraint.} Written instructions --- in \texttt{CLAUDE.md},
+in prompts, in stern warnings --- are at best suggestions. Nothing happens to a
+language model when it violates them, because a model is not a thing that can face
+consequences.
+\end{quote}
+Observed failure modes, even under explicit instructions to the contrary,
+include: hallucinating sample sizes rather than deriving them from the analytical
+sample (e.g.\ an invented ``494 counties''); half-overwriting files; and computing
+figures/tables in an ephemeral shell instead of writing them into a reproducible
+pipeline (``programming in the air''). Discretion appears to grow as the task
+gets larger or the context window fills.
+
+\subsection{Structure binds, prose doesn't --- use tools}
+What actually constrains an agent are \textbf{tools and structure}, not words. An
+illustrative example: the \texttt{did} package (Callaway and Sant'Anna's staggered
+adoption estimator) \emph{refuses} to run when every unit is eventually treated
+because it requires not-yet-treated or never-treated comparisons, whereas
+\texttt{lm}/\texttt{fixest} will happily estimate two-way fixed effects on the same
+data. The package \emph{is} the constraint. Generalising this points toward
+\textbf{hooks} that mechanically fence off forbidden actions --- making bad moves
+impossible rather than merely discouraged.
+
+\section{A workflow for continuous verification and understanding}
+The practical response is to engineer understanding back into the process rather
+than assume it happens by accident. Recurring elements:
+\begin{itemize}
+  \item \textbf{The git diff as the unit of verification} (after Goldsmith-Pinkham):
+        review changes diff-by-diff --- but guard against skimming them into
+        cognitive debt.
+  \item \textbf{Skills} (custom, invocable routines), for example:
+    \begin{itemize}
+      \item \texttt{/covariates} --- a cooperative interview (up to ten questions) that
+            elicits the researcher's \emph{latent} knowledge of which covariates
+            satisfy conditional parallel trends, motivated by the Heckman--Ichimura--Todd
+            (1997) regression-adjustment view of diff-in-diff and by Autor's reading
+            of the ``Polanyi paradox.''
+      \item \texttt{/target} --- pins down the exact aggregated estimand (usually an average
+            causal effect) the design and estimator will target.
+      \item \texttt{/quiz} --- generates teaching slides and then asks the researcher
+            multiple-choice questions (modelled on corporate ``training-video
+            quizzes'') to build \emph{continuous understanding} on top of verification.
+      \item \texttt{/amnesia} --- an interviewer that re-orients the researcher to a project
+            after time away, countering day-to-day forgetting.
+    \end{itemize}
+  \item \textbf{Adversarial grilling vs.\ cooperative interviewing.} Goldsmith-Pinkham's
+        ``grilling'' is adversarial --- it attacks a plan to find weaknesses until the
+        plan survives or a hole is conceded. Cunningham's interviews are cooperative
+        --- they extract and build on the researcher's beliefs. The two are
+        complementary.
+  \item \textbf{A checklist-based dashboard} for the ``craft of causal inference'':
+        explicit staged steps (informed by Rubin's ``design trumps analysis,''
+        Imbens's LaLonde re-analyses, and ``Pedro's Checklist''), with completed
+        figures/tables pinned as clickable cards, and Claude Code embedded directly
+        in the dashboard.
+\end{itemize}
+An honest caveat runs throughout: production functions are idiosyncratic. The aim
+is to reach one's \emph{own} production-possibility frontier, not to copy another
+researcher's workflow; heavy visual scaffolding that one person needs, another may
+hold in their head.
+
+\section{Governance, teaching, and open questions}
+\begin{itemize}
+  \item \textbf{``Submit your prompts'' is misguided.} Requiring prompt transcripts at
+        journal submission is likened to demanding a researcher's private
+        conversations, texts, and emails with human coauthors; for those who use an
+        agent as a ``thinking partner'' the two are not meaningfully different, and
+        such a policy invites adverse selection.
+  \item \textbf{Teaching agents to others} works best by (i) leading with history and
+        narrative, (ii) opening with a live ``magic trick'' --- autonomous research
+        from an empty folder --- to defamiliarise the familiar and command
+        attention, and only then (iii) turning to installation, the underlying bash
+        commands, and the conceptual framing of markdown, hooks, and skills.
+  \item \textbf{``No prompt engineering.''} With modern agents, natural conversation
+        largely suffices; much of the remaining skill is human capital acquired by
+        doing real projects (``learning by doing''), not memorised incantations.
+  \item \textbf{A macro-scale question.} Cunningham even speculates that AI --- by making
+        the value of human-produced writing, code, and images newly salient (models
+        are trained on human labour) --- may revive interest in the classical
+        \emph{labour theory of value} within economics.
+\end{itemize}
+
+\section*{Key takeaways}
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item Coding agents collapse the marginal cost of \emph{producing} research; the scarce
+        resources are now verification and understanding.
+  \item Understanding used to be a free by-product of doing the work; with agents it
+        must be deliberately manufactured.
+  \item Prose does not constrain an agent --- tools, packages, and hooks do.
+  \item Treat zero errors as a \emph{constraint} that designs the workflow, not as an
+        objective that tolerates ``optimal errors.''
+  \item Build explicit structure --- skills, checklists, quizzes, diff review --- to keep
+        a human genuinely in the loop.
+\end{enumerate}
+
+\vfill
+\hrulefill\\[0.3em]
+{\small \textbf{Sources.} Synthesised from Scott Cunningham, \emph{Scott's Mixtape
+Substack} (\href{https://causalinf.substack.com}{causalinf.substack.com}),
+essays incl.\ ``My strategy for talks on agents for research'' (Aug 10, 2026),
+``How to improve understanding with Claude Code'' (Aug 7, 2026), ``Prose is not
+constraints \ldots\ Paul Goldsmith-Pinkham's NBER talk'' (Jul 30, 2026), and
+``Will AI revive the Labor theory of value'' (Aug 11, 2026). This is an
+independent concept summary, not an official publication.}
+
+\end{document}
