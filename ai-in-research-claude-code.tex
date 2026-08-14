@@ -1,0 +1,207 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+% AI Applications in Research: Agentic Coding and Claude Code
+% A concept summary compiled for the Scott Cunningham newsletter workspace.
+% Compiles with a standard TeX distribution: pdflatex ai-in-research-claude-code.tex
+% ---------------------------------------------------------------------------
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage[colorlinks=true, linkcolor=black, urlcolor=blue, citecolor=black]{hyperref}
+
+\setlist{itemsep=2pt, topsep=3pt}
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Agentic Coding and Claude Code for Applied Empirical Work}
+\author{Compiled for the Scott Cunningham newsletter workspace}
+\date{August 14, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This note summarizes the main concepts behind the current wave of
+AI applications in scientific research, with an emphasis on \emph{agentic
+coding tools}---and Claude Code in particular---as they are being adopted by
+quantitative social scientists. It draws on the ongoing ``Claude Code'' series
+in Scott Cunningham's \emph{Scott's Mixtape} newsletter, which documents, in
+public and in near real time, how an economist uses coding agents for
+reproducible empirical research. The aim is a compact conceptual map:
+what an agent is, what a research workflow built around one looks like, which
+guarantees such tools can and cannot provide, and how to use them responsibly.
+\end{abstract}
+
+\section{From Chatbots to Agents}
+
+Early large-language-model (LLM) use in research was conversational: a
+researcher pasted code or text into a chat window and copied results back out.
+The more consequential shift is the move from \emph{models} to \emph{agents}.
+An agent is not merely a model that maps input tokens to output tokens; it is a
+model embedded in a \textbf{harness}---an ecosystem of tools, memory, and
+orchestration that lets it take actions in the world and iterate toward a goal.
+
+\begin{itemize}
+  \item \textbf{Tools.} The agent can read and write files, run shell
+  commands, execute code in R, Stata, Python, or Julia, query databases, and
+  call external services. It observes the results and decides what to do next.
+  \item \textbf{Memory.} Persistent instructions (for example, a
+  \texttt{CLAUDE.md} file) and accumulated context let the agent carry
+  project conventions, data dictionaries, and prior decisions across a session.
+  \item \textbf{Orchestration.} A control loop lets the agent plan, act,
+  observe, and self-correct---and, increasingly, spawn \emph{subagents} that
+  work on independent subtasks in parallel.
+\end{itemize}
+
+Claude Code is one such harness: a command-line agent that operates directly
+in a researcher's working directory, editing the actual project files rather
+than producing snippets to be transplanted by hand.
+
+\section{Why Research Is a Natural Fit}
+
+Empirical research is unusually well suited to agentic coding because so much
+of it is \emph{verifiable computation}: the object of interest is a pipeline
+that turns raw data into tables and figures, and correctness can often be
+checked mechanically.
+
+\begin{itemize}
+  \item The work is text- and code-centric, so it lives natively in the
+  agent's medium.
+  \item Ground truth frequently exists---a published result to replicate, an
+  identity that must hold, an estimate that two languages should agree on.
+  \item Tasks decompose cleanly into independent subtasks (clean, estimate,
+  visualize, audit), which parallel subagents can attack simultaneously.
+\end{itemize}
+
+\section{Core Application Patterns}
+
+\subsection{Reproducibility and code audits}
+A recurring theme is using an agent as an adversarial referee. In Cunningham's
+\emph{MixtapeTools} ``Referee~2'' protocol, several parallel audits inspect an
+empirical project: a code audit, a cross-language replication, a
+directory/replication-package check, an output-automation check, and an
+econometrics review. The agent is pointed at a repository and asked not to be
+helpful but to \emph{find what is wrong}.
+
+\subsection{Cross-language replication}
+A powerful correctness test is to re-implement the same specification in
+multiple languages and packages---say difference-in-differences in R, Stata,
+and Python across several estimators---and compare. Divergence is a signal:
+it exposes silent defaults, package-specific conventions, and genuine bugs.
+This turns ``the multiverse'' of software choices from a hidden hazard into an
+explicit, checkable object.
+
+\subsection{Replicating published papers}
+The series has repeatedly used Claude Code to reproduce published work from
+raw data---for example, re-analyzing a study that classified hundreds of
+thousands of Congressional speeches by immigration sentiment. These exercises
+measure how far an agent can get autonomously (percentage agreement with the
+original), at what cost (dollars and wall-clock hours), and where human
+judgment remains indispensable.
+
+\subsection{End-to-end analysis pipelines}
+Beyond auditing, agents assist with the full arc: data cleaning and
+harmonization, estimation, robustness sweeps (for instance, running many
+covariate specifications and reporting how estimates move), figure and table
+generation, and the automation that keeps outputs in sync with code.
+
+\subsection{Explanation and communication}
+Agents help draft methodological explainers, restructure notes, and build
+interactive visualizations---compressing the distance between doing the
+analysis and communicating it. A related observation from the series is that
+\emph{research} and \emph{publishing} are becoming decoupled activities.
+
+\section{Guiding Principles}
+
+\subsection{``Prose is not a constraint''}
+Perhaps the sharpest lesson: written rules in \texttt{CLAUDE.md} files and
+prompts \emph{guide} an agent but do not \emph{bind} it. Instructions can be
+ignored or forgotten. Real constraints come from the environment:
+
+\begin{itemize}
+  \item \textbf{Tools that refuse invalid input}---e.g., a package or wrapper
+  that will not run a mis-specified model---enforce correctness structurally.
+  \item \textbf{Hooks} that make forbidden actions impossible (blocking a
+  commit, a write, or a command) convert a request into a guarantee.
+\end{itemize}
+
+The design goal is to move requirements out of prose and into machinery.
+
+\subsection{Verify, don't trust}
+Agents are fluent and therefore persuasive, including when wrong. The
+workflows that hold up pair generation with \emph{independent verification}:
+replication in a second language, adversarial audits, tests against known
+answers, and skeptical review passes whose default is to reject.
+
+\subsection{Parallelism and subagents}
+When subtasks are independent, spawning multiple subagents (an
+``orchestrator'' pattern) improves both speed and reliability---several agents
+attack the problem from different angles, and their disagreements are
+informative. This underlies the multi-audit reproducibility protocol above.
+
+\subsection{Reproducibility as a first-class output}
+Because the agent can rebuild an entire pipeline on command, ``reproducible
+from raw data'' becomes a routine deliverable rather than an aspiration:
+templates, replication packages, and a \texttt{CLAUDE.md} that encodes project
+conventions travel with the work.
+
+\section{Limitations and Cautions}
+
+\begin{itemize}
+  \item \textbf{Confident errors.} Fluency is not correctness; unverified
+  agent output can be subtly and persuasively wrong.
+  \item \textbf{Building to the test.} Agents optimize what you check, not
+  what you meant---weak checks yield code that passes them and little else.
+  \item \textbf{Cost and reproducibility of the agent itself.} Runs cost money
+  and time, and model or configuration changes can shift results, so the
+  workflow needs its own provenance.
+  \item \textbf{Judgment stays human.} Identification strategy, interpretation,
+  and the decision about what is worth doing remain the researcher's.
+\end{itemize}
+
+\section{A Minimal Workflow for Researchers}
+
+\begin{enumerate}
+  \item Put project conventions, data dictionaries, and non-negotiables in a
+  \texttt{CLAUDE.md}; back the critical ones with tools or hooks, not prose.
+  \item Have the agent draft the pipeline, but require a second, independent
+  implementation (another language or package) for anything load-bearing.
+  \item Run an adversarial audit pass (``find the bug'') before trusting a
+  result; prefer parallel subagents for independent checks.
+  \item Automate outputs so tables and figures regenerate from code, and keep
+  the whole project reproducible from raw data.
+  \item Record cost, model version, and configuration alongside the results.
+\end{enumerate}
+
+\section{Selected Resources}
+
+\begin{itemize}
+  \item Scott's Mixtape Substack --- \emph{Claude Code} series:
+  \url{https://causalinf.substack.com/s/claude-code}
+  \item ``Claude Code 51: Harnessing AI Agents for Economic Research'':
+  \url{https://causalinf.substack.com/p/claude-code-51-harnessing-ai-agents}
+  \item \emph{MixtapeTools} (templates, the ``Referee~2'' audit protocol):
+  \url{https://github.com/scunning1975/MixtapeTools}
+  \item Newsletter home and archive:
+  \url{https://causalinf.substack.com/} \,/\,
+  \url{https://causalinf.substack.com/archive}
+  \item Claude Code documentation:
+  \url{https://code.claude.com/docs}
+\end{itemize}
+
+\vspace{1em}
+\noindent\textit{Compiled from Scott Cunningham's ``Scott's Mixtape''
+newsletter series on Claude Code together with general background on agentic
+coding tools. Post titles and dates were reconstructed from public search
+results, as direct newsletter access was unavailable from this environment.}
+
+\end{document}
