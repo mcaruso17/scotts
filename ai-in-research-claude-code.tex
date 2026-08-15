@@ -1,0 +1,171 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+%  AI Applications in Research: Concepts and the Use of Claude Code
+%  A concept summary, informed by Scott Cunningham's "Scott's Mixtape"
+%  Substack essays on using AI agents for empirical social science.
+% ---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black
+}
+
+\title{AI Applications in Research:\\
+       Core Concepts and the Use of Claude Code}
+\author{Automated research digest \\ \small Scott Cunningham newsletter routine}
+\date{15 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This note summarizes the main concepts behind using AI coding agents --- in
+particular \emph{Claude Code} --- as collaborators in quantitative empirical
+research. It synthesizes the recurring themes of Scott Cunningham's
+\emph{Scott's Mixtape} Substack, where causal-inference research is carried out
+alongside AI agents. The central argument is that agents have made research
+\emph{production} nearly free, which relocates the scarce, valuable human work
+to \emph{verification} and \emph{understanding}. Practical structure ---
+checklists, harnesses, hooks, and skills --- is what keeps agent-assisted
+research honest.
+\end{abstract}
+
+\section{The shift: production is (almost) free}
+AI agents can now autonomously carry a contemporary empirical paper from
+question to manuscript: propose a research question, pick an identification
+strategy, locate and download datasets, choose estimators, write replicable
+code, generate tables and figures with robustness checks, and draft a
+20-page manuscript with references and appendices --- often in under an hour.
+Cunningham calls this ``3-d printing a research paper.''
+
+The key economic observation is that the \emph{marginal cost of producing}
+research output has collapsed. But cheap production is not the same as
+trustworthy knowledge. The bottleneck moves downstream --- from making the
+artifact to being warranted in believing it.
+
+\section{The research triangle: production, verification, understanding}
+A useful mental model is that agent-assisted research must pass through three
+distinct ``doors'':
+\begin{description}[style=nextline, leftmargin=1.2em]
+  \item[Production] Generating the analysis and the manuscript. Agents do this
+    well and can do it autonomously and endogenously (choosing the topic and
+    design themselves).
+  \item[Verification] Confirming the result is accurate \emph{with respect to a
+    pre-stated target estimand}. This is more than re-running code in several
+    languages or checking that every exhibit is script-generated --- those are
+    necessary but not sufficient. Verification must also confirm that what
+    \emph{should not} have happened did not happen (e.g., no endogenous drift
+    into a favorable specification). Agents cannot fully self-verify this: there
+    is nothing positive to check when the task is to confirm an \emph{absence}.
+  \item[Understanding] The human must retain full, accurate understanding of
+    what was done, by whom, and what was found. The analogy is a CEO who
+    delegates but still knows, approximately and correctly, the state of every
+    factor of production.
+\end{description}
+
+\noindent A guiding constraint is \textbf{zero errors} --- treated as a hard
+constraint rather than an objective to be ``minimized'' (which would license
+an ``optimal'' positive error rate). Collapsing the whole project into a single
+manuscript is a convenient sufficient statistic: the manuscript must pass
+through production, verification, and understanding.
+
+\section{Structure over vibes: checklists and harnesses}
+Because experts skip steps --- often more than beginners, a ``thinking fast''
+(System~1) failure mode --- agent-assisted research benefits from explicit
+structure. Cunningham is building a \emph{difference-in-differences harness}:
+a narrow, checklist-driven, increasingly software-shaped workflow that centers
+the research triangle. The narrowness is deliberate: a tightly scoped harness
+(one method) is easier to evaluate and perfect than a universal one, though the
+same idea extends to synthetic control, unconfoundedness, and other designs.
+
+\subsection*{Illustrative checklist stages}
+\begin{description}[style=nextline, leftmargin=1.2em]
+  \item[Packages] A visual card recording which packages and \emph{which
+    versions} the project uses --- reproducibility and defense against silent
+    deprecation.
+  \item[Bite] The first-stage question: when the intervention lands, what is
+    the very first thing it moves? (For a gun law, track the movement of guns,
+    not deaths; for a minimum wage, find where it binds.) Document ``bite''
+    exhaustively across \emph{space} (heat maps) and \emph{time} (aggregated
+    series), for treatment and comparison groups alike.
+\end{description}
+
+\noindent The ``bite'' stage is where the treatment-assignment mechanism is
+diagnosed --- the design-based core of credible causal inference. Candidate
+mechanisms include human rationality / essential heterogeneity (endogenous
+choice), instruments (randomized assignment of a nudge), direct randomization
+(RCTs), and running variables (regression discontinuity).
+
+\section{What to automate --- and what not to}
+A central practical judgment: \emph{do not fully automate the stage where the
+project is conceived.} Agents should build the maps, write the code, produce
+the time-series figures, and wire exhibits into a deck or manuscript --- all
+the mechanical production that supports verification. But the human should own
+the ``bite'' / conception stage, where insight into the assignment mechanism
+drives the choice of design and comparison group. Automate production; keep
+verification and understanding human-supervised.
+
+\section{Claude Code as a research instrument}
+The concrete tooling that makes this workflow real:
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Agentic end-to-end execution.} Claude Code operates on a local
+    machine: reading and writing files, running code, downloading data, and
+    iterating --- an ``autonomous-driving'' capability that is nonetheless
+    better treated as advanced lane-assist than full self-driving.
+  \item \textbf{Hooks.} Deterministic automations wired to specific checklist
+    steps (e.g., regenerate figures/tables and re-embed them in the manuscript
+    on change), rather than abstract, universal hooks.
+  \item \textbf{Skills.} Packaged, reusable procedures for recurring craft
+    tasks (figure and table production, specification templates).
+  \item \textbf{MCP integrations.} Connecting the agent to external systems
+    (data sources, publishing platforms, repositories) through the Model
+    Context Protocol.
+  \item \textbf{Reproducibility discipline.} Version-pinned environments and
+    script-generated exhibits so that ``what the code says'' and ``what the
+    paper shows'' cannot silently diverge.
+\end{itemize}
+
+\section{Open questions}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Model heterogeneity.} Do frontier models differ systematically
+    in autonomous-research skill, and is that difference knowable \emph{ex
+    ante}?
+  \item \textbf{Endogenous specification search.} Agents can drift into
+    favorable specifications in response to true statements about a project ---
+    how do we detect and prevent it?
+  \item \textbf{Generalizability of the harness.} How much of a method-specific
+    harness transfers to other designs and other researchers' workflows?
+\end{itemize}
+
+\section*{Takeaways}
+\begin{enumerate}[leftmargin=1.4em]
+  \item Agents made \emph{production} cheap; the scarce goods are now
+    \emph{verification} and \emph{understanding}.
+  \item Verification is relative to a pre-committed estimand and must also rule
+    out what should not have happened --- something agents cannot fully do
+    alone.
+  \item Human understanding is non-negotiable; the researcher is the CEO of the
+    project, accountable under a zero-error constraint.
+  \item Checklists, harnesses, hooks, and skills convert a powerful but
+    over-eager agent into a disciplined research collaborator.
+  \item Automate the mechanical production; keep conception, design choice, and
+    final judgment in human hands.
+\end{enumerate}
+
+\vspace{1em}
+\noindent\rule{\linewidth}{0.4pt}\\
+\small Source material: Scott Cunningham, \emph{Scott's Mixtape} Substack
+(\url{https://causalinf.substack.com/}), esp.\ ``Which stages of research
+production should we let AI Agents loose'' (14 Aug 2026). This is an
+independent, automatically generated concept digest, not an official summary.
+
+\end{document}
