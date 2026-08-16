@@ -1,0 +1,202 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+% AI Applications in Research: Core Concepts and the Role of Claude Code
+% A concept summary compiled from public writing on agentic AI in empirical
+% research, with particular attention to Scott Cunningham's "Claude Code"
+% series on the Scott's Mixtape Substack.
+% Compile with: pdflatex ai-in-research-claude-code.tex
+% ---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue,citecolor=black]{hyperref}
+
+\setlist{topsep=2pt,itemsep=2pt,parsep=0pt}
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\title{\bfseries AI Applications in Research:\\[2pt]
+\large Core Concepts and the Role of Claude Code}
+\author{Compiled summary}
+\date{August 16, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the use of
+artificial-intelligence agents in academic and applied research, with an
+emphasis on agentic coding assistants such as Anthropic's \emph{Claude Code}.
+It organizes the emerging practice around a simple framework---the separation
+of research \emph{production}, \emph{verification}, and \emph{understanding}---
+and illustrates each with concrete workflows now common in empirical social
+science: reproducibility audits, multi-language pipeline replication,
+autonomous empirical paper generation, and communication of results. The
+summary draws on public writing about agentic research, most directly the
+ongoing ``Claude Code'' series by economist Scott Cunningham on the
+\emph{Scott's Mixtape} Substack.
+\end{abstract}
+
+\section{Introduction}
+Over the past year, large language models moved from chat-style assistants to
+\emph{agents}: systems that can read a codebase, plan a task, run commands,
+inspect their own output, and iterate toward a goal with limited human
+intervention. In research, this shift matters because the day-to-day labor of
+empirical work---writing and debugging code, cleaning data, running estimators,
+producing tables and figures, and drafting exposition---is precisely the kind
+of multi-step, tool-using work at which agents now excel. The central question
+is no longer \emph{whether} an agent can produce a piece of research, but
+\emph{which stages} of research we should let it run, and under what safeguards.
+
+\section{A Framework: Three Doors of Research}
+A useful organizing idea, articulated in Cunningham's recent writing, is that a
+research manuscript must pass through three distinct ``doors'':
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item \textbf{Production} --- generating the artifact itself: the code, the
+        data pipeline, the estimates, the tables, figures, and prose.
+  \item \textbf{Verification} --- establishing that the artifact is
+        \emph{correct}: that the pipeline runs, that the numbers are right, and
+        that the claims follow from the analysis (the ``zero-errors'' constraint).
+  \item \textbf{Understanding} --- a human genuinely comprehending what was done
+        and why, so the work can be defended, extended, and trusted.
+\end{enumerate}
+The key observation is that these three were historically \emph{bundled}: when a
+researcher produced work by hand, they necessarily verified and understood it
+along the way. Agents \emph{unbundle} them. An agent can now handle production
+end-to-end while verification and understanding become separate, deliberate
+tasks that humans must not skip. Deciding how far to open each door---how much
+autonomy to grant at production, and how much scrutiny to keep at verification
+and understanding---is the core governance problem of AI-assisted research.
+
+\section{What Claude Code Is}
+Claude Code is a command-line agentic coding tool from Anthropic. Rather than
+returning a snippet to copy and paste, it operates directly in a project:
+reading files, editing them, running shell commands and tests, and reacting to
+the results in a loop. For researchers this is significant because empirical
+projects are effectively software projects---directories of scripts, data,
+logs, and outputs---so an agent that can act on the whole project (not just a
+single prompt) can carry a task from raw data to finished exhibit. Common
+access patterns include a terminal on a workstation, an IDE integration, and
+lightweight remote or mobile control for launching and checking on runs away
+from the desk.
+
+\section{Applications in Empirical Research}
+
+\subsection{Reproducibility and coding audits}
+An agent can be pointed at an existing analysis and asked to replicate a
+published pipeline \emph{from scratch}, independently, as a check on the
+original. A striking version of this is cross-implementation auditing:
+re-deriving the same estimate---for example a difference-in-differences
+result---across multiple languages (Python, R, Stata) and multiple packages,
+and confirming the numbers agree. Convergence across independent
+implementations is strong evidence of correctness; divergence localizes a bug.
+
+\subsection{Pipeline automation and estimation ``harnesses''}
+Much empirical labor is repetitive scaffolding: importing and cleaning data,
+constructing variables, running a family of specifications, and assembling
+output. Agents automate this, and the practice is maturing from ad-hoc prompts
+toward reusable \emph{harnesses}---structured checklists and templates that
+encode a correct workflow (e.g., a difference-in-differences harness) and that
+are gradually hardening into software. The harness both speeds production and
+standardizes verification, because the same checks run every time.
+
+\subsection{Autonomous empirical paper generation}
+At the frontier, agents choose and execute empirical projects with minimal
+step-by-step direction. In one documented effort, an autonomous
+program-evaluation project generated on the order of a thousand automated
+empirical papers: humans controlled the \emph{prompting} and the guardrails,
+while agents controlled the \emph{production}. This illustrates both the scale
+now achievable and why verification and understanding must be handled
+explicitly---volume does not substitute for correctness.
+
+\subsection{Communication and presentation}
+Beyond analysis, agents assist with the ``last mile'' of research:
+building slide decks, formatting tables and figures, and drafting explanatory
+text so that finished work can be presented and taught. This lowers the cost of
+turning a correct result into something an audience can absorb.
+
+\subsection{Remote and mobile workflows}
+Because an agent's work is largely asynchronous---launch a task, let it run,
+review the result---researchers increasingly dispatch and monitor runs
+remotely, including from a phone, revisiting long-running analyses without being
+tied to a workstation.
+
+\section{Verification and the Zero-Error Constraint}
+The hardest and least automatable door is verification. Empirical claims carry a
+``zero-errors'' expectation: a single wrong number can invalidate a result.
+Practical strategies to earn that confidence include (i) independent
+re-implementation and cross-checking, as in multi-language audits; (ii)
+automated tests and assertions baked into the harness; (iii) adversarial review,
+where a second agent or a human is tasked specifically with trying to
+\emph{refute} a result rather than confirm it; and (iv) keeping a human in the
+loop at the points where an error would be most costly. Verification is where
+human judgment retains the clearest comparative advantage.
+
+\section{Human Understanding and Its Risks}
+The subtler risk is to the third door. When production is delegated, the
+researcher can end up with a correct result they do not fully understand---a
+gap that undermines their ability to defend it in review, teach it, or build on
+it. Sustaining understanding is an active choice: reading what the agent
+produced, asking it to explain its reasoning, reconstructing key steps by hand,
+and treating the agent as a collaborator to interrogate rather than an oracle to
+trust. The goal is leverage \emph{with} comprehension, not comprehension traded
+away for speed.
+
+\section{Best Practices}
+\begin{itemize}
+  \item \textbf{Decide autonomy per door.} Grant more autonomy at production;
+        keep tight human control at verification and understanding.
+  \item \textbf{Codify workflows as harnesses.} Turn repeated tasks into
+        checklists and, eventually, software, so quality is reproducible.
+  \item \textbf{Verify independently.} Prefer cross-implementation and
+        adversarial checks over self-confirmation by the same agent.
+  \item \textbf{Keep provenance.} Log prompts, code, data versions, and outputs
+        so a result can be traced and reproduced.
+  \item \textbf{Protect understanding.} Budget time to read, question, and
+        internalize what the agent did before relying on it.
+  \item \textbf{Scale prompting, not trust.} As output volume grows (hundreds of
+        analyses), invest correspondingly in guardrails and review.
+\end{itemize}
+
+\section{Limitations and Open Questions}
+Agentic research remains bounded by several open problems: the reliability of
+verification at scale; the temptation to accept unverified output because it
+``looks right''; reproducibility and provenance across many automated runs;
+appropriate norms of disclosure and authorship when agents do much of the
+production; and the pedagogical question of how students build understanding in
+a world where production is cheap. These are governance and methodology
+questions as much as technical ones, and they are the subject of active debate.
+
+\section{Conclusion}
+The practical value of AI in research is best understood not as ``the agent
+writes the paper'' but as a deliberate reallocation of effort. Agents
+increasingly own \emph{production}; humans must consciously retain
+\emph{verification} and \emph{understanding}. Tools like Claude Code make the
+first door cheap; the discipline of the researcher is what keeps the other two
+open. Used this way, agentic tools compress the mechanical cost of empirical
+work while preserving the correctness and comprehension on which credible
+research depends.
+
+\section*{Sources and Further Reading}
+\begin{itemize}
+  \item Scott Cunningham, ``Which stages of research production should we let AI
+        Agents loose,'' \emph{Scott's Mixtape} Substack (Aug.\ 14, 2026).\\
+        \url{https://causalinf.substack.com/p/which-stages-of-research-production}
+  \item Scott Cunningham, ``Claude Code'' series (walkthroughs of Claude Code for
+        quantitative and empirical social-science projects).\\
+        \url{https://causalinf.substack.com/s/claude-code}
+  \item \emph{Scott's Mixtape} Substack home. \url{https://causalinf.substack.com/}
+  \item Anthropic, ``Coding agents in the social sciences.''\\
+        \url{https://www.anthropic.com/research/coding-agents-social-sciences}
+  \item Scott Cunningham, \emph{MixtapeTools} (tools for coding, teaching, and
+        presentations with AI assistance).\\
+        \url{https://github.com/scunning1975/MixtapeTools}
+\end{itemize}
+
+\end{document}
