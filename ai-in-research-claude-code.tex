@@ -1,0 +1,243 @@
+\documentclass[11pt]{article}
+
+% ==============================================================
+%  AI Applications in Research: The Rise of Agentic Coding
+%  and Claude Code for Quantitative Social Science
+%
+%  Compile with:  pdflatex ai-in-research-claude-code.tex
+%  (twice, so the table of contents and references resolve)
+% ==============================================================
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{parskip}
+
+\definecolor{linkblue}{RGB}{0,80,160}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=linkblue,
+  urlcolor=linkblue,
+  citecolor=linkblue,
+  pdftitle={AI Applications in Research: Agentic Coding and Claude Code},
+  pdfauthor={Automated research digest}
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\newcommand{\cc}{\textsf{Claude Code}}
+
+\title{\textbf{AI Applications in Research:\\[2pt]
+Agentic Coding and \cc{} for Quantitative Social Science}}
+\author{Automated research digest}
+\date{17 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarises the main concepts behind the current wave of
+artificial-intelligence (AI) applications in research, with particular attention
+to \emph{agentic coding tools}---above all Anthropic's \cc{}---and how they are
+reshaping the day-to-day workflow of empirical researchers. It draws on the
+public, real-time experiments of economist Scott Cunningham (Baylor University,
+author of \emph{Causal Inference: The Mixtape}), whose ongoing newsletter series
+documents the promise, mechanics, and unresolved problems of doing research with
+AI agents. The aim is a compact conceptual map: what these tools are, where they
+help, how researchers actually use them, and what caveats remain.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+\hrule
+\bigskip
+
+% --------------------------------------------------------------
+\section{Why AI now matters for research}
+% --------------------------------------------------------------
+
+Large language models (LLMs) have moved from chat-window assistants that answer
+questions to \emph{agents} that take actions: reading a codebase, editing files,
+running commands, inspecting the results, and iterating toward a goal. This shift
+from ``answer'' to ``act'' is what makes them relevant to the research
+\emph{process} rather than merely to research \emph{writing}.
+
+For empirical disciplines---economics, epidemiology, political science,
+biology---a large share of the working day is spent on activities that are
+laborious but well-specified: cleaning data, wiring together a data pipeline,
+translating code between languages, debugging estimation routines, writing tests,
+and reproducing prior results. These are precisely the tasks where an AI agent
+that can see files and execute code is most useful.
+
+\begin{description}[leftmargin=1.4em, style=nextline]
+  \item[From autocomplete to agency.] Earlier tools suggested the next line of
+    code; agentic tools own a whole sub-task and report back.
+  \item[The workflow, not just the prose.] The frontier of impact is the research
+    \emph{pipeline}---acquisition, cleaning, estimation, and replication---not
+    only the final manuscript.
+  \item[Documentation over hype.] The most useful accounts are careful logs of
+    what worked and what did not, produced while doing real research.
+\end{description}
+
+% --------------------------------------------------------------
+\section{Core concepts and vocabulary}
+% --------------------------------------------------------------
+
+\begin{description}[leftmargin=1.4em, style=nextline]
+  \item[Agent.] An LLM given tools (shell, file editing, search) and a loop:
+    plan, act, observe, revise. It can complete multi-step tasks with minimal
+    step-by-step human prompting.
+  \item[\cc{}.] A command-line agentic coding tool from Anthropic. The
+    researcher points it at a project directory; it reads the code, proposes and
+    makes edits, runs scripts, and explains its reasoning in the terminal.
+  \item[Context / project memory.] A persistent description of a project (its
+    conventions, data locations, goals) that the agent consults so that guidance
+    need not be repeated each session.
+  \item[Multi-agent / sub-agents.] Several agent instances working in parallel on
+    independent parts of a task (e.g.\ different languages or packages), whose
+    outputs are then compared or merged.
+  \item[Human-in-the-loop.] The researcher reviews, approves, and corrects the
+    agent's actions; the agent accelerates work but does not replace judgement.
+  \item[Reproducibility / replication.] Re-deriving a result from raw inputs. A
+    natural fit for agents, which can rebuild a pipeline ``from scratch'' and
+    flag where numbers diverge.
+\end{description}
+
+% --------------------------------------------------------------
+\section{How researchers use \cc{}: a workflow taxonomy}
+% --------------------------------------------------------------
+
+Cunningham's public experiments illustrate a recurring set of use patterns. They
+generalise well beyond economics.
+
+\subsection{Onboarding a legacy project}
+Open an old (even decade-old) project directory, point the agent at it, and have
+it read the code, infer intent, and summarise structure---rapidly rebuilding the
+mental model needed to resume work.
+
+\subsection{Pipeline construction and data wrangling}
+Set up a project, acquire and inspect data, and build the cleaning-to-estimation
+pipeline collaboratively---the agent writing and running code while the
+researcher steers design decisions.
+
+\subsection{Code audits and cross-language replication}
+Run \emph{multiple agents} that independently re-implement a pipeline in
+different languages and packages, then compare outputs. Convergence builds
+confidence; divergence localises bugs. Applied, for example, to auditing
+difference-in-differences estimation code.
+
+\subsection{Method-by-method teaching and checklists}
+Use the agent to work through an estimator step by step---e.g.\ a
+difference-in-differences ``checklist'' that makes assumptions such as
+\emph{no anticipation} and \emph{parallel trends} explicit and testable.
+
+\subsection{Collaborative, open research}
+Conduct a real project in public: two researchers ideate, gather data, and write
+a paper together over a series of recorded sessions, with the agent as a third
+participant---for instance, a study of how abortion-clinic closures following a
+change in travel distance affect marriage rates.
+
+\subsection{Reflective / analytic writing}
+Turn the tool on the researcher's own corpus---e.g.\ connecting the agent to a
+back-catalogue of essays to analyse their reach and value, or writing
+speculative essays about how AI might reorganise peer review and the researcher's
+comparative advantage.
+
+% --------------------------------------------------------------
+\section{Benefits}
+% --------------------------------------------------------------
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Speed on well-specified tasks:} boilerplate, translation between
+    languages, and refactoring collapse from hours to minutes.
+  \item \textbf{Lower activation energy:} resuming a stalled or unfamiliar
+    project is far cheaper when an agent reconstructs context for you.
+  \item \textbf{Stronger reproducibility:} independent re-implementations act as
+    a cross-check on results and expose fragile code.
+  \item \textbf{Learning by doing:} narrating an estimator step by step doubles
+    as pedagogy---for the researcher and for their audience.
+  \item \textbf{Wider reach:} documenting the workflow openly compounds into
+    community knowledge (and, in Cunningham's case, rapid audience growth).
+\end{itemize}
+
+% --------------------------------------------------------------
+\section{Limits, risks, and open problems}
+% --------------------------------------------------------------
+
+Enthusiasm is tempered by candid accounting of what breaks.
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{New problems replace old ones:} agents can solve a task while
+    introducing fresh failure modes---and time saved is not guaranteed.
+  \item \textbf{Verification burden:} generated code and results must still be
+    checked; plausible-looking output can be subtly wrong.
+  \item \textbf{Judgement stays human:} research design, identification, and
+    interpretation are not offloadable to the agent.
+  \item \textbf{Reproducibility of the \emph{agent} itself:} nondeterministic
+    behaviour complicates documenting exactly how a result was produced.
+  \item \textbf{Norms in flux:} peer review, authorship, and the researcher's
+    comparative advantage are being renegotiated in real time.
+\end{itemize}
+
+% --------------------------------------------------------------
+\section{A practical checklist for researchers}
+% --------------------------------------------------------------
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item Start on a low-stakes, well-specified task (a cleaning script, a
+    translation) to calibrate trust.
+  \item Give the agent durable project context so guidance is not re-typed each
+    session.
+  \item Keep a human in the loop: read diffs, run tests, question surprising
+    results.
+  \item Use independent re-implementations to audit important numbers.
+  \item Document what worked \emph{and} what failed---your log is the deliverable
+    others learn from.
+  \item Treat the tool as an accelerator of your judgement, not a replacement
+    for it.
+\end{enumerate}
+
+% --------------------------------------------------------------
+\section{Case study: Scott Cunningham's ``\cc{}'' series}
+% --------------------------------------------------------------
+
+Since mid-December 2025, Cunningham has published an ongoing series on
+\emph{Scott's Mixtape Substack} documenting, in near-real time, his use of \cc{}
+for ``practical quantitative social-scientific research.'' The series spans
+dozens of essays and videos and has coincided with a sharp rise in the
+newsletter's readership (from roughly 20{,}000 subscribers in December 2025 to
+around 28{,}000 by mid-2026). Recurring threads include: reviving legacy
+projects, multi-agent code audits of difference-in-differences pipelines, an
+open collaboration with Caitlin Myers (Middlebury) on an abortion-and-marriage
+natural experiment conducted over recorded sessions, and speculative essays on
+how AI could reshape peer review. He has described the underlying book project as
+\emph{AI Agents for Research Workers}.
+
+\medskip
+\noindent\textit{Note on sourcing.} This summary was assembled from public
+search-engine descriptions of the newsletter; the Substack itself was not
+directly reachable from the environment in which this document was prepared, so
+specific episode numbers and dates should be treated as approximate.
+
+% --------------------------------------------------------------
+\section*{Selected resources}
+\addcontentsline{toc}{section}{Selected resources}
+% --------------------------------------------------------------
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Scott's Mixtape Substack --- \url{https://causalinf.substack.com/}
+  \item \cc{} series index ---
+    \url{https://causalinf.substack.com/s/claude-code}
+  \item Scott Cunningham's homepage --- \url{http://www.scunning.com/}
+  \item Anthropic --- \cc{} documentation ---
+    \url{https://docs.anthropic.com/en/docs/claude-code}
+\end{itemize}
+
+\end{document}
