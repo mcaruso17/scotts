@@ -1,0 +1,262 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---------- packages ----------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue!55!black,
+  pdftitle={AI Applications in Research: Notes on Claude Code},
+  pdfauthor={Scheduled routine summary}
+}
+\usepackage{parskip}
+
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{0.6em}{}
+
+% ---------- metadata ----------
+\title{AI Applications in Research \\
+\large A short survey, with emphasis on Claude Code}
+\author{Compiled from public sources by a scheduled routine \\
+        \small carusomatteo17@gmail.com}
+\date{2026-08-20}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This note surveys how large language model (LLM) agents --- and in
+particular Anthropic's \emph{Claude Code} --- are being folded into
+empirical research workflows in 2026. It draws on Scott Cunningham's
+ongoing ``Claude Code'' series on \emph{Scott's Mixtape} Substack, the
+\texttt{MixtapeTools} repository, recent reproducibility benchmarks in
+the social sciences, and adjacent write-ups from academic economists.
+The intent is a scannable overview rather than an exhaustive review:
+what the tools are, which workflow patterns have emerged, what the
+evidence says about reliability, and where the open problems sit.
+\end{abstract}
+
+\tableofcontents
+
+% ==============================================================
+\section{Introduction}
+% ==============================================================
+
+Two shifts have converged over 2024--2026. First, general-purpose LLMs
+crossed a capability threshold at which they can reliably read a
+repository, execute code, install dependencies, and iterate against a
+concrete objective. Second, \emph{coding agents} --- terminal-native
+harnesses around those models --- exposed that capability in a form
+researchers already know how to use: a shell, a file tree, a git
+history. Claude Code, Codex, Cursor's agent mode, and Aider are the
+most visible instances. Empirical researchers have started to adopt
+them not as autocomplete, but as a new layer in the research stack,
+sitting between the researcher and the raw data.
+
+This document focuses on Claude Code because (a) it currently leads
+independent reproducibility benchmarks in the social sciences and
+(b) it has the best-documented academic workflow to date, thanks to
+Scott Cunningham's public series.
+
+% ==============================================================
+\section{What Claude Code is}
+% ==============================================================
+
+Claude Code is Anthropic's official command-line agent. Practically,
+it is a terminal program that (i) accepts a natural-language goal,
+(ii) reads and writes files in a working directory, (iii) runs shell
+commands and inspects their output, and (iv) loops until the goal is
+met or the user intervenes. Around that core it exposes several
+extensibility points relevant to research:
+
+\begin{itemize}[leftmargin=1.2em]
+  \item \textbf{Skills} --- reusable, named prompt-and-tool bundles
+        that ship with a repository or a user's dotfiles and load
+        on demand (\texttt{/skill-name}).
+  \item \textbf{Sub-agents} --- named agent types with restricted
+        toolsets (e.g.\ a read-only \emph{Explore} agent, a
+        \emph{code-reviewer} agent) that the main loop can delegate
+        to in parallel.
+  \item \textbf{Hooks} --- shell commands run on lifecycle events
+        (\texttt{SessionStart}, \texttt{PostToolUse}, \ldots),
+        useful for e.g.\ auto-installing project dependencies at
+        session start on a fresh clone.
+  \item \textbf{MCP servers} --- external tool providers exposed
+        over the Model Context Protocol; commonly wired to GitHub,
+        Google Drive, Gmail, Calendar, or a lab-specific data
+        catalogue.
+  \item \textbf{Web execution} --- a managed, ephemeral container
+        variant that runs on Anthropic's infrastructure and can be
+        triggered from GitHub or a schedule, so the same agent
+        works interactively and unattended.
+\end{itemize}
+
+% ==============================================================
+\section{Emerging workflow patterns}
+% ==============================================================
+
+Several patterns recur across published academic write-ups
+(Cunningham; Goldsmith-Pinkham; Sant'Anna; Matray; Backman; Crawfurd).
+
+\subsection{Claude as thinking partner, not autopilot}
+
+The dominant posture in Cunningham's \texttt{MixtapeTools} is
+\emph{iterative steering}: the researcher decomposes the task,
+Claude executes when the next move is unambiguous, and surfaces a
+question when it is not. Long autonomous runs are avoided for
+substantive analytical work; they are reserved for mechanical passes
+(formatting, migrations, cross-language ports).
+
+\subsection{Cross-language replication audits}
+
+A signature \texttt{MixtapeTools} pattern is the ``Referee~2'' or
+``health inspector'' protocol: after a project appears complete, a
+\emph{fresh} Claude instance --- with no memory of the build --- is
+pointed at the artefacts and asked to replicate the pipeline
+independently in \emph{different} languages (typically Python, R, and
+Stata). Divergences between the three independent runs are the
+finding. This inverts the traditional replication package: rather
+than shipping code and hoping it runs elsewhere, the researcher
+generates independent implementations up front.
+
+\subsection{Presentation and writing pipelines}
+
+Beamer decks, Quarto reports, and \LaTeX{} manuscripts are built and
+maintained inside the same repo the analysis lives in, with the
+agent handling the mechanical parts (figure regeneration, table
+formatting, citation hygiene, cross-references). This is where the
+productivity delta is largest and least controversial.
+
+\subsection{Research management as data}
+
+Cunningham exposes a ``research GTD'' layer --- hypotheses, open
+questions, evidence, decisions --- as plain-text files under version
+control that Claude can read and update. The agent becomes a
+disciplined note-taker rather than a source of new claims.
+
+% ==============================================================
+\section{Evidence on reliability}
+% ==============================================================
+
+The most-cited benchmark to date is \emph{SocSci-Repro-Bench}
+(Alizadeh et al., 2026), which evaluates coding agents on 221 tasks
+drawn from 13 substantive social-science domains. Headline numbers:
+
+\begin{itemize}[leftmargin=1.2em]
+  \item Task-level accuracy: Claude Code \textbf{93.4\%}, Codex
+        \textbf{62.1\%} (a 31.3~pp gap).
+  \item Paper-level accuracy: Claude Code \textbf{78.0\%}, Codex
+        \textbf{35.8\%} (a 42.2~pp gap).
+  \item The authors argue the delta reflects \emph{agentic}
+        capability (reading code, installing deps, debugging,
+        executing) rather than memorised recall of results.
+\end{itemize}
+
+Complementary work on a many-analysts economics study finds that
+agent outputs cluster near the human median with \emph{tighter}
+dispersion and no extreme outliers --- suggestive that agents behave
+as low-variance, moderately-skilled analysts rather than as one more
+idiosyncratic team.
+
+% ==============================================================
+\section{Open problems}
+% ==============================================================
+
+Cunningham is explicit that Claude Code introduces new failure modes
+even as it removes old ones. Recurring themes across the community:
+
+\begin{itemize}[leftmargin=1.2em]
+  \item \textbf{Silent overconfidence.} An agent that finishes
+        without errors is not the same as an agent that finished
+        correctly. Cross-language audits and adversarial verifiers
+        exist precisely because a single run's ``done'' signal is
+        weak.
+  \item \textbf{Context loss and drift.} Long sessions accumulate
+        stale assumptions; short, well-scoped sub-agents beat one
+        long chat.
+  \item \textbf{Reviewer legibility.} Diffs authored by an agent
+        may be locally correct but stylistically alien; house-style
+        skills and explicit review passes help.
+  \item \textbf{Reproducibility of the agent itself.} Model
+        upgrades, harness changes, and skill drift mean the ``same''
+        prompt can produce different outputs six months later; pin
+        model IDs and record harness versions in the paper's
+        replication package.
+  \item \textbf{Governance.} Data-use agreements, IRB scope, and
+        vendor data-retention terms need to be reviewed before an
+        agent is given raw subject data.
+\end{itemize}
+
+% ==============================================================
+\section{Getting started}
+% ==============================================================
+
+A minimum viable setup for an empirical researcher looks roughly
+like this:
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item Install Claude Code and authenticate.
+  \item Clone \texttt{MixtapeTools} and copy the skills you need
+        into your project's \texttt{.claude/} directory.
+  \item Add a \texttt{SessionStart} hook that (re)installs the
+        project's dependencies, so a fresh clone --- or a fresh
+        cloud session --- comes up green.
+  \item Wire an MCP server for wherever your data lives (Drive,
+        S3, a lab database).
+  \item Adopt one review discipline (e.g.\ Referee~2 cross-language
+        replication, or a \texttt{/code-review} pass gated on
+        merge) so ``the agent said it was done'' is never the last
+        word.
+\end{enumerate}
+
+% ==============================================================
+\section{Selected sources}
+% ==============================================================
+
+\begin{itemize}[leftmargin=1.2em]
+  \item Scott Cunningham, \emph{Online version of The Remix is now
+        here}, Scott's Mixtape Substack, 2026-08-17.
+        \url{https://causalinf.substack.com/p/online-version-of-the-remix-is-now}
+  \item Scott Cunningham, \emph{Claude Code} series (index).
+        \url{https://causalinf.substack.com/s/claude-code}
+  \item \texttt{scunning1975/MixtapeTools} (GitHub).
+        \url{https://github.com/scunning1975/MixtapeTools}
+  \item M.\ Alizadeh et al., \emph{AI Coding Agents Can Reproduce
+        Social Science Findings}, arXiv:2606.11447.
+        \url{https://arxiv.org/abs/2606.11447}
+  \item Anthropic, \emph{Coding agents in the social sciences}.
+        \url{https://www.anthropic.com/research/coding-agents-social-sciences}
+  \item P.\ Sant'Anna, \emph{Claude Code Academic Workflow --- \LaTeX,
+        Quarto, Research Automation}.
+        \url{https://psantanna.com/claude-code-my-workflow/}
+  \item P.\ Goldsmith-Pinkham, \emph{Getting Started with Claude
+        Code: A Researcher's Setup Guide}.
+        \url{https://paulgp.substack.com/p/getting-started-with-claude-code}
+  \item A.\ Matray, \emph{Custom Claude Code Skills for Research}.
+        \url{https://adrienmatray-ai.com/skills.html}
+  \item C.\ Backman, \emph{Claude Code in VS Code --- For Academic
+        Economists}. \url{https://claesbackman.com/claude-code-guide.html}
+  \item L.\ Crawfurd, \emph{Claude Code Skills for Academic
+        Research}. \url{https://lcrawfurd.github.io/claude-skills/}
+\end{itemize}
+
+\vfill
+\noindent\rule{\linewidth}{0.4pt}\\
+{\small Compiled 2026-08-20 by a scheduled Claude Code routine.
+Content is a synthesis of public sources; details attributed to
+individual posts should be verified against the live articles before
+citation. Substack domains were unreachable from the routine's
+runtime environment, so post-level detail was reconstructed from
+search snippets and adjacent public pages.}
+
+\end{document}
