@@ -1,0 +1,155 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+%  AI Applications in Research: Claude Code as a Research Collaborator
+%  A concept summary drawing on Scott Cunningham's "Mixtape" work on
+%  agentic AI for applied empirical social science.
+% ---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue!55!black,
+  citecolor=black,
+  pdftitle={AI Applications in Research: Claude Code as a Research Collaborator},
+  pdfauthor={Compiled summary}
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\setlist{itemsep=2pt, topsep=3pt}
+
+\title{\textbf{AI Applications in Research}\\[2pt]
+\large Claude Code as a Research Collaborator in Applied Empirical Work}
+\author{Concept summary compiled from Scott Cunningham's ``Mixtape'' materials}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarises the main concepts behind the use of AI
+agents---and Claude Code in particular---in quantitative and empirical research.
+It draws on the work of economist Scott Cunningham (author of \emph{Causal
+Inference: the Mixtape} and its 2026 successor \emph{the Remix}), who has
+documented an evolving practice of using coding agents as research
+collaborators in applied social science. The emphasis throughout is on a
+posture of \emph{verification over speed} and \emph{dialogue over automation}:
+the agent is treated as a thinking partner whose output must be audited, not as
+an autonomous code generator to be trusted blindly.
+\end{abstract}
+
+\section{From Chatbots to Coding Agents}
+The first wave of large language models (LLMs) entered research as
+conversational assistants---tools for explaining concepts, drafting prose, and
+sketching code snippets. The more consequential shift is the arrival of
+\emph{agentic} tools such as Claude Code: command-line agents that operate
+directly inside a project directory, able to read the full file tree, run
+scripts across languages, inspect their own output, and iterate. For empirical
+researchers this changes the unit of assistance from ``answer a question'' to
+``carry out a multi-step task inside my actual project,'' which is where most
+of the real friction in research lives.
+
+\section{Core Use Cases in Empirical Research}
+\begin{description}[leftmargin=1.4em, style=nextline]
+  \item[Onboarding a legacy project.] Point the agent at an existing (even
+    ten-year-old) directory and have it map the code, data, and dependencies,
+    then narrate the pipeline back to the researcher.
+  \item[Cross-language replication audits.] Independently re-implement an
+    analysis in Python, R, and Stata (and across multiple packages), then check
+    that intermediate and final results agree to many decimal places for all
+    non-random steps---a strong test of correctness. Difference-in-differences
+    is a natural worked example.
+  \item[Large-scale text reclassification.] Orchestrate LLM calls (e.g.\
+    lightweight models such as \texttt{gpt-4o-mini}) to code or reclassify large
+    text corpora, with the agent managing batching, prompts, and validation.
+  \item[Deep reading of the literature.] Chunk PDFs into small segments,
+    extract structured notes across fixed dimensions, and persist them as
+    markdown for reuse.
+  \item[Reproducible outputs.] Automate the path from raw data to tables,
+    figures, and slides so that results regenerate deterministically.
+  \item[Conjecture chasing.] Form a hypothesis and delegate the tedious
+    empirical follow-through to the agent, keeping the researcher focused on
+    judgement rather than plumbing.
+\end{description}
+
+\section{A Practice Built on Verification}
+The distinctive contribution of Cunningham's work is not any single tool but a
+set of protocols that make agent output trustworthy. Collected in the
+open \emph{MixtapeTools} repository, they include:
+\begin{itemize}
+  \item \textbf{Referee~2} --- an independent audit protocol (run in a fresh,
+    separate session for objectivity) that checks code quality, cross-language
+    replication, directory structure, output automation, and econometric
+    validity.
+  \item \textbf{Blindspot} --- a ``peripheral vision'' audit that surfaces
+    overlooked problems and unexploited strengths in a piece of research.
+  \item \textbf{Bibcheck} --- a many-agent bibliography validator that spawns a
+    narrow agent per citation to verify entries against canonical sources
+    (DOI, journal pages, author records).
+  \item \textbf{Deck tooling} --- Beamer generation enforcing assertion-based
+    titles and one-idea-per-slide, plus a TikZ ``collision audit'' that repairs
+    overlapping diagram elements.
+  \item \textbf{CLAUDE.md} --- a per-project context file that gives the agent
+    persistent memory of conventions and goals across sessions.
+\end{itemize}
+
+\section{Design Principles}
+\begin{enumerate}[label=\arabic*.]
+  \item \textbf{Verification over speed.} Every result is something to be
+    reproduced and audited, not accepted on trust.
+  \item \textbf{Adversarial separation.} Different roles run in different
+    sessions/terminals so that an ``auditor'' agent is not biased by the
+    ``author'' agent's context.
+  \item \textbf{Cross-language replication as ground truth.} Agreement across
+    independent implementations is treated as the strongest available evidence
+    of correctness.
+  \item \textbf{Documentation as a primary output.} Notes, logs, and context
+    files are first-class artefacts, not by-products.
+  \item \textbf{Thinking partnership.} The goal is augmented judgement, not
+    autonomous code generation; the researcher stays in the loop.
+\end{enumerate}
+
+\section{Opportunities and Cautions}
+\paragraph{Opportunities.} Agentic AI compresses the time from question to
+credible answer, lowers the cost of robustness checks, and---by making
+cross-language replication cheap---can raise the reproducibility bar for a whole
+field. It also democratises method: newcomers can stand up a working,
+audited pipeline far faster than before.
+
+\paragraph{Cautions.} The same fluency that makes agents useful makes their
+errors persuasive. Fabricated citations, silently wrong replications, and
+plausible-but-invalid econometrics are real risks. The discipline of
+independent audits, human review, and reproducible outputs is what converts a
+fast assistant into a trustworthy collaborator.
+
+\section{Latest Newsletter (Context)}
+At the time of writing, the most recent post on Scott's Mixtape Substack
+announces that the free online version of the new book, \emph{Causal Inference:
+the Remix} (Yale University Press, released 25~August~2026), is now available.
+The online edition is slated to include an essay on how to use the book with
+LLMs, a link to suggested agent ``skills,'' materials from the Mixtape
+Sessions, and additional code to assist readers---extending the Claude Code
+theme directly into the textbook itself.
+
+\section*{Key Resources}
+\begin{itemize}
+  \item Scott's Mixtape Substack --- \url{https://causalinf.substack.com/}
+  \item Claude Code series (section) ---
+    \url{https://causalinf.substack.com/s/claude-code}
+  \item MixtapeTools (protocols and skills) ---
+    \url{https://github.com/scunning1975/mixtapetools}
+  \item \emph{Causal Inference: the Remix}, Yale University Press ---
+    \url{https://yalebooks.yale.edu/book/9780300292619/causal-inference/}
+\end{itemize}
+
+\end{document}
