@@ -1,0 +1,360 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: Concepts and the Use of Claude Code
+%  A conceptual summary synthesizing themes from Scott Cunningham's
+%  "Scott's Mixtape Substack" essays on AI agents for empirical research.
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black
+}
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\title{\bfseries AI Applications in Research \\[0.3em]
+\large A Conceptual Summary, with an Emphasis on Claude Code}
+\author{Prepared as a research briefing\\
+\small Synthesizing themes from Scott Cunningham's \emph{Scott's Mixtape Substack}}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts that are emerging around the
+use of AI agents in scientific research, with particular attention to
+\textbf{Claude Code} as a coding agent for empirical work. It draws on the
+recent essays of economist Scott Cunningham (Baylor University; author of
+\emph{Causal Inference: The Mixtape} and \emph{Causal Inference: The Remix}),
+who has documented in real time how AI agents change the production,
+verification, and understanding of quantitative research. The goal is a compact,
+conceptual reference rather than a how-to manual.
+\end{abstract}
+
+\tableofcontents
+\vspace{1em}
+
+% ---------------------------------------------------------------
+\section{From Chatbots to Coding Agents}
+% ---------------------------------------------------------------
+
+A useful first distinction separates three ``harnesses'' that wrap the same
+underlying language models, because conflating them is the single most common
+source of confusion:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Chatbots} (e.g.\ ChatGPT, the Claude app) --- conversational
+        interfaces most people already know.
+  \item \textbf{Coding copilots} (e.g.\ Cursor, GitHub Copilot) --- inline
+        assistance embedded in an editor.
+  \item \textbf{Coding agents} (e.g.\ Claude Code, Codex) --- agents that operate
+        directly on your machine: reading and writing files across the hard
+        drive, running shell commands, downloading data, executing code, and
+        iterating toward a goal.
+\end{itemize}
+
+The critical conceptual point is that \emph{AI agents for research are not
+chatbots}. A researcher's prior familiarity with ChatGPT can actively
+\emph{impede} understanding of what an agent does, because it invites the false
+belief that the work reduces to finding the ``right prompt.'' In practice,
+serious users do not ``prompt-engineer'' an agent so much as \emph{converse}
+with it as a thinking partner; the relevant skill is closer to collaboration
+than to incantation.
+
+% ---------------------------------------------------------------
+\section{What Autonomous Empirical Research Can Now Do}
+% ---------------------------------------------------------------
+
+A coding agent can, start to finish and largely unattended, carry out a complete
+empirical study: propose a research question, choose an identification strategy,
+locate and download public datasets, select an estimator, write replicable code,
+produce publication-quality tables and figures, run batteries of robustness
+checks, and draft a full manuscript with references and appendices --- often in
+well under an hour. Cunningham calls this ``3-D printing a research paper.''
+Large-scale demonstrations (e.g.\ autonomous program-evaluation projects that
+generated on the order of a thousand papers using difference-in-differences,
+instrumental variables, and related designs) have moved this from conjecture to
+established fact.
+
+\medskip
+\noindent\textbf{But full autonomy remains out of reach.} A helpful metaphor:
+today's agents are less like a fully self-driving car and more like adaptive
+cruise control with lane-keeping. They can \emph{produce} research
+autonomously, yet they cannot be trusted to \emph{verify} their own accuracy or
+to supply the researcher's \emph{understanding}. This gap motivates the central
+framework below.
+
+% ---------------------------------------------------------------
+\section{The Core Framework: Production, Verification, Understanding}
+% ---------------------------------------------------------------
+
+The organizing idea is that research with agents must pass through three
+distinct ``doors,'' conditional on the researcher's taste and judgment:
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item \textbf{Production} --- generating the research artifact (code, exhibits,
+        the manuscript itself). This is the door agents already open well.
+  \item \textbf{Verification} --- confirming that what was intended was in fact
+        done, \emph{and} that what should not have been done was not done.
+        Verification is defined relative to a pre-specified target estimand; it
+        is not merely re-running code in several languages or confirming that a
+        figure was produced by stored code. Those are \emph{necessary but not
+        sufficient} conditions.
+  \item \textbf{Understanding} --- the researcher's own warranted comprehension
+        of the work. This is fundamentally a human obligation and cannot be
+        delegated to the agent.
+\end{enumerate}
+
+A recurring cautionary observation: agents can exhibit \emph{endogenous sorting
+into model specifications} not because they were instructed to, but in response
+to true statements made within a project's context. This is precisely why
+verification cannot be outsourced wholesale to the agent --- part of what must
+be verified is the \emph{absence} of choices that were never supposed to be
+made, and ``there is nothing to verify'' about an omission the agent silently
+introduced.
+
+\subsection{Zero Errors as a Constraint, Not an Objective}
+
+A key normative stance: \textbf{``zero errors'' should be treated as a
+\emph{constraint}, not as the objective function.} If error \emph{minimization}
+becomes the goal, one implicitly accepts ``optimal errors'' as acceptable. The
+research problem is better cast as maximizing (optimal) research output subject
+to the hard constraint of zero errors --- a Lagrangean in which production,
+verification, and understanding are all required to hold.
+
+\subsection{The Researcher as CEO}
+
+A guiding analogy: the researcher should act as the \textbf{CEO of the research
+enterprise}. A CEO delegates --- she need not personally write every line of
+code --- but she must nonetheless maintain an approximately accurate
+understanding of \emph{what} was done, \emph{by whom}, and \emph{what was
+found}. As delegation scales, so does the difficulty of retaining that
+understanding, which is exactly the challenge agents create.
+
+% ---------------------------------------------------------------
+\section{The Economics of Research Production under AI}
+% ---------------------------------------------------------------
+
+Agents dramatically lower the \textbf{marginal cost of producing research},
+from some pre-AI level $MC_b$ (fixed largely by human time and skill) to a level
+$\widehat{MC}_{AI} \approx \varepsilon$, just above zero. Standard supply-and-demand
+logic then implies:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Research \textbf{quantity rises}, from $Q^*_b$ to $Q^*_{AI}$, with the
+        magnitude governed by the elasticity of research demand.
+  \item Existing work is now produced with far fewer time inputs, generating
+        additional surplus; new work at the margin generates further surplus
+        still.
+\end{itemize}
+
+\noindent\textbf{The subtle problem is what happens to ``understanding.''}
+Historically, understanding was in large part a \emph{byproduct} of production
+--- almost an externality of doing the work by hand (a kind of ``squatter's
+right'' of comprehension: \emph{I made it, therefore I knew it}). When agents do
+the producing, that automatic byproduct may no longer be generated. The freed-up
+time is not guaranteed to be reallocatable to recover the lost understanding; it
+is an open question, not an accounting identity.
+
+\medskip
+\noindent This reframes a popular slogan. It is often said that
+``\emph{verification} is the new bottleneck.'' The sharper claim is that
+\textbf{``understanding is the new bottleneck,''} because agents may eventually
+verify as competently as they produce --- and yet the human may still not
+understand the result. Echoing a classic principle (attributed to IBM): a
+machine cannot be held accountable, and therefore must not be trusted to make
+decisions. Either agents help us understand the work, or we should not use them.
+
+% ---------------------------------------------------------------
+\section{Practical Method: Checklists and ``Harnesses''}
+% ---------------------------------------------------------------
+
+To keep production, verification, and understanding aligned, Cunningham
+advocates a \textbf{checklist-centered workflow}, or ``harness.'' The rationale
+is drawn from Atul Gawande's \emph{The Checklist Manifesto}: in high-stakes
+tasks, people skip critical steps --- and, counterintuitively, \emph{experts}
+skip steps more often than beginners (a consequence of Kahneman's fast,
+``System~1'' thinking). A checklist deliberately re-imposes slow, deliberate
+attention. The idea is also latent in the design-based tradition of causal
+inference (Rubin's ``Design Trumps Analysis''; the applied checklists of Guido
+Imbens and collaborators).
+
+\subsection{Example: A Difference-in-Differences Harness}
+
+A concrete instance is a narrow, difference-in-differences-specific harness.
+Deliberately keeping it \emph{narrow} makes it easier to evaluate and perfect.
+Selected checklist stages include:
+
+\begin{description}[leftmargin=0em, style=nextline]
+  \item[Packages.] A visual card recording exactly which packages and
+        \emph{versions} the project uses --- guarding against silent drift and
+        deprecation.
+  \item[Bite.] The first-order, ``boots-on-the-ground'' response to the
+        intervention. If a gun law passes, study the \emph{movement of guns}
+        first --- not deaths or crime. If a minimum wage rises, find where it
+        \emph{binds}. Document the response exhaustively across \emph{space}
+        (heat maps) and \emph{time} (time-series aggregations), for treated and
+        comparison groups alike, until it is genuinely understood.
+\end{description}
+
+The \textbf{bite} stage is where the study is truly \emph{conceived}: it is how
+the researcher gains insight into the \emph{treatment assignment mechanism},
+which in turn dictates the credible design and the credible comparison group.
+This is deliberately the stage \emph{least} suited to full automation. Agents
+can and should build the maps, write the code, and produce the figures, but the
+human must remain the one who \emph{understands} where, who, and when the
+treatment touched the world.
+
+\subsection{Treatment Assignment Mechanisms}
+
+Design-based causal inference (following Angrist and Imbens) emphasizes
+understanding \emph{what mechanism assigned the treatment}. The mechanism
+selects the appropriate design:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Human rationality / essential heterogeneity} --- agents
+        endogenously choose treatment because it is optimal for them
+        (Heckman/Roy; Rubin's ``perfect doctor''). Endogenous selection is what
+        makes naive causal inference so hard.
+  \item \textbf{Instruments} --- an instrument (ideally randomized) assigns
+        treatment to compliers, motivating instrumental variables; the exclusion
+        restriction additionally forbids any direct effect on the outcome
+        (Imbens and Angrist, 1994, LATE).
+  \item \textbf{Randomization} --- randomized treatments act directly on the
+        outcome (RCTs), collapsing the instrument and the treatment into one.
+  \item \textbf{Running variables} --- a threshold rule (e.g.\ a blood-alcohol
+        cutoff for a DUI) assigns treatment, motivating regression
+        discontinuity (Imbens and Lemieux, ``RDD: A Guide to Practice'').
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{Tools of the Trade: Skills, Hooks, and the Git Diff}
+% ---------------------------------------------------------------
+
+Beyond conversation, Claude Code exposes reusable building blocks that let a
+researcher encode a workflow:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Skills} --- packaged, invokable routines that automate a defined
+        task (e.g.\ producing a specific exhibit, or wiring figures into a deck
+        or manuscript).
+  \item \textbf{Hooks} --- automation triggered around actions, ideally made
+        \emph{concrete} to each checklist step rather than abstract and
+        universal.
+  \item \textbf{Markdown project files} --- durable, human-readable instructions
+        and context that travel with the project.
+\end{itemize}
+
+\subsection{Verification via the Git Diff --- and Its Limits}
+
+A popular unit of verification (associated with Paul Goldsmith-Pinkham) is the
+\textbf{git diff}: review each change the agent proposes before accepting it. The
+danger is that reviewing diffs can decay into \emph{skimming and silently
+accepting} them --- accumulating ``cognitive debt'' that the ritual of checking
+was supposed to retire. Diffs remain valuable, but they are not sufficient on
+their own for genuine understanding.
+
+\subsection{An Emerging Idea: the \texttt{/quiz} Skill}
+
+To attack the understanding bottleneck directly, one experimental approach is a
+\texttt{/quiz} skill modeled on corporate training videos: the agent (i)
+generates a short set of slides that \emph{teaches} the researcher something
+about the current project, then (ii) asks multiple-choice questions one at a
+time to confirm comprehension. The aim is \textbf{continuous understanding} and
+\textbf{continuous verification} layered on top of the staged checklist --- an
+intentional way of ``tying oneself to the mast'' so that attention does not
+quietly drift onto autopilot.
+
+% ---------------------------------------------------------------
+\section{Communicating AI-for-Research to Others}
+% ---------------------------------------------------------------
+
+A pedagogical pattern for presenting agents to non-specialist audiences
+(administrators, colleagues, students):
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item \textbf{History of thought} --- situate the tool (e.g.\ the origin of
+        Claude Code as an internal Anthropic tool that later reached a broad
+        audience of empiricists via the desktop app).
+  \item \textbf{Narrative} --- lead with a concrete personal story.
+  \item \textbf{Numerical examples / a live demo} --- the ``magic trick'':
+        start from an empty folder and set an agent running a complete
+        autonomous study while you lecture; return periodically to show
+        progress. It captures attention and viscerally proves that
+        \emph{agents are not chatbots}.
+  \item \textbf{Interactive media} --- video or hands-on interludes.
+  \item \textbf{Technical rigor} --- only now introduce installation, what the
+        agent is actually doing (its access to the file system and shell), and
+        the conceptual model of skills, hooks, and the production/verification/
+        understanding triangle.
+\end{enumerate}
+
+The goal is to ``defamiliarize the familiar'' and bring the \emph{median}
+attendee forward, not merely the few who would have adopted anyway.
+
+% ---------------------------------------------------------------
+\section{Open Questions and Cautions}
+% ---------------------------------------------------------------
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Skill atrophy and the principal--agent problem.} If we trust an
+        agent we cannot audit, and our own skills decay, we risk ``the blind
+        leading the blind.''
+  \item \textbf{Is understanding recoverable?} It is an assumption --- not a
+        proven fact --- that time saved by agents can be reinvested to rebuild
+        the understanding that hand-production used to generate for free.
+  \item \textbf{Reproducibility and disclosure norms.} Requiring authors to
+        submit their ``prompts'' or full chat transcripts is argued to be
+        both impractical (there is no stable artifact to submit when one
+        converses naturally) and an overreach analogous to demanding all
+        private communications with human coauthors.
+  \item \textbf{Heterogeneity across models.} Whether different frontier models
+        differ systematically and predictably in their fitness for autonomous
+        research remains an open empirical question.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{Key Takeaways}
+% ---------------------------------------------------------------
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item Coding agents like Claude Code can autonomously \emph{produce} complete
+        empirical research; they cannot be trusted to \emph{verify} it or to
+        supply human \emph{understanding}.
+  \item Organize all agent-assisted research around three doors: \textbf{production,
+        verification, understanding}.
+  \item Treat \textbf{zero errors as a constraint}, not an objective; act as the
+        \textbf{CEO} of the research enterprise.
+  \item Agents slash the marginal cost of production, so the true bottleneck
+        shifts from output to \textbf{understanding}.
+  \item Impose deliberate structure --- \textbf{checklists / harnesses}, skills,
+        and hooks --- and keep conception-heavy stages (like \textbf{bite}) under
+        human control.
+  \item Verify actively (git diffs, and devices like a \texttt{/quiz} skill for
+        \textbf{continuous understanding}); do not silently accept.
+\end{enumerate}
+
+\vfill
+\noindent\rule{\linewidth}{0.4pt}\\[0.4em]
+{\footnotesize Sources: Scott Cunningham, \emph{Scott's Mixtape Substack}
+(\url{https://causalinf.substack.com}), essays including ``Which stages of
+research production should we let AI Agents loose'' (Aug.\ 14, 2026), ``How to
+improve understanding with Claude Code'' (Aug.\ 7, 2026), ``My strategy for
+talks on agents for research'' (Aug.\ 10, 2026), and ``Online version of The
+Remix is now here'' (Aug.\ 17, 2026). This is an independent conceptual synthesis
+prepared for research reference.}
+
+\end{document}
