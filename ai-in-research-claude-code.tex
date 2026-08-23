@@ -1,0 +1,157 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: The Rise of Agentic Coding
+%  A concept summary with a focus on Claude Code, grounded in
+%  Scott Cunningham's "Mixtape" newsletter and Claude Code series.
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue]{hyperref}
+
+\setlist{itemsep=2pt, topsep=3pt}
+\titlespacing*{\section}{0pt}{12pt}{4pt}
+\titlespacing*{\subsection}{0pt}{8pt}{2pt}
+
+\title{\textbf{AI Applications in Research}\\[2pt]
+\large The Rise of Agentic Coding and Claude Code in Empirical Science}
+\author{Prepared as a concept summary\\
+\small Grounded in Scott Cunningham's \emph{Mixtape} newsletter and Claude Code series}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the growing use of
+artificial intelligence---and \textbf{agentic coding tools such as Claude Code}
+in particular---in quantitative and empirical research. It draws on the ongoing
+documentation by economist Scott Cunningham, who since late 2025 has been
+publicly recording what does and does not work when an AI agent is placed at the
+center of a real research workflow. The aim is a scannable, conceptual map:
+what these tools are, how researchers use them, the benefits they unlock, and
+the new risks they introduce.
+\end{abstract}
+
+\section{What Is Agentic Coding?}
+Traditional AI coding assistants \emph{suggest} code inside an editor. An
+\textbf{agentic} tool such as Claude Code instead operates as an autonomous
+collaborator in the terminal that can:
+\begin{itemize}
+  \item read and reason over an entire project (data, scripts, papers, notes);
+  \item plan a task, then \emph{execute} it---editing files, running code,
+        inspecting output, and iterating without step-by-step prompting;
+  \item call multiple languages and packages (e.g.\ Python, R, and Stata) within
+        a single pipeline; and
+  \item maintain context across a long session, behaving less like autocomplete
+        and more like a research assistant.
+\end{itemize}
+The conceptual shift is from ``AI writes a line'' to ``AI drives a workflow.''
+
+\section{How Researchers Use Claude Code}
+\begin{itemize}
+  \item \textbf{Reproduction and coding audits.} Ask the agent to replicate an
+        empirical pipeline \emph{from scratch}, independently, across several
+        languages and packages---e.g.\ estimating a difference-in-differences
+        design in three languages and five packages---and compare results as a
+        cross-validation of the finding.
+  \item \textbf{Text classification at scale.} Orchestrate models (such as
+        \texttt{gpt-4o-mini}) to reclassify or code large text corpora, with the
+        agent managing batching, prompts, and validation.
+  \item \textbf{Templates and reusable ``skills.''} Maintain a repository of
+        project templates and agent ``skills'' so that new studies start from a
+        consistent, well-structured scaffold (see \emph{MixtapeTools}).
+  \item \textbf{End-to-end project management.} Data cleaning, estimation,
+        figure and table generation, and even drafting prose can be delegated to
+        and coordinated by the agent.
+  \item \textbf{Teaching and documentation.} Live, recorded sessions of the
+        agent working on real applications, rather than abstract demonstrations,
+        make the workflow legible to students and peers.
+\end{itemize}
+
+\section{Why It Matters: Benefits}
+\begin{itemize}
+  \item \textbf{Independent replication becomes cheap.} Multiple AI agents can
+        re-estimate the same effect and, in recent comparisons, produce central
+        estimates broadly similar to those of many human research teams.
+  \item \textbf{Cross-language robustness checks} that were previously too costly
+        become routine, strengthening confidence in a result.
+  \item \textbf{Lower barrier to entry} for applied empirical work: boilerplate,
+        setup, and translation between tools are absorbed by the agent.
+  \item \textbf{Faster iteration} on ideas, freeing researcher attention for
+        design, interpretation, and judgment.
+\end{itemize}
+
+\section{New Problems Created (Not Just Old Ones Solved)}
+A central and honest theme of Cunningham's documentation is that agentic AI
+introduces \emph{new} failure modes even while solving old ones---and sometimes
+\emph{without} reducing total time spent:
+\begin{itemize}
+  \item \textbf{Verification burden shifts, it does not disappear.} The
+        researcher must still check that the agent's code is correct; trust
+        without verification is dangerous.
+  \item \textbf{Plausible-but-wrong output.} Agents can produce confident,
+        clean-looking code and results that are subtly incorrect.
+  \item \textbf{Evaluation bias.} In head-to-head studies, AI ``reviewers'' have
+        been observed to rank AI-produced work above comparable human work,
+        raising concerns about circular or biased evaluation.
+  \item \textbf{Deskilling and learning risk.} Heavy reliance on LLMs can
+        undermine how students and researchers build genuine understanding.
+  \item \textbf{Reproducibility of the agent itself.} Non-determinism and model
+        updates make ``the AI did it'' an incomplete description of a method.
+\end{itemize}
+
+\section{Emerging Best Practices}
+\begin{itemize}
+  \item \textbf{Document the workflow, not just the result}---keep the prompts,
+        templates, and steps as part of the research record.
+  \item \textbf{Use the agent as an auditor}: independent, multi-tool
+        re-implementation as a robustness check.
+  \item \textbf{Keep a human in the loop} for design decisions, verification, and
+        interpretation.
+  \item \textbf{Standardize with templates and skills} to make agent behavior
+        more predictable and shareable.
+  \item \textbf{Treat AI output with healthy skepticism}---validate before trust.
+\end{itemize}
+
+\section{Connection to the Latest Newsletter}
+These themes anchor the current \emph{Mixtape} newsletter cycle. Cunningham's
+new book, \emph{Causal Inference: The Remix} (Yale University Press,
+$\sim$750 pages, released August 2026), updates \emph{The Mixtape} and is
+accompanied by a \textbf{free online version}. That online edition is designed
+for the AI era: it includes an essay on \textbf{how to use the book with LLMs},
+a link to \textbf{suggested Claude skills}, access to \textbf{Mixtape Sessions}
+materials, and additional code. The revision also expands contemporary
+\textbf{difference-in-differences} into two dedicated chapters and reorganizes
+the treatment of unconfoundedness and synthetic control---the very methods most
+often exercised in the Claude Code demonstrations above.
+
+\section{Key Takeaways}
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item Agentic tools like Claude Code turn AI from an autocomplete into a
+        workflow driver for empirical research.
+  \item Their strongest current use in research is \textbf{independent,
+        cross-language replication and auditing}.
+  \item Benefits (speed, robustness, access) are real, but so are \textbf{new
+        risks} (verification burden, biased evaluation, deskilling).
+  \item The durable practice is \textbf{human-in-the-loop, documented,
+        skeptical} use---AI as a collaborator to be checked, not an oracle to be
+        trusted.
+\end{enumerate}
+
+\vspace{6pt}
+\hrule
+\vspace{4pt}
+\footnotesize
+\noindent\textbf{Primary source:} Scott Cunningham, \emph{Scott's Mixtape
+Substack} (\url{https://causalinf.substack.com}), including the ongoing Claude
+Code series and the post ``Online version of The Remix is now here.''
+Supporting tools: \emph{MixtapeTools}
+(\url{https://github.com/scunning1975/mixtapetools}).
+
+\end{document}
