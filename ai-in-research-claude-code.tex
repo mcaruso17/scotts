@@ -1,0 +1,189 @@
+\documentclass[11pt]{article}
+
+% ------------------------------------------------------------------
+% AI Applications in Research: The Case of Claude Code
+% A conceptual summary inspired by Scott Cunningham's "Mixtape" Substack
+% ------------------------------------------------------------------
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage[margin=1in]{geometry}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\definecolor{accent}{RGB}{27,94,150}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=accent,
+  urlcolor=accent,
+  citecolor=accent,
+  pdftitle={AI Applications in Research: The Case of Claude Code},
+  pdfauthor={Compiled summary}
+}
+
+\titleformat{\section}{\Large\bfseries\color{accent}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.6em}{}
+
+\setlist[itemize]{leftmargin=1.4em, itemsep=2pt, topsep=3pt}
+
+\title{\textbf{AI Applications in Research}\\[2pt]
+\large The Case of Agentic Coding and Claude Code}
+\author{Compiled summary\\ \small Inspired by Scott Cunningham's \emph{Scott's Mixtape} Substack}
+\date{24 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the use of
+artificial intelligence, and specifically \emph{agentic coding} tools such as
+\textbf{Claude Code}, in empirical and quantitative research. It draws on themes
+developed at length in Scott Cunningham's \emph{Mixtape} newsletter, where an
+economist documents ``live'' the workflow of doing applied social science with
+AI agents. The aim is to give a compact, conceptual map of \emph{what changes}
+when a research pipeline is run with an agent, and \emph{what discipline} is
+required to keep the results trustworthy.
+\end{abstract}
+
+\section{Why AI Matters for Research}
+Large language models (LLMs) have moved from being text generators to being
+\emph{agents} that read a project, plan, write and run code, inspect their own
+output, and iterate. For empirical researchers this collapses the distance
+between an idea and a working pipeline. The central shift is not ``the model can
+write code'' but that \textbf{the model can operate the whole loop} --- data
+acquisition, cleaning, estimation, figures, and drafting --- under human
+direction.
+
+\begin{itemize}
+  \item \textbf{From assistant to agent.} Autocomplete suggests a line; an agent
+        executes a task end-to-end and verifies it.
+  \item \textbf{Lower cost of ``trying things.''} Robustness checks, alternative
+        specifications, and replications become cheap enough to run routinely.
+  \item \textbf{Returns to expertise rise, not fall.} The agent amplifies a
+        researcher who knows what a credible design and a correct result look
+        like; it cannot supply the judgment itself.
+\end{itemize}
+
+\section{What Claude Code Is}
+Claude Code is a command-line \emph{agentic coding} tool: it works directly in a
+project directory, can read and edit files, run shell commands, call external
+tools, and keep a persistent record of what it did. In a research context it
+functions less like a chatbot and more like a tireless research assistant who
+sits inside the repository.
+
+\begin{itemize}
+  \item \textbf{Operates in the repo.} It sees the actual files, data, and code,
+        not a pasted snippet, so its context is the project itself.
+  \item \textbf{Runs and checks code.} It can execute a script, read the error,
+        and fix it --- the verify step is part of the loop.
+  \item \textbf{Extensible.} \emph{Skills}, custom instructions
+        (\texttt{CLAUDE.md}), sub-agents, and MCP tool connections let a
+        researcher encode house rules and reusable procedures.
+\end{itemize}
+
+\section{Core Concept: The Lifecycle of Context}
+A recurring framing is that good agentic research is about \textbf{managing
+context} across a pipeline. One useful decomposition runs:
+\[
+\text{Intent} \;\rightarrow\; \text{Spec} \;\rightarrow\; \text{Execution}
+\;\rightarrow\; \text{Verification} \;\rightarrow\; \text{Persistence}
+\]
+
+\begin{description}[leftmargin=2em, style=nextline]
+  \item[Intent] The research question and identifying assumptions the human
+        holds in mind.
+  \item[Spec] An explicit, written statement of what is to be done --- the
+        contract the agent works against.
+  \item[Execution] The agent writes and runs the code that realizes the spec.
+  \item[Verification] Results are checked against evidence: does the output make
+        sense, replicate, and survive scrutiny?
+  \item[Persistence] What was learned (and what was abandoned) is written down so
+        the next session, or the next agent, inherits it.
+\end{description}
+
+\subsection{The ``Research Factory''}
+Building on that lifecycle, the research process can be treated as a
+\emph{factory} that pins down three things explicitly:
+\begin{enumerate}[leftmargin=1.6em]
+  \item the \textbf{spec} defining what is being done;
+  \item the \textbf{evidence} the spec is revised against;
+  \item the \textbf{process} governing how the whole thing evolves over time.
+\end{enumerate}
+The value is reproducibility and revisability: the pipeline is an artifact that
+can be re-run, audited, and improved rather than a one-off script.
+
+\section{Concrete Applications in Empirical Work}
+The newsletter illustrates uses that generalize well beyond economics:
+
+\begin{itemize}
+  \item \textbf{Full pipelines.} Going from raw data to cleaned data, to
+        estimates (e.g.\ difference-in-differences and synthetic control), to
+        tables and figures, in one directed workflow.
+  \item \textbf{Coding audits / cross-language replication.} Independently
+        re-implementing a pipeline across languages and packages (e.g.\ Stata,
+        R, Python) to check that results agree --- a strong test of correctness.
+  \item \textbf{Text as data.} Reclassifying or coding large text corpora with a
+        cheaper model (e.g.\ a small GPT-class model) orchestrated by the agent.
+  \item \textbf{Figures and maps.} Producing publication-quality graphics,
+        including maps of an identification strategy (e.g.\ travel distance to
+        clinics), by iterating on the visual with the agent.
+  \item \textbf{Writing and documentation.} Drafting bibliographies, slide
+        decks, and prose scaffolding, keeping the human as editor.
+\end{itemize}
+
+\section{How Research and Publishing Are Diverging}
+A provocative theme is that \textbf{research and publishing are becoming two
+different activities}. When a full analytical pipeline can be produced and
+re-run at low cost, the scarce, human-supplied goods become:
+\begin{itemize}
+  \item \textbf{Questions worth asking} and credible identification strategies;
+  \item \textbf{Verification and judgment} --- deciding whether a result is real;
+  \item \textbf{Taste and communication} --- what to foreground, and how.
+\end{itemize}
+The manuscript is increasingly an \emph{output} of a reproducible process rather
+than the process itself.
+
+\section{Discipline, Risks, and Good Practice}
+Agentic research is powerful precisely because it is fast, which makes guardrails
+essential.
+
+\begin{itemize}
+  \item \textbf{Verification is non-negotiable.} An agent can produce confident,
+        plausible, and wrong output; every result needs an independent check.
+  \item \textbf{Beware silent errors.} Data-handling and merge mistakes are the
+        classic failure mode; cross-implementation audits catch many of them.
+  \item \textbf{Persist the reasoning.} Keeping a record of what was tried,
+        including abandoned paths, prevents rework and hidden assumptions.
+  \item \textbf{Keep the human in the loop.} The researcher owns the design,
+        the assumptions, and the final judgment --- the agent owns the toil.
+  \item \textbf{Reproducibility first.} Treat the pipeline, not the PDF, as the
+        deliverable.
+\end{itemize}
+
+\section{Takeaways}
+\begin{enumerate}[leftmargin=1.6em]
+  \item AI agents change research by automating the \emph{execution} loop while
+        raising the premium on human \emph{judgment}.
+  \item Claude Code embodies this by operating inside the repository and closing
+        the write--run--verify loop.
+  \item Manage \textbf{context} deliberately: intent, spec, execution,
+        verification, persistence.
+  \item Treat the analysis as a reproducible \emph{research factory}.
+  \item Verification and identification remain irreducibly human --- and more
+        valuable than ever.
+\end{enumerate}
+
+\vfill
+\begin{center}
+\small\itshape
+Conceptual summary compiled from publicly reported themes of
+Scott Cunningham's \emph{Scott's Mixtape} Substack
+(\href{https://causalinf.substack.com/}{causalinf.substack.com}),
+including the ongoing ``Claude Code'' series on agentic AI for
+quantitative social science.
+\end{center}
+
+\end{document}
