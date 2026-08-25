@@ -1,0 +1,294 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+%  AI Applications in Research: Concepts and the Use of Claude Code
+%  Companion note to the Scott's Mixtape newsletter tracking repository.
+%  Compile with: pdflatex ai-in-research-claude-code.tex  (run twice for refs)
+% ---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{titlesec}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black,
+  pdftitle={AI Applications in Research and the Use of Claude Code}
+}
+
+\definecolor{codebg}{gray}{0.96}
+\lstset{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{codebg},
+  frame=single,
+  framesep=6pt,
+  rulecolor=\color{gray!40},
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  xleftmargin=4pt,
+  xrightmargin=4pt
+}
+
+\titlespacing*{\section}{0pt}{1.4em}{0.5em}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+       \large Core Concepts and the Use of Claude Code}
+\author{Companion note to \emph{Scott's Mixtape} newsletter tracking}
+\date{August 25, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This note summarizes the main concepts behind the use of artificial
+intelligence (AI) in research, and then focuses on \emph{agentic coding
+assistants}---with \textbf{Claude Code} as the running example---as tools for
+empirical and computational scholarship. It is written as a companion to a
+repository that tracks Scott Cunningham's \emph{Mixtape} newsletter, whose
+recent editions emphasize how AI agents are reshaping the everyday workflow of
+applied researchers in economics and the social sciences. The aim is a compact,
+practical reference: what these tools do, where they fit in the research
+pipeline, and how to use them without sacrificing rigor or reproducibility.
+\end{abstract}
+
+\tableofcontents
+
+% ===========================================================================
+\section{Motivation: why AI now matters for research}
+% ===========================================================================
+
+Large language models (LLMs) have moved from novelty to infrastructure. In
+applied fields such as econometrics, the shift most visible to practitioners is
+not chat but \emph{agency}: models that can read a project, run code, inspect
+output, and iterate toward a goal. This mirrors a theme running through recent
+applied-methods writing (including Scott Cunningham's newsletter and the online
+edition of \emph{Causal Inference: The Remix}, which is slated to include an
+essay on using the book with LLMs): the frontier is less about a single clever
+answer and more about \emph{workflow}---compressing the loop between an idea and
+a verified, reproducible result.
+
+Three capabilities drive this:
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Language understanding} of papers, documentation, and code.
+  \item \textbf{Tool use}---the model can call external tools (a shell, a file
+        editor, a search index, a database) rather than only emitting text.
+  \item \textbf{Iteration}---the model observes the result of an action and
+        decides the next one, forming an agentic loop.
+\end{itemize}
+
+% ===========================================================================
+\section{A map of AI applications across the research pipeline}
+% ===========================================================================
+
+It is useful to place AI applications along the stages of a typical research
+project rather than treating ``AI'' as one thing.
+
+\begin{description}[leftmargin=1.6em,style=nextline]
+  \item[Discovery and literature review] Summarizing papers, tracing citation
+    threads, extracting definitions and assumptions, and drafting related-work
+    sections---always with human verification of claims and sources.
+  \item[Data acquisition and cleaning] Writing scrapers and parsers, reshaping
+    messy files, documenting variable construction, and flagging anomalies.
+  \item[Modeling and analysis] Translating an estimand into code, implementing
+    estimators, and generating robustness and specification checks.
+  \item[Reproducibility and engineering] Refactoring replication packages,
+    fixing broken dependencies, adding tests, and wiring up version control.
+  \item[Writing and communication] Drafting and revising \LaTeX{}, producing
+    tables and figures, and tightening exposition.
+  \item[Review and verification] Acting as an adversarial reader that hunts for
+    bugs, mismatched assumptions, or fragile results.
+\end{description}
+
+The remainder of this note concentrates on the middle stages---analysis,
+reproducibility, and engineering---where \emph{agentic coding assistants} such
+as Claude Code have the largest and most concrete impact.
+
+% ===========================================================================
+\section{What Claude Code is}
+% ===========================================================================
+
+\textbf{Claude Code} is an agentic coding assistant built on Anthropic's Claude
+models. Unlike a chat window that returns text you must copy and paste, it
+operates \emph{inside} a project: it can read and edit files, run shell
+commands, execute and observe tests, use version control, and call external
+tools. It runs in the terminal and is also available through desktop, web, and
+IDE integrations.
+
+Conceptually it closes an \emph{agentic loop}:
+\begin{enumerate}[leftmargin=1.6em,itemsep=2pt]
+  \item Read the relevant parts of the project and the user's request.
+  \item Propose and take an action (edit a file, run a command).
+  \item Observe the result (test output, an error, a diff).
+  \item Decide the next action, repeating until the goal is met or it needs
+        human input.
+\end{enumerate}
+
+The practical consequence is that the model is grounded in \emph{your} code and
+data, not just its training distribution, and it can verify its own work by
+running it.
+
+% ===========================================================================
+\section{Core concepts and building blocks}
+% ===========================================================================
+
+A handful of ideas recur when using tools of this kind productively.
+
+\paragraph{Context and grounding.} The assistant is only as good as the context
+it is given. Pointing it at the actual files, error messages, and data schemas
+dramatically improves results over abstract description. A project-level memory
+file (e.g.\ a \texttt{CLAUDE.md}) that records conventions, entry points, and
+``how to run things'' pays for itself.
+
+\paragraph{Tools.} Beyond editing and running code, agents can be extended with
+additional tools---web search, documentation fetchers, or connectors to
+external systems via protocols such as the Model Context Protocol (MCP). This
+lets a single session reach data and services beyond the local filesystem.
+
+\paragraph{Skills.} Reusable, packaged instructions for a recurring
+task---``run the replication,'' ``format tables to journal style,'' ``review a
+diff against our checklist.'' Scott Cunningham's forthcoming online edition
+explicitly plans to ship \emph{suggested skills} for working through the
+causal-inference material with an LLM, an example of packaging domain workflow
+so it can be invoked on demand.
+
+\paragraph{Subagents and orchestration.} Large tasks can be decomposed and
+delegated to parallel helper agents (search this subsystem, verify that finding)
+while a main agent synthesizes. This is how one keeps a big audit, migration, or
+literature sweep tractable.
+
+\paragraph{Verification as a first-class step.} Because the agent can execute
+code, ``does it actually run and reproduce the number?'' becomes part of the
+loop rather than an afterthought.
+
+% ===========================================================================
+\section{Applications in empirical research}
+% ===========================================================================
+
+Concrete, high-value uses in an empirical (e.g.\ econometrics) workflow include:
+
+\begin{itemize}[leftmargin=1.4em,itemsep=3pt]
+  \item \textbf{Implementing estimators.} Turning an estimand into working code
+        in R, Stata, or Python---for example a modern staggered
+        difference-in-differences estimator---and cross-checking it against a
+        known reference implementation.
+  \item \textbf{Reviving replication packages.} Diagnosing why a decade-old
+        replication no longer runs, pinning dependencies, and restoring the
+        pipeline end to end.
+  \item \textbf{Robustness and specification checks.} Generating a battery of
+        alternative specifications, placebo tests, and sensitivity analyses,
+        then tabulating the results.
+  \item \textbf{Simulation studies.} Building Monte Carlo experiments to probe
+        when an identification strategy or a diagnostic (e.g.\ visual inspection
+        of pre-trends) can mislead.
+  \item \textbf{Data wrangling.} Reshaping panels, harmonizing variable
+        definitions across waves, and documenting every transformation.
+  \item \textbf{Reproducible outputs.} Producing \LaTeX{} tables and figures
+        directly from analysis code so the paper and the results stay in sync.
+  \item \textbf{Refactoring and testing.} Cleaning up analysis scripts, adding
+        unit tests around key functions, and setting up version control.
+\end{itemize}
+
+% ===========================================================================
+\section{An illustrative workflow}
+% ===========================================================================
+
+A typical agent-assisted task looks less like ``write me code'' and more like a
+supervised loop:
+
+\begin{lstlisting}[language=bash]
+# 1. Point the agent at the problem, grounded in the real project.
+#    "The event-study plot in fig3.R throws an error after the last data
+#     refresh. Diagnose it, fix it, and confirm the figure regenerates."
+
+# 2. The agent reads fig3.R and the data schema, reproduces the error,
+#    proposes a minimal fix, and edits the file.
+
+# 3. It re-runs the script and inspects the output:
+Rscript fig3.R        # -> writes figures/event_study.pdf
+
+# 4. It reports the diff and the regenerated figure for human review.
+git diff fig3.R
+\end{lstlisting}
+
+The researcher stays in the loop as reviewer and decision-maker; the agent
+absorbs the mechanical friction (finding the bug, wiring the tools, running the
+checks).
+
+% ===========================================================================
+\section{Best practices}
+% ===========================================================================
+
+\begin{enumerate}[leftmargin=1.6em,itemsep=3pt]
+  \item \textbf{Ground the request.} Give real files, errors, and data
+        descriptions; keep a project memory file with conventions and run
+        commands.
+  \item \textbf{Keep changes small and reviewable.} Prefer minimal diffs and
+        inspect them; treat the agent's output as a pull request, not gospel.
+  \item \textbf{Make verification explicit.} Ask for tests, reproduced numbers,
+        or a re-run of the pipeline---not just an assertion that it works.
+  \item \textbf{Use version control.} Commit before and after agent work so
+        changes are auditable and reversible.
+  \item \textbf{Package recurring workflows as skills.} Encode house style and
+        standard checks once, then invoke them.
+  \item \textbf{Keep a human in the loop for judgment.} Identification
+        assumptions, interpretation, and the decision to publish remain the
+        researcher's responsibility.
+\end{enumerate}
+
+% ===========================================================================
+\section{Limitations, risks, and research integrity}
+% ===========================================================================
+
+AI assistance does not relax the standards of scholarship; if anything it raises
+the premium on verification.
+
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Confabulation.} Models can produce plausible but wrong code,
+        citations, or explanations. Every factual claim and every result needs
+        an independent check.
+  \item \textbf{Silent errors.} Code that runs is not code that is correct;
+        reproduce key numbers against a trusted reference.
+  \item \textbf{Data governance.} Be deliberate about what data and credentials
+        an agent can access, especially with confidential or restricted data.
+  \item \textbf{Reproducibility of the assistance itself.} Model versions
+        change; record what was done (prompts, diffs, commits) so the
+        \emph{human-verified} artifact---not the chat---is the record.
+  \item \textbf{Transparency.} Follow venue norms on disclosing AI tool use in
+        the research and writing process.
+\end{itemize}
+
+% ===========================================================================
+\section{Summary}
+% ===========================================================================
+
+The most consequential AI applications in research today are agentic: models
+that read a project, act on it, observe results, and iterate. Claude Code is a
+representative example, most valuable in the analysis, reproducibility, and
+engineering stages of the empirical pipeline. Used well---grounded in real
+context, kept to small reviewable changes, and paired with explicit
+verification and version control---these tools compress the loop from idea to
+reproducible result while leaving judgment, interpretation, and accountability
+where they belong: with the researcher. This is precisely the direction
+signaled by applied-methods writers such as Scott Cunningham, whose updated
+\emph{Causal Inference: The Remix} is set to include guidance and skills for
+working through causal inference alongside LLMs.
+
+\vspace{1em}
+\hrule
+\vspace{0.6em}
+\noindent\small \emph{Selected resources:}
+Scott's Mixtape Substack, \url{https://causalinf.substack.com/};
+\emph{Causal Inference: The Mixtape} (online),
+\url{https://mixtape.scunning.com/};
+Claude Code documentation, \url{https://docs.claude.com/en/docs/claude-code/overview}.
+
+\end{document}
