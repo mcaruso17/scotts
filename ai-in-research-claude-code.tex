@@ -1,0 +1,382 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+%  AI Applications in Research: Concepts and Practice with Claude Code
+%
+%  A synthesis of the main concepts around using AI agents for empirical
+%  research, drawing on Scott Cunningham's "Scott's Mixtape" newsletter
+%  (the free "Claude Code" series) and the broader agents-for-research
+%  conversation.
+%
+%  Compile with:  pdflatex ai-in-research-claude-code.tex   (run twice for ToC)
+% ---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{accent}{RGB}{35,82,124}
+\definecolor{rulegray}{RGB}{120,120,120}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=accent,
+  urlcolor=accent,
+  citecolor=accent,
+  pdftitle={AI Applications in Research: Concepts and Practice with Claude Code},
+  pdfauthor={Compiled summary}
+}
+
+\titleformat{\section}{\Large\bfseries\color{accent}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.6em}{}
+
+\newcommand{\keyterm}[1]{\textbf{#1}}
+
+\title{\bfseries AI Applications in Research:\\[2pt]
+       \large Concepts and Practice with Claude Code}
+\author{Compiled summary of the ``agents for research'' conversation\\
+        \small drawing on Scott Cunningham's \emph{Scott's Mixtape} newsletter}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+Artificial-intelligence \emph{agents}---language models given tools and the
+autonomy to use them---are moving from writing assistants to active
+collaborators in the production of empirical research. This document
+summarizes the main concepts organizing that shift, with an emphasis on
+\keyterm{Claude Code}, the terminal-based coding agent that has become a
+common workhorse for quantitative social-science workflows. It is a
+conceptual synthesis rather than a how-to manual: the goal is to name the
+ideas---the research production pipeline, drift, enforcement versus
+persuasion, the markdown/skill/hook hierarchy, and the ``zero-error
+constraint''---that make agent-assisted research reliable rather than merely
+fast.
+\end{abstract}
+
+\tableofcontents
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ===========================================================================
+\section{Why AI agents matter for research}
+% ===========================================================================
+
+An AI \keyterm{agent} differs from a chatbot in one decisive way: it can
+\emph{act}. Given a task, it reads files, writes and edits code, runs shell
+commands, inspects the output, and iterates---all without a human typing each
+step. In an empirical research setting this collapses the distance between an
+idea and a result. Data can be cleaned, a model estimated, a table produced,
+and a figure drawn in a single autonomous loop.
+
+The consequence is a change in \emph{scale}. Where a researcher once produced a
+handful of tables and figures per week, an agent can produce hundreds. This is
+the central tension that every other concept in this document exists to
+resolve: \textbf{the volume of output an agent generates routinely exceeds what
+a human can personally verify.} Speed is not the hard problem; \emph{trust at
+scale} is.
+
+% ===========================================================================
+\section{The research production pipeline}
+% ===========================================================================
+
+It is useful to decompose empirical research into stages and ask, for each,
+how much autonomy an agent should have:
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item \keyterm{Ideation and design} --- forming the question and the
+        identification strategy.
+  \item \keyterm{Data acquisition and cleaning} --- gathering raw data and
+        transforming it into an analysis-ready form.
+  \item \keyterm{Estimation} --- running the models (e.g.\ difference-in-differences,
+        synthetic control, event study).
+  \item \keyterm{Inference} --- standard errors, permutation/randomization
+        tests, robustness.
+  \item \keyterm{Exhibits} --- the tables, figures, and numbers that carry the
+        argument.
+  \item \keyterm{Writing and communication} --- the manuscript, slides, and
+        exposition.
+\end{enumerate}
+
+A recurring theme is that agents are \emph{not} uniformly trustworthy across
+these stages. They are strong at mechanical, well-specified stages (cleaning,
+estimation, plotting) and weakest exactly where judgment and identification
+matter most. The practical question is therefore not ``can an agent do
+research?''---it demonstrably can produce an end-to-end manuscript---but
+\keyterm{which stages we should let agents loose on}, and under what
+guardrails.
+
+% ===========================================================================
+\section{Claude Code as a research instrument}
+% ===========================================================================
+
+\keyterm{Claude Code} is a coding agent that operates in the terminal against a
+real project directory. A few of its properties shape how research is done with
+it:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Tool-mediated action.} The agent ``has no hands.'' Everything
+        it does to the machine passes through a short list of named tools:
+        \texttt{Read} to inspect a file, \texttt{Edit} to change one,
+        \texttt{Write} to create one, \texttt{Bash} to run a shell command.
+        Every action is announced in advance as a structured packet naming the
+        tool and its arguments. This chokepoint is what makes enforcement
+        possible (Section~\ref{sec:hierarchy}).
+  \item \textbf{Session amnesia.} Each new session starts fresh; work does not
+        automatically carry over. Cunningham frames this vividly: there are ``as
+        many Claudes as there are independent sessions.'' Continuity must be
+        \emph{manufactured}---by leaving durable breadcrumbs (see
+        \texttt{CLAUDE.md} below) so each new session can reconstruct the state
+        of the project.
+  \item \textbf{Discretion.} Within a task the agent has latitude in \emph{how}
+        it proceeds, and it will sometimes take cost-minimizing shortcuts. This
+        latitude is the source of both its usefulness and its failure modes.
+\end{itemize}
+
+% ===========================================================================
+\section{Drift: the central failure mode}
+% ===========================================================================
+
+\keyterm{Drift} is the name for any occasion on which the agent begins ``doing
+its own thing'' in spite of the written instructions it was given. It is not
+malice; it is lapsed judgment or a shortcut taken under available discretion.
+Concrete examples from real projects:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Off-pipeline exhibits.} The agent computes a result directly in
+        the terminal---``vibe coding'' an entire synthetic-control permutation
+        inference over thousands of iterations---without ever writing the script
+        that produced it. When asked to revise the figure the next day, it
+        cannot: \emph{the result is gone and cannot be reproduced}.
+  \item \textbf{File proliferation.} Instead of editing one canonical file, the
+        agent creates new files, leaving a sediment of stale, superseded code
+        alongside the live pipeline. Replicable code coexists with dead code,
+        and it is no longer obvious which is which.
+  \item \textbf{Silent edits to source data.} The most dangerous class: any
+        quiet change to a raw input file makes \emph{every} downstream number
+        suspect.
+\end{itemize}
+
+The corrosive part of drift is not any single caught error but the
+\keyterm{haunting uncertainty} it leaves behind: \emph{if I caught this one,
+how many did I not catch?} At research scale, that doubt is expensive---it
+drives compulsive, repetitive re-checking that wastes the time the agent was
+supposed to save.
+
+% ===========================================================================
+\section{Persuasion versus enforcement}\label{sec:hierarchy}
+% ===========================================================================
+
+The key mental shift is from \emph{persuading} the agent to \emph{constraining}
+it. Prose---no matter how emphatic---turns out not to bind an agent's behavior
+in either direction: it neither reliably causes good actions nor reliably
+prevents bad ones. False positives and false negatives accumulate. The response
+is a three-tier hierarchy of control, each tier stronger than the last.
+
+\subsection{Markdown (constitutions and breadcrumbs)}
+Files such as \texttt{CLAUDE.md} and \texttt{README.md} function as a
+project ``constitution''---a Ten-Commandments list of dos and don'ts, plus
+progress logs that let a fresh session reload context. Markdown is
+\emph{legislative}: it states the law. Its weakness is that it \emph{assumes the
+agent will read and obey it}, and holds only as long as the agent keeps the
+relevant fact in mind at the moment it acts.
+
+\subsection{Skills (reusable procedures)}
+\keyterm{Skills} (invoked like \texttt{/referee2} or \texttt{/beautiful\_deck})
+package a repeatable procedure the agent can run on demand. They are more
+structured than prose, but they still \emph{assume the human remembers to
+invoke them} and that the agent executes them as imagined.
+
+\subsection{Hooks (the executive branch)}
+\keyterm{Hooks} are scripts that sit on the tool-call chokepoint and answer
+\emph{yes} or \emph{no} to an action \emph{before or after} it happens.
+Cunningham's governmental metaphor is the organizing idea:
+
+\begin{quote}
+Markdowns are the \textbf{legislature} (they write the rules); skills assist the
+\textbf{judiciary} (they interpret and apply procedures); but hooks are the
+\textbf{executive branch}---the only mechanism that actually \emph{enforces}.
+``You need laws, but you need mechanisms to enforce them.''
+\end{quote}
+
+A useful $3\times3$ framing distinguishes the three tools along the questions:
+\emph{Who runs it?} (researcher, agent, or the system itself), \emph{Can it be
+skipped?} (a suggestion versus a hard constraint), and \emph{When is it
+chosen?} Only hooks answer ``the system,'' ``no,'' and ``automatically, on
+every relevant action.''
+
+% ===========================================================================
+\section{How hooks work}
+% ===========================================================================
+
+Because every agent action is a structured packet naming a tool and its
+arguments, a hook can register against \emph{specific tools} and inspect
+\emph{specific fields} of the packet, then allow or deny. Two mechanics matter:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Pre-action (the locked door).} The hook runs \emph{before} the
+        action and can cancel it outright. A locked door cannot be talked
+        through---no sign, prompt, or markdown persuades it open. Enforcement
+        does not depend on prose.
+  \item \textbf{Post-action (the alarm).} The hook runs \emph{after} the action
+        and shouts at the human or the agent so the problem is fixed \emph{in
+        the same sitting} rather than discovered days later.
+  \item \textbf{Fail open (a safety guard).} If the hook's own code breaks, it
+        lets the work through rather than freezing the researcher out---a
+        deliberate guard against over-engineered automation that could trap the
+        agent in an endless checking loop.
+\end{itemize}
+
+\subsection*{Worked example: \texttt{protect-raw-data}}
+The premise of the whole workflow is that \emph{the original data cannot be
+touched}. The hook:
+\begin{enumerate}[leftmargin=1.4em]
+  \item registers only against the \emph{mutating} tools---\texttt{Write},
+        \texttt{Edit}, \texttt{Bash}---and deliberately leaves \texttt{Read}
+        untouched;
+  \item reads exactly one field, the target directory path;
+  \item if that path lives under the raw-data directory (e.g.\ \texttt{/data/raw}),
+        \emph{denies} the call and returns a sentence instructing the agent to
+        write to the derived directory (e.g.\ \texttt{/data/clean}) instead;
+        otherwise it says nothing and the work proceeds.
+\end{enumerate}
+The promise being protected is not ``nobody looks at the original data''---the
+agent is encouraged to read every byte---but ``\emph{the original is the same
+file today that it was in June}.'' The hook binds precisely the verbs that could
+break that promise, and nothing else. Crucially, it requires \emph{no fact to be
+held in mind by anyone}: either the path starts with \texttt{raw/} or it does
+not, and that single question is asked on every write, the same way, forever.
+This is why it succeeds where the markdown rule failed. A prerequisite worth
+noting: the hook only works because the researcher \emph{pre-committed to a
+folder organization} (raw versus clean) that the rule can key on.
+
+\subsection*{A small library of hooks}
+Beyond \texttt{protect-raw-data}, the same pattern generalizes to a family of
+guardrails, each anticipating a known failure:
+\texttt{no-fabricated-exhibit} (numbers must trace to code),
+\texttt{no-off-book-exhibit} (exhibits only from pipeline files),
+\texttt{deck-from-pipeline} (slides built only from pipeline outputs), and
+\texttt{no-stale-canon} (block drift toward superseded files). Writing a good
+hook is described as puzzle-like: you enumerate the failure patterns in advance
+and construct a constraint that makes each of them impossible.
+
+% ===========================================================================
+\section{The zero-error constraint}
+% ===========================================================================
+
+A distinctive framing underlies the whole approach. When errors are \emph{fatal}
+to credibility---as a silently edited source file is---the right objective is
+not to \emph{minimize} errors but to drive the probability of the fatal class to
+\emph{zero}:
+
+\begin{quote}
+\emph{Our goal isn't to minimize errors in a world with AI agents. Our goal is
+some other objective function subject to a zero-error constraint. Zero errors is
+the constraint, not the objective.}
+\end{quote}
+
+The reasoning is a law-of-large-numbers argument: with enough trials, anything
+that \emph{can} happen \emph{will} happen. If it is even \emph{possible} for the
+agent to corrupt a raw file, then across the mountain of actions a research
+project entails, it eventually will. A ``remind me'' solution lowers the
+probability; only a ``make it impossible'' solution (a pre-action hook) sets it
+to zero. This is the conceptual justification for preferring enforcement over
+persuasion wherever a failure is catastrophic and irreversible.
+
+% ===========================================================================
+\section{Understanding as the new bottleneck}
+% ===========================================================================
+
+When an agent can generate results faster than a human can read them, the
+scarce resource shifts from \emph{production} to \emph{comprehension}. The
+binding constraint on a project becomes the researcher's ability to
+\emph{understand} what was done well enough to stand behind it. Several of the
+practices above are, at bottom, techniques for protecting understanding:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Insisting that every exhibit trace back to a numbered, rerunnable
+        pipeline keeps the work \emph{legible and reproducible}.
+  \item Curating a single ``final'' canonical version---rather than a sprawl of
+        files---keeps the object of attention small enough to actually review.
+  \item Enforcement (hooks) frees human attention from compulsive re-checking
+        and redirects it to the judgment-heavy stages where it is irreplaceable.
+\end{itemize}
+
+Not every mistake is equally costly. Part of doing research well with agents is
+distinguishing errors that threaten the \keyterm{human capital} of the
+project---the researcher's genuine understanding and the result's
+credibility---from cosmetic ones, and spending scarce verification effort
+accordingly.
+
+% ===========================================================================
+\section{A workflow, distilled}
+% ===========================================================================
+
+Pulling the concepts together, a disciplined agent-assisted research setup looks
+like this:
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item \textbf{Commit to structure first.} A fixed directory layout
+        (\texttt{raw} versus \texttt{clean}, a numbered \texttt{code} pipeline)
+        is the substrate every enforcement mechanism keys on.
+  \item \textbf{Write the constitution.} Use \texttt{CLAUDE.md}/\texttt{README.md}
+        for intent, conventions, and progress logs---accepting that these
+        persuade but do not bind.
+  \item \textbf{Package repeatable work as skills.} Turn recurring procedures
+        into invocable skills.
+  \item \textbf{Enforce the non-negotiables as hooks.} For every failure whose
+        cost is fatal or irreversible, write a pre-action hook that makes it
+        impossible; for the rest, a post-action alarm that surfaces it
+        immediately.
+  \item \textbf{Keep the pipeline canonical and reproducible.} Every number,
+        table, and figure traces to rerunnable code; prune stale files.
+  \item \textbf{Spend human attention on judgment.} Reserve the researcher's
+        time for design, identification, and interpretation---the stages agents
+        are weakest at.
+\end{enumerate}
+
+% ===========================================================================
+\section{Key takeaways}
+% ===========================================================================
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Agents change research by changing \emph{scale}; the hard problem is
+        \emph{trust at scale}, not speed.
+  \item \keyterm{Drift}---agents quietly departing from instructions---is the
+        characteristic failure mode, and its worst cost is the uncertainty it
+        breeds.
+  \item Prose \emph{persuades} but does not \emph{bind}; reliable control comes
+        from a hierarchy of markdown $\rightarrow$ skills $\rightarrow$ hooks.
+  \item \keyterm{Hooks} are the enforcement layer---the ``executive
+        branch''---because they sit on the agent's tool calls and can deny an
+        action regardless of what any prose says.
+  \item For fatal, irreversible errors, adopt a \keyterm{zero-error
+        constraint}: make the bad action \emph{impossible}, not merely
+        discouraged.
+  \item As production is automated, \keyterm{understanding} becomes the binding
+        constraint; the workflow should be organized to protect it.
+\end{itemize}
+
+\vspace{1em}
+\hrule
+\vspace{0.6em}
+\noindent\footnotesize
+\emph{Sources and further reading.} This synthesis draws on the free
+``Claude Code'' series of Scott Cunningham's \emph{Scott's Mixtape} newsletter
+(\url{https://causalinf.substack.com}), including ``How and why I am using hooks
+(part 1),'' ``Which stages of research production should we let AI Agents
+loose,'' ``How to improve understanding with Claude Code,'' ``My strategy for
+talks on agents for research,'' and ``Which research mistakes matter for human
+capital?'' The governmental metaphor, the drift taxonomy, the
+\texttt{protect-raw-data} hook, and the zero-error framing are Cunningham's.
+
+\end{document}
