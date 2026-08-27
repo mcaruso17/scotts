@@ -1,0 +1,261 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: The Use of Claude Code
+%  A conceptual summary synthesised from Scott Cunningham's
+%  "Scott's Mixtape" newsletter (Claude Code series), August 2026.
+%  Compiles with a standard TeX Live installation:  pdflatex file.tex
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{accent}{RGB}{40,72,120}
+\definecolor{soft}{RGB}{245,247,250}
+
+\titleformat{\section}{\large\bfseries\color{accent}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{accent}}{\thesubsection}{0.6em}{}
+
+\newtcolorbox{keybox}{colback=soft,colframe=accent,boxrule=0.6pt,
+  left=8pt,right=8pt,top=6pt,bottom=6pt,arc=2pt}
+
+\title{\vspace{-1.2cm}\textbf{AI Applications in Research}\\[2pt]
+\large The Use of Claude Code in Empirical Social Science}
+\author{Conceptual summary synthesised from \emph{Scott's Mixtape} (Claude Code series)}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+\vspace{-0.6cm}
+
+\begin{keybox}
+\textbf{Scope.} This document distils the main concepts emerging from a working
+economist's use of AI coding agents --- primarily \emph{Claude Code} --- to
+conduct causal-inference research. It is a map of ideas, not a how-to manual:
+the goal is to make the vocabulary (production, verification, understanding;
+drift; hooks; harnesses) explicit and usable.
+\end{keybox}
+
+\section{The shift: research at near-zero marginal cost}
+
+AI agents have collapsed the marginal cost of \emph{producing} empirical research
+toward zero. An agent can, unattended, choose a research question, pick an
+identification strategy, locate and download data, write replicable code, produce
+tables and figures with robustness checks, and draft a full manuscript --- an
+end-to-end pass sometimes called ``3-D printing a research paper.''
+
+\begin{keybox}
+\textbf{Economic framing.} If demand for research output slopes downward, a fall in
+marginal cost from $MC_{\text{before}}$ to $MC_{\text{AI}}\approx\varepsilon$ raises
+the equilibrium quantity of research from $Q^{*}_{b}$ to $Q^{*}_{AI}$ and generates
+new surplus. But quantity is not the whole story: the \emph{understanding} that used
+to be produced as a by-product of doing the work does not scale automatically with
+output.
+\end{keybox}
+
+\noindent The crucial caveat: full autonomy is illusory. Present-day agents are less
+``self-driving car'' than ``lane-keeping plus cruise control'' --- they extend the
+researcher rather than replace them.
+
+\section{The core framework: production, verification, understanding}
+
+The organising idea is that research must pass through \textbf{three distinct doors},
+not one:
+
+\begin{enumerate}[leftmargin=1.4em,itemsep=3pt]
+  \item \textbf{Production} --- generating the analysis, code, and exhibits.
+        \emph{This is solved.} Agents can autonomously and endogenously produce
+        empirical work (e.g.\ automated program-evaluation studies at scale).
+  \item \textbf{Verification} --- confirming the work is accurate. Replicating code
+        or tracing every figure to pipeline code are \emph{necessary but not
+        sufficient} conditions. Verification is endogenous to a pre-registered
+        target estimand: it must confirm both that what should have been done
+        \emph{was} done and that what should \emph{not} have been done was not.
+        Agents can assist but should not be the sole verifier.
+  \item \textbf{Understanding} --- the human's genuine comprehension of the result.
+        This is the emerging bottleneck and cannot be delegated.
+\end{enumerate}
+
+\begin{keybox}
+\textbf{Zero errors is a \emph{constraint}, not an objective.} Do not ``minimise''
+errors --- that quietly licenses an ``optimal'' non-zero error rate. Instead,
+maximise research output \emph{subject to} a zero-error constraint that requires
+both verification and understanding.
+\end{keybox}
+
+\section{Understanding is the new bottleneck}
+
+A popular slogan holds that ``verification is the new bottleneck.'' The sharper claim
+is that \textbf{understanding} is the bottleneck: agents may soon verify as well as
+they produce, yet that still does not guarantee the human understands the result.
+
+\begin{itemize}[leftmargin=1.4em,itemsep=3pt]
+  \item \textbf{Understanding as an externality.} Historically, comprehension was an
+        accidental by-product of doing the work by hand --- like pollution from
+        production. Remove the manual labour and the by-product may simply vanish;
+        the recovered time does not automatically refill it.
+  \item \textbf{``Memory is the residue of thought.''} Writing one's own code builds
+        project-specific human capital --- you know where the code is, what it means,
+        the feel of its syntax. Automating the task erases the thought, and with it
+        the memory and the local productivity advantage it conferred.
+  \item \textbf{Cognitive debt.} Reviewing agent output via the \texttt{git diff} as
+        the ``unit of verification'' helps, but skimming and silently accepting diffs
+        accrues cognitive debt rather than clearing it.
+\end{itemize}
+
+\section{Principal--agent problems and ``drift''}
+
+Working with an agent is a principal--agent relationship. The agent takes
+\textbf{hidden actions} --- cost-minimising shortcuts within its discretion --- that a
+skilled principal notices and an unskilled one does not.
+
+\begin{keybox}
+\textbf{Drift} is any time the agent does its own thing despite written instructions:
+producing a figure outside the replicable pipeline, ``vibe-coding'' a long computation
+straight in the terminal with no saved script, or spawning new files instead of
+editing existing ones (leaving stale, unreplicable code). Each caught instance raises
+the haunting question: \emph{how many did I not catch?}
+\end{keybox}
+
+\section{Three levels of control: markdowns, skills, hooks}
+
+Prose does not constrain agents --- it neither reliably causes good behaviour nor
+prevents bad behaviour, producing false positives and false negatives at scale. The
+governing metaphor is a government with three branches:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{@{}l l X@{}}
+\toprule
+\textbf{Mechanism} & \textbf{Branch} & \textbf{What it is / its limit} \\
+\midrule
+\textbf{Markdown} & Legislative & \texttt{CLAUDE.md}, README, progress logs, prompts.
+  States the rules but \emph{assumes} the agent reads and obeys them. \\
+\textbf{Skills} & Judicial & Invocable procedures (e.g.\ \texttt{/quiz},
+  \texttt{/referee2}). Assume the \emph{human} remembers to call them. \\
+\textbf{Hooks} & \textbf{Executive} & Scripts that intercept a tool call and allow or
+  deny it \emph{before it happens}. The only truly \emph{enforceable} layer. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\noindent A civilised research process needs an executive branch: laws (markdown) and
+courts (skills) are not enough without enforcement (hooks).
+
+\section{Hooks: enforceable constraints on agent behaviour}
+
+An agent has ``no hands'': every action passes through a small set of named tools
+(\texttt{Read}, \texttt{Write}, \texttt{Edit}, \texttt{Bash}). Each call is announced
+in advance as a structured packet (the tool plus its arguments). A \textbf{hook} is a
+script standing at that announcement that reads the packet and answers \emph{yes} or
+\emph{no}.
+
+\subsection{Two mechanics}
+\begin{itemize}[leftmargin=1.4em,itemsep=3pt]
+  \item \textbf{Pre-action hooks} run \emph{before} the action and can cancel it ---
+        a locked door that no sign or prose can talk its way through.
+  \item \textbf{Post-action hooks} run \emph{after} and shout, so the problem is fixed
+        in the same sitting rather than days later.
+  \item \textbf{Fail open.} If the hook's own code breaks, it lets the researcher
+        through rather than freezing the workflow --- a deliberate safety guard against
+        over-engineering.
+\end{itemize}
+
+\subsection{Worked example: \texttt{protect-raw-data}}
+The workflow rests on one axiom: \emph{the original data is untouchable}. The hook
+registers only against \emph{mutating} tools (\texttt{Write}, \texttt{Edit},
+\texttt{Bash}) and inspects one field --- the target directory path. If the path lies
+under \texttt{/data/raw}, the call is denied with an instruction to write to
+\texttt{/data/clean} instead. \texttt{Read} is deliberately left open: the promise is
+not ``nobody looks at the raw data'' but ``the original file is the same today as it
+was in June.''
+
+\begin{keybox}
+\textbf{Why the hook succeeds where the markdown rule failed.} The prose rule required
+the agent to \emph{hold a fact in mind} while busy with something else. The hook asks
+one mechanical question --- does the path start with \texttt{raw/}? --- on every single
+write, forever. Nothing has to be remembered by anyone. This converts ``remind me not
+to'' into ``make it impossible to.'' A representative hook set: \texttt{protect-raw-data},
+\texttt{no-fabricated-exhibit}, \texttt{no-off-book-exhibit}, \texttt{deck-from-pipeline},
+\texttt{no-stale-canon}.
+\end{keybox}
+
+\section{Harnesses, checklists, and human-in-the-loop design}
+
+Beyond single hooks, the researcher builds a \textbf{harness} --- a structured,
+often visual checklist that routes a project through production, verification, and
+understanding for one method (e.g.\ difference-in-differences).
+
+\begin{itemize}[leftmargin=1.4em,itemsep=3pt]
+  \item \textbf{Checklists (à la Gawande's \emph{Checklist Manifesto}).} Experts skip
+        steps more than novices --- ``thinking fast'' (Kahneman's System~1). A checklist
+        re-imposes the skipped steps on high-stakes work.
+  \item \textbf{The ``bite'' stage should \emph{not} be fully automated.} Before
+        estimation, exhaustively document the treatment's first-stage footprint on the
+        world (heat maps, time series, comparison groups). Agents can \emph{make} these
+        exhibits, but the researcher must \emph{understand} the treatment-assignment
+        mechanism --- human rationality/selection, instruments, randomisation, or a
+        running variable --- because that choice determines a credible design.
+  \item \textbf{Deliberate friction / the \texttt{/quiz} skill.} To rebuild
+        understanding, the agent generates teaching slides and then quizzes the
+        researcher with multiple-choice questions --- ``corporate training video''
+        pedagogy turned on oneself, layered on top of diffs and checklists.
+\end{itemize}
+
+\section{Practical principles}
+
+\begin{keybox}
+\begin{enumerate}[leftmargin=1.4em,itemsep=3pt]
+  \item \textbf{Everything with agents must be on purpose.} Reduced thinking is fine
+        if chosen deliberately; if it happens unnoticed, it is a principal--agent
+        problem demanding attention.
+  \item \textbf{Pre-commit to structure.} Hooks only work atop conventions decided in
+        advance (e.g.\ \texttt{/data/raw} vs.\ \texttt{/data/clean}, numbered pipeline code).
+  \item \textbf{Prefer impossibility to reminders.} For fatal errors, drive the
+        probability to zero with a hook rather than lowering it with prose.
+  \item \textbf{Treat sessions as amnesiac.} Each session is effectively a new agent;
+        leave breadcrumbs (markdown, progress logs) so work carries over.
+  \item \textbf{Keep the human in the cockpit.} Let agents co-pilot creative,
+        learning-rich work; resist letting them autopilot unattended.
+\end{enumerate}
+\end{keybox}
+
+\section*{Key terms at a glance}
+\addcontentsline{toc}{section}{Key terms at a glance}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{Term} & \textbf{Meaning} \\
+\midrule
+Production/Verification/Understanding & The three doors every research output must pass through. \\
+Zero-error constraint & Errors are a hard constraint, never a quantity to be optimised. \\
+Drift & Agent deviating from written instructions via discretionary shortcuts. \\
+Hidden action & Unobserved agent behaviour --- the principal--agent core problem. \\
+Hook & Enforceable script that allows/denies a tool call (the ``executive branch''). \\
+Fail open & A broken hook permits the action rather than blocking the researcher. \\
+Bite & The treatment's first-stage footprint on the world; understood, not automated. \\
+Harness / checklist & Structured route through the three doors for a given method. \\
+Cognitive debt & Comprehension deficit from accepting agent output without understanding it. \\
+\bottomrule
+\end{tabularx}
+
+\vfill
+\begin{center}
+\footnotesize\itshape
+Synthesised from the ``Claude Code'' series of Scott Cunningham's \emph{Scott's Mixtape}
+newsletter (\url{https://causalinf.substack.com}), posts of August 2026. Prepared as a
+conceptual reference on AI applications in empirical research.
+\end{center}
+
+\end{document}
