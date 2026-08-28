@@ -1,0 +1,271 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: Concepts and the Use of Claude Code
+%  A concept summary compiled for reference.
+%  Compile with: pdflatex ai-in-research-claude-code.tex
+%  Uses only standard packages (no external downloads required).
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{parskip}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue!55!black,
+  citecolor=black,
+  pdftitle={AI Applications in Research and the Use of Claude Code},
+  pdfauthor={Compiled summary}
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\setlist[itemize]{leftmargin=1.4em, itemsep=2pt, topsep=3pt}
+
+\title{\vspace{-1.5em}\textbf{AI Applications in Research}\\[0.3em]
+\large Main Concepts and the Use of Claude Code}
+\author{}
+\date{Compiled 28 August 2026}
+
+\begin{document}
+\maketitle
+\vspace{-2.5em}
+
+\begin{abstract}
+\noindent This document summarises the main concepts behind the use of
+artificial-intelligence (AI) coding agents in scientific research, with an
+emphasis on \textbf{Claude Code}---the terminal-based agentic coding tool from
+Anthropic---as applied to empirical and quantitative social science. It draws
+on the emerging practitioner literature, most visibly the ongoing ``Claude
+Code'' series by economist Scott Cunningham (Baylor University, author of
+\emph{Causal Inference: The Mixtape}), and organises the ideas into a set of
+reusable concepts: what agentic coding is, how it changes the research
+workflow, patterns for reliability and verification, the reproducibility and
+publishing implications, and the open risks. It is a conceptual reference, not
+an endorsement of any specific tool or vendor.
+\end{abstract}
+
+% ---------------------------------------------------------------
+\section{From Autocomplete to Agents}
+% ---------------------------------------------------------------
+
+AI assistance in research has moved through three broad stages:
+
+\begin{itemize}
+  \item \textbf{Chat assistants} (e.g.\ conversational LLMs): answer questions
+        and draft code snippets that the researcher copies into their project.
+  \item \textbf{In-editor completion}: models suggest the next lines of code
+        inside an editor, keeping a human in the loop for every keystroke.
+  \item \textbf{Coding agents}: tools such as Claude Code that operate directly
+        on a project---reading and editing files, running commands, inspecting
+        output, and iterating---under human direction. The unit of interaction
+        becomes a \emph{task} (``replicate this table,'' ``audit this
+        pipeline'') rather than a line of code.
+\end{itemize}
+
+\noindent The central economic observation is that agents have sharply lowered
+the \emph{marginal cost of producing empirical work}. Tasks that once cost
+hours---reformatting data, porting an estimator across languages, rebuilding a
+figure---collapse toward minutes. This shifts the binding constraint away from
+implementation labour and toward \emph{judgement}: knowing what to ask, what to
+check, and what to trust.
+
+% ---------------------------------------------------------------
+\section{What Claude Code Is}
+% ---------------------------------------------------------------
+
+Claude Code is a command-line agent that works inside a project directory. In a
+research context its distinguishing features are:
+
+\begin{itemize}
+  \item \textbf{Filesystem-native}: it reads the actual code, data documentation,
+        and outputs in a repository rather than working from pasted fragments,
+        so it reasons about the project as it really is.
+  \item \textbf{Tool use}: it can run shell commands, execute analysis scripts
+        (Python, R, Stata, Julia), compile \LaTeX, and read the results back,
+        closing the loop between writing code and observing its behaviour.
+  \item \textbf{Multi-file and multi-language}: it can coordinate changes across
+        an entire pipeline and cross a language boundary within a single task.
+  \item \textbf{Persistent context}: project-level instruction files (e.g.\ a
+        \texttt{CLAUDE.md}), reusable ``skills,'' and sub-agents let a
+        researcher encode conventions, house style, and repeatable audits so the
+        agent behaves consistently across sessions.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{The Research Workflow with an Agent}
+% ---------------------------------------------------------------
+
+A recurring workflow pattern in the practitioner literature looks like this:
+
+\begin{enumerate}[leftmargin=1.6em, itemsep=2pt]
+  \item \textbf{Point the agent at an existing project}---often a real, messy,
+        years-old directory---and have it map the structure and describe what
+        the code does.
+  \item \textbf{Specify a task in prose}, treating the agent as a capable
+        research assistant: replicate a result, add a robustness check, rebuild
+        a table, or translate a script.
+  \item \textbf{Let the agent implement, run, and inspect} the output, iterating
+        on errors autonomously within the task.
+  \item \textbf{Review and verify} the result against independent evidence
+        rather than accepting it at face value (see Section~\ref{sec:verify}).
+  \item \textbf{Capture the workflow} as reusable instructions/skills so the
+        next task inherits the same standards.
+\end{enumerate}
+
+\noindent The researcher's role becomes closer to that of a principal
+investigator directing and cross-examining a fast, tireless, but fallible
+research assistant, rather than a coder typing every line.
+
+% ---------------------------------------------------------------
+\section{Verification, Auditing, and ``Referee'' Patterns}
+\label{sec:verify}
+% ---------------------------------------------------------------
+
+Because an agent can be confidently wrong, the most valuable concepts are the
+ones that make its work \emph{checkable}. Cunningham's \emph{MixtapeTools}
+collection illustrates several reusable audit patterns:
+
+\begin{itemize}
+  \item \textbf{Independent replication (``Referee 2'')}: a fresh agent, in a
+        clean session, re-derives results by writing \emph{separate} replication
+        scripts rather than reading or trusting the original code---catching
+        errors, cross-language discrepancies, and specification problems. The
+        auditor never edits the author's code.
+  \item \textbf{Apples-to-apples package audits}: reproduce the same estimand
+        (e.g.\ a difference-in-differences estimator) across multiple
+        languages and multiple packages to check that they agree, exposing
+        silent implementation differences.
+  \item \textbf{Peripheral-vision review (``Blindspot'')}: a structured pass
+        that surfaces overlooked problems \emph{and} overlooked opportunities
+        (missing tests, unexplained features, unasked questions).
+  \item \textbf{Citation auditing (``Bibcheck'')}: many narrow agents each
+        verify a single reference against canonical sources, so bibliography
+        checking does not drift or hallucinate.
+  \item \textbf{Falsifiable, recoverable dialogue}: warrant-first ``research
+        harness'' patterns that log hypotheses and claims to the filesystem so
+        the reasoning behind a result can be reconstructed later.
+\end{itemize}
+
+\noindent The unifying principle: \textbf{use AI to check AI}, but structure the
+check so it is \emph{independent} of the work being checked (separate session,
+separate script, separate agent, canonical ground truth).
+
+% ---------------------------------------------------------------
+\section{Reproducibility and Provenance}
+% ---------------------------------------------------------------
+
+Agentic workflows change the reproducibility conversation in two directions:
+
+\begin{itemize}
+  \item \textbf{Better}: end-to-end pipelines can be regenerated on demand, and
+        cross-language, cross-package replication becomes cheap enough to run
+        routinely as a matter of hygiene rather than heroics.
+  \item \textbf{Harder}: the reasoning that produced a result now partly lives
+        in agent sessions. A practical concept here is that the agent can keep a
+        \emph{diary/log of what it did}---including abandoned approaches and the
+        reasons behind choices---giving a provenance trail that a bare git
+        history omits. Preserving these traces matters for auditability.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{Beyond Analysis: Teaching, Writing, and Presentation}
+% ---------------------------------------------------------------
+
+The same agentic patterns extend past estimation:
+
+\begin{itemize}
+  \item \textbf{Teaching materials}: generating and refining lecture slides and
+        Beamer/\LaTeX{} decks, with automated audits for visual overlaps and
+        clean, warning-free compilation.
+  \item \textbf{Reading at scale}: splitting long PDFs into chunks and
+        extracting structured notes to avoid context overload.
+  \item \textbf{Writing and text-as-data}: drafting explainer prose, and using
+        smaller models to classify or re-classify large text corpora as an input
+        to analysis.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{Research vs.\ Publishing: The Coming Divergence}
+% ---------------------------------------------------------------
+
+A prominent theme in the recent commentary is that \emph{doing} research and
+\emph{publishing} it are decoupling:
+
+\begin{itemize}
+  \item If the marginal cost of a competent empirical paper falls dramatically,
+        the volume of plausible-looking manuscripts rises---raising the spectre
+        of ``paper milling'' and straining traditional peer review.
+  \item Value may shift from the \emph{production} of a result toward
+        \emph{trust infrastructure}: independent verification, credible
+        provenance, replication-by-default, and the reputation of the
+        researcher who vouches for the work.
+  \item The durable human comparative advantage moves upstream---toward posing
+        the right question, identifying credible variation, and exercising
+        judgement---and downstream toward standing behind results.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{Risks and Limitations}
+% ---------------------------------------------------------------
+
+\begin{itemize}
+  \item \textbf{Confident errors}: agents can produce code that runs and looks
+        right but is wrong; verification is not optional.
+  \item \textbf{Automation bias}: the ease of accepting output can erode the
+        scrutiny that empirical work requires.
+  \item \textbf{Silent methodological choices}: defaults buried in packages or
+        prompts can drive results; apples-to-apples audits guard against this.
+  \item \textbf{Security and prompt injection}: agents that read external
+        content and run commands can be manipulated; least-privilege setups and
+        human review of consequential actions matter.
+  \item \textbf{Provenance loss}: reasoning that lives only in transient
+        sessions is easily lost unless deliberately captured.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{Concept Summary}
+% ---------------------------------------------------------------
+
+\begin{itemize}
+  \item AI coding agents lower the marginal cost of empirical work and move the
+        binding constraint from implementation to judgement.
+  \item Claude Code operates on real projects (files, commands, output),
+        turning research assistance from ``snippets'' into ``tasks.''
+  \item Reliability comes from \emph{independent} verification patterns: fresh
+        replications, cross-package audits, blind-spot review, citation checks.
+  \item Reproducibility improves for pipelines but requires deliberate capture
+        of agent reasoning and provenance.
+  \item The likely structural change is a split between cheap research
+        production and scarce, trust-bearing publication and verification.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section*{Selected Sources and Further Reading}
+% ---------------------------------------------------------------
+\addcontentsline{toc}{section}{Selected Sources and Further Reading}
+
+\begin{itemize}
+  \item Scott Cunningham, \emph{Scott's Mixtape Substack} --- ``Claude Code''
+        series on AI agents for empirical social science:
+        \url{https://causalinf.substack.com/s/claude-code}
+  \item S.\ Cunningham, \emph{MixtapeTools} (Referee~2, Blindspot, Bibcheck,
+        deck and audit skills): \url{https://github.com/scunning1975/MixtapeTools}
+  \item Anthropic, Claude Code documentation:
+        \url{https://code.claude.com/docs}
+\end{itemize}
+
+\vfill
+\noindent\footnotesize\textcolor{black!55}{Conceptual reference compiled from
+publicly available practitioner writing. Titles, dates, and attributions are
+approximate where primary sources could not be retrieved directly.}
+
+\end{document}
