@@ -1,0 +1,165 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+%  AI Applications in Research: The Case of Claude Code
+%  A concept summary grounded in agentic, empirical social-science workflows.
+%  Compiles with pdflatex using standard TeX Live packages.
+% ---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage[colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!55!black,citecolor=blue!45!black]{hyperref}
+
+\definecolor{accent}{RGB}{40,80,140}
+\titleformat{\section}{\large\bfseries\color{accent}}{\thesection}{0.75em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{accent!85!black}}{\thesubsection}{0.6em}{}
+\setlist[itemize]{leftmargin=1.4em,itemsep=2pt,topsep=3pt}
+\setlist[enumerate]{leftmargin=1.6em,itemsep=2pt,topsep=3pt}
+
+\newcommand{\keyword}[1]{\textbf{\color{accent}#1}}
+
+\title{\vspace{-1.5em}\textbf{AI Applications in Research}\\[0.25em]
+\large A Concept Summary, with Emphasis on Claude Code\\[0.35em]
+\normalsize for Agentic, Reproducible Empirical Work}
+\author{Prepared as a scheduled research digest}
+\date{August 29, 2026}
+
+\begin{document}
+\maketitle
+\vspace{-1.2em}
+
+\begin{abstract}
+\noindent This document summarizes how AI---and \keyword{agentic coding assistants} such
+as \keyword{Claude Code} in particular---is being applied across the research lifecycle:
+literature work, data analysis, replication, writing, and peer review. It distills a
+practical philosophy that has emerged among quantitative social scientists (notably in the
+applied econometrics community around Scott Cunningham's ``Mixtape'' work): treat the model
+as a \emph{thinking partner} rather than an autonomous author, and let AI raise the standard
+of \emph{reproducibility and adversarial verification} rather than merely accelerate output.
+\end{abstract}
+
+\section{Why AI Now Matters for Research}
+The recent shift is not chatbots that answer questions but \keyword{agents} that operate
+inside the researcher's own environment---reading files, running code, editing manuscripts,
+and calling tools across sessions. This moves AI from an \emph{advice} role to an
+\emph{execution} role, which changes both the opportunities and the risks:
+\begin{itemize}
+  \item \textbf{Opportunity:} compress the distance between an idea and a tested result, and
+  make rigorous practices (cross-checks, documentation, audits) cheap enough to always do.
+  \item \textbf{Risk:} plausible-but-wrong output at scale---silent bugs, fabricated
+  citations, and unexamined assumptions---if the workflow lacks verification discipline.
+\end{itemize}
+
+\section{A Guiding Philosophy}
+A workable stance for research use of tools like Claude Code rests on a few principles:
+\begin{enumerate}
+  \item \keyword{Thinking partner, not autopilot.} The model executes when the next move is
+  clear and surfaces ambiguity when it is not; the \emph{dialogue itself} is part of the
+  intellectual work, not just a delivery mechanism.
+  \item \keyword{Design before results.} Get the specification right (identification,
+  estimand, sample) before interpreting any estimate.
+  \item \keyword{Separate author from auditor.} Adversarial review must run in a fresh
+  session with no prior commitments; the auditor never edits the author's code.
+  \item \keyword{Documentation is a primary output.} Undocumented work is effectively
+  incomplete; persistent notes counter a model's session ``amnesia.''
+  \item \keyword{Formal process over intuition.} Checklists and structured protocols beat
+  informal judgement, especially for error-prone, repetitive verification.
+\end{enumerate}
+
+\section{Applications Across the Research Lifecycle}
+
+\subsection{Reading and synthesis}
+Long PDFs are split into small chunks and deep-read with structured note extraction, turning
+passive reading into a persistent, queryable markdown record of claims, methods, and gaps.
+
+\subsection{Data analysis and estimation}
+The assistant scaffolds and runs analysis pipelines, but the decisive practice is
+\keyword{cross-language replication}: the same estimand is computed independently in R,
+Stata, and Python and required to agree to many decimal places. Divergence flags a bug in
+specification, data handling, or a package default---caught before it reaches a table.
+
+\subsection{Reproducibility and code audits}
+A multi-audit ``referee'' protocol (e.g., code review, cross-language replication, directory
+structure, output automation, and econometric soundness) is run by a \emph{fresh} model
+instance that inspects but never modifies the author's code---mirroring an external referee.
+
+\subsection{Bibliography and citation integrity}
+Many narrow-focus agents verify each reference against canonical sources, directly targeting
+the well-known failure mode of confident but fabricated or mis-attributed citations.
+
+\subsection{Writing, figures, and presentations}
+End-to-end generation of slides and figures (e.g., Beamer/TikZ) with automated visual checks
+(collision/overlap passes, zero-warning compiles) and rhetoric audits that push from
+narrative framing toward technical precision.
+
+\subsection{Peer review}
+AI agents assist a human referee---organizing, stress-testing, and checking claims---while the
+\emph{referee report itself remains human-written}, keeping accountability with the reviewer.
+
+\section{Illustrative Toolkit}
+The table sketches representative Claude Code ``skills'' for empirical research, as a concrete
+instance of the applications above.
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{3.1cm}p{10.2cm}@{}}
+\toprule
+\textbf{Skill} & \textbf{What it does} \\
+\midrule
+Referee~2 & Five-audit reproducibility protocol run by a fresh instance; inspects, never edits. \\
+Blindspot & ``Peripheral vision'' audit that surfaces overlooked problems and unasked questions. \\
+Bibcheck & Parallel per-citation verification against canonical sources. \\
+Split-PDF & Chunked deep reading of papers with structured, persistent notes. \\
+Beautiful Deck & Beamer generation with audience triage plus rhetoric and graphics audits. \\
+GTD Harness & Warrant-first tracking of hypotheses, evidence, and falsification tests. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Verification: The Core Discipline}
+Because generative systems produce fluent errors, AI-assisted research depends on making
+verification \emph{routine and cheap}:
+\begin{itemize}
+  \item \textbf{Triangulate} results across independent implementations and, where possible,
+  trust visual inspection of pictures over raw numbers.
+  \item \textbf{Isolate} the auditor from the author so review is genuinely adversarial.
+  \item \textbf{Persist} context (decisions, warrants, open questions) in version-controlled
+  markdown so work is recoverable and falsifiable.
+  \item \textbf{Automate} the checklist so rigor does not depend on a busy researcher's memory.
+\end{itemize}
+
+\section{Limitations and Cautions}
+\begin{itemize}
+  \item \keyword{Hallucination and silent bugs} remain the central threat---verification is
+  not optional.
+  \item \keyword{Provenance and reproducibility:} record prompts, tool versions, and seeds so
+  an AI-assisted pipeline can be re-run by others.
+  \item \keyword{Authorship and accountability:} the researcher owns the claims; AI drafts and
+  checks, but does not sign the referee report or the paper.
+  \item \keyword{Privacy and policy:} respect data-use agreements and journal/venue rules on
+  AI assistance and disclosure.
+\end{itemize}
+
+\section{Takeaways}
+\begin{enumerate}
+  \item Agentic assistants shift AI from advice to \emph{execution} inside the research
+  environment, changing both speed and risk.
+  \item The payoff comes not from faster typing but from making \emph{rigorous, reproducible,
+  adversarially verified} practice the default.
+  \item Used as a disciplined thinking partner---with cross-checks, isolated audits, and
+  persistent documentation---tools like Claude Code can raise, rather than lower, the standard
+  of empirical work.
+\end{enumerate}
+
+\vfill
+\footnotesize\noindent\textit{Selected references:}
+Scott Cunningham, \emph{Scott's Mixtape} Substack (\url{https://causalinf.substack.com});
+\emph{MixtapeTools} repository (\url{https://github.com/scunning1975/mixtapetools});
+Anthropic, \emph{Claude Code} documentation (\url{https://docs.anthropic.com/en/docs/claude-code/overview}).
+
+\end{document}
