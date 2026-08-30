@@ -1,0 +1,262 @@
+\documentclass[11pt]{article}
+
+% =====================================================================
+%  AI Applications in Research: Claude Code as a Thinking Partner
+%  Companion note to the Scott Cunningham (Scott's Mixtape Substack)
+%  newsletter of 17 August 2026, "Online version of The Remix is now here."
+%  Compiled: 30 August 2026
+% =====================================================================
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{booktabs}
+\usepackage{longtable}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor={blue!55!black},
+  citecolor=black,
+  pdftitle={AI Applications in Research: Claude Code as a Thinking Partner},
+  pdfauthor={Compiled summary}
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\setlist[itemize]{leftmargin=1.4em,itemsep=2pt,topsep=3pt}
+\setlist[enumerate]{leftmargin=1.6em,itemsep=2pt,topsep=3pt}
+
+\newcommand{\keyterm}[1]{\textbf{#1}}
+
+\title{\vspace{-2em}\textbf{AI Applications in Research}\\[0.3em]
+\large Claude Code as a Thinking Partner in Empirical Social Science}
+\author{Compiled summary --- companion to \emph{Scott's Mixtape Substack}}
+\date{30 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This note summarizes the main concepts behind the use of AI coding
+agents---specifically Anthropic's \keyterm{Claude Code}---in quantitative and
+empirical research. It is compiled as a companion to the 17~August 2026 issue
+of Scott Cunningham's \emph{Scott's Mixtape Substack}, which announced the free
+online version of \emph{Causal Inference: The Remix}, including an essay on
+using the book with large language models (LLMs) and a set of ``suggested
+skills.'' The concepts are drawn from Cunningham's public writing and his
+open-source \texttt{MixtapeTools} toolkit, and are organized here as a
+reference for researchers considering AI-assisted workflows. This document does
+not reproduce copyrighted newsletter text; it distills publicly stated ideas
+and principles.
+\end{abstract}
+
+% ---------------------------------------------------------------------
+\section{Context: the newsletter that prompted this note}
+% ---------------------------------------------------------------------
+
+The most recent issue of \emph{Scott's Mixtape Substack} at the time of writing
+(17~August 2026, ``Online version of The Remix is now here'') announced that
+Yale University Press had agreed to a \keyterm{free online edition} of
+Cunningham's new textbook, \emph{Causal Inference: The Remix}
+(print release 25~August 2026). The online edition is intended to bundle:
+
+\begin{itemize}
+  \item an \keyterm{essay on using the book with LLMs};
+  \item a link to a set of \keyterm{suggested skills} for AI coding agents;
+  \item access to materials from the \keyterm{Mixtape Sessions} workshops; and
+  \item additional \keyterm{code} to help readers reproduce and extend results.
+\end{itemize}
+
+The newsletter sits within a broader theme that Cunningham has been developing:
+how AI agents are changing the day-to-day practice of applied empirical
+research. The remainder of this note summarizes that theme.
+
+% ---------------------------------------------------------------------
+\section{The central idea: Claude as a thinking partner}
+% ---------------------------------------------------------------------
+
+The organizing principle is a deliberate stance toward the tool:
+
+\begin{quote}
+\emph{Claude as a thinking partner, not Claude as an autonomous agent. I steer
+iteratively; Claude executes when the next move is clear and surfaces ambiguity
+when it isn't.}
+\end{quote}
+
+Two consequences follow.
+
+\begin{enumerate}
+  \item \keyterm{Dialogue is the work.} The back-and-forth reasoning---framing
+        the question, interrogating assumptions, deciding the next step---is the
+        intellectual output, not merely a means of producing code. ``The
+        dialogue is the work, not just the delivery mechanism for the work.''
+  \item \keyterm{Restraint over automation.} The researcher retains judgment and
+        direction. The agent is asked to make ambiguity visible rather than to
+        paper over it with a plausible-looking answer.
+\end{enumerate}
+
+This framing addresses the main empirical risk documented in recent work on AI
+coding agents in social science: agents are \keyterm{methodologically diverse}
+and can reproduce findings, yet remain \keyterm{interpretively vulnerable}---
+capable of confidently producing results whose interpretation is subtly wrong.
+Human steering and independent auditing are the mitigations.
+
+% ---------------------------------------------------------------------
+\section{Reproducibility and quality principles}
+% ---------------------------------------------------------------------
+
+Several principles recur across the workflow. They are useful independently of
+any particular tool.
+
+\begin{description}[leftmargin=1.6em,style=nextline,itemsep=4pt]
+  \item[Design precedes results.] Establish that a specification is correct
+        \emph{before} looking at point estimates; anticipating the answer
+        corrupts the audit.
+  \item[Cross-software replication as ground truth.] ``R = Stata = Python to
+        6 decimal places, or something is wrong.'' Independent re-implementation
+        in multiple languages and packages exposes latent bugs that a single
+        implementation hides.
+  \item[Structural independence for review.] The person (or agent) who wrote the
+        code cannot objectively grade it. Genuine external audit requires a
+        \emph{fresh} context with no memory of the authoring choices.
+  \item[Author sovereignty over author code.] An independent audit produces its
+        own replication scripts but \emph{never modifies} the original code, so
+        the review stays external.
+  \item[Documentation as a permanent artifact.] ``If it's not documented, it
+        didn't happen.'' Every audit yields a dated report and a recoverable
+        paper trail.
+\end{description}
+
+% ---------------------------------------------------------------------
+\section{Skills, agents, and commands (the MixtapeTools toolkit)}
+% ---------------------------------------------------------------------
+
+Cunningham packages these ideas as reusable \keyterm{skills}, \keyterm{subagents},
+and \keyterm{slash commands} for Claude Code, published in the open-source
+\texttt{MixtapeTools} repository. The table below summarizes the main ones.
+
+\renewcommand{\arraystretch}{1.3}
+\begin{longtable}{@{}p{0.24\textwidth}p{0.70\textwidth}@{}}
+\toprule
+\textbf{Tool} & \textbf{What it does} \\
+\midrule
+\endhead
+\keyterm{Referee 2} &
+A five-stage systematic audit (code, cross-language replication, directory
+structure, output automation, econometric specification) run in a fresh
+terminal by an \emph{independent} Claude instance that has never seen the
+project. It replicates results to six decimals across R/Stata/Python, writes a
+formal referee report, and runs a revise-and-resubmit loop---without ever
+modifying the author's code. \\
+
+\keyterm{Blindspot} &
+A ``peripheral-vision'' audit that looks for overlooked problems and missed
+opportunities, organized as a four-quadrant grid of vices and virtues (features
+left unexplained, convenient absences, unasked questions, unexploited
+strengths). \\
+
+\keyterm{Bibcheck} &
+A many-agent bibliography auditor that spawns a narrow-focus agent per citation
+(or per field) to verify entries against canonical sources such as DOI
+registries and journal landing pages. \\
+
+\keyterm{Split-PDF} &
+Automates literature ingestion: downloads a paper, splits it into small
+page-chunks, and extracts structured notes across several dimensions into
+persistent markdown for deep reading. \\
+
+\keyterm{Beautiful Deck / Compile Deck} &
+End-to-end Beamer slide generation that enforces a rhetorical discipline
+(audience triage, original theming, a narrative $\rightarrow$ application
+$\rightarrow$ picture $\rightarrow$ code $\rightarrow$ technical sequence) with
+automated rhetoric and graphics audits by sub-agents. \\
+
+\keyterm{TikZ Collision Audit} &
+A six-pass routine that detects and repairs overlapping labels and arrows in
+LaTeX/TikZ figures using measured gap calculations rather than eyeballing. \\
+
+\keyterm{/compiletex} &
+LaTeX compilation with zero-warning reporting. \\
+
+\keyterm{/newproject} &
+Scaffolds a research project with standard folders and a \texttt{CLAUDE.md}
+template. \\
+
+\keyterm{/newbook} &
+Scaffolds a book-shaped project using the memoir class with curated typography. \\
+
+\keyterm{GTD Harness} \emph{(WIP)} &
+A ``warrant-first'' research-management system that makes claims falsifiable and
+trackable via a live dashboard of hypothesis DAGs, evidence, and referee
+reports. \\
+\bottomrule
+\end{longtable}
+
+% ---------------------------------------------------------------------
+\section{Why this matters for research}
+% ---------------------------------------------------------------------
+
+The pattern generalizes beyond economics. AI coding agents can now execute large
+parts of an empirical pipeline, but their value depends on the surrounding
+\keyterm{process discipline}:
+
+\begin{itemize}
+  \item Treat the agent as a collaborator that \keyterm{surfaces ambiguity},
+        not as an oracle that resolves it silently.
+  \item Make \keyterm{independent replication} (across languages/packages) a
+        routine check rather than an occasional heroic effort.
+  \item Enforce \keyterm{separation of duties}: the builder and the auditor
+        should not share context.
+  \item Keep an \keyterm{auditable trail}---dated reports, replication scripts,
+        and documented decisions---so that reproducibility is built in, not
+        retrofitted.
+\end{itemize}
+
+Recent research (e.g., preprints on ``AI Coding Agents in Social Science'' and
+``AI Coding Agents Can Reproduce Social Science Findings'') supports the double
+message: these agents are surprisingly capable at \emph{reproducing} results,
+yet the \emph{interpretation} of those results still needs a human in the loop
+and adversarial, independent review.
+
+% ---------------------------------------------------------------------
+\section{Links, resources, and calls to action}
+% ---------------------------------------------------------------------
+
+\begin{itemize}
+  \item Latest newsletter (17~Aug~2026):
+        \url{https://causalinf.substack.com/p/online-version-of-the-remix-is-now}
+  \item Newsletter home: \url{https://causalinf.substack.com/}
+  \item Dedicated ``Claude Code'' section:
+        \url{https://causalinf.substack.com/s/claude-code}
+  \item Online book (\emph{The Remix} / \emph{The Mixtape}):
+        \url{https://mixtape.scunning.com/}
+  \item \texttt{MixtapeTools} toolkit:
+        \url{https://github.com/scunning1975/MixtapeTools}
+  \item Mixtape Sessions (workshops \& materials):
+        \url{https://github.com/Mixtape-Sessions}
+  \item Author site: \url{https://www.scunning.com/}
+\end{itemize}
+
+\vspace{0.5em}
+\noindent\textbf{Call to action from the newsletter:} read the free online
+edition of \emph{The Remix}, try the suggested Claude Code skills on your own
+pipeline, and adopt an independent-audit step (e.g., a Referee-2--style review)
+before trusting AI-assisted results.
+
+\vspace{1em}
+\hrule
+\vspace{0.5em}
+\footnotesize
+\noindent\emph{Note:} This document is a compiled summary of publicly available,
+publicly stated ideas for reference purposes. Quoted phrases are short
+attributions to the cited public sources; it does not reproduce the full text of
+any paywalled newsletter.
+
+\end{document}
