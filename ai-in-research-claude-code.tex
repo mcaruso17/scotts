@@ -1,0 +1,230 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: Concepts and Practice with Claude Code
+%  Compiled from Scott Cunningham's "Scott's Mixtape" newsletter,
+%  his Claude Code series, and the MixtapeTools project.
+%  Compile with: pdflatex ai-in-research-claude-code.tex
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{accent}{HTML}{2B5B84}
+\titleformat{\section}{\Large\bfseries\color{accent}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.6em}{}
+
+\newtcolorbox{keybox}[1]{colback=accent!5!white,colframe=accent!60!black,
+  fonttitle=\bfseries,title=#1,boxrule=0.6pt,arc=2pt,left=6pt,right=6pt,top=4pt,bottom=4pt}
+
+\hypersetup{colorlinks=true,linkcolor=accent,urlcolor=accent,citecolor=accent}
+
+\title{\vspace{-1.5em}\textbf{AI Applications in Research}\\[0.3em]
+  \large Concepts and Practice, with a Focus on Claude Code}
+\author{Compiled from \emph{Scott's Mixtape} and the MixtapeTools project}
+\date{31 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the use of AI agents
+in empirical research, drawing on the work of the economist Scott Cunningham
+(\emph{Causal Inference: The Mixtape} / \emph{The Remix}) and his ongoing series
+on using \textbf{Claude Code} for practical quantitative social science. It opens
+with a short summary of the most recent newsletter, then organizes the recurring
+ideas into a reusable methodology: agentic coding as a dialogue, cross-language
+replication as default verification, the ``Referee~2'' five-audit protocol,
+reproducibility and documentation discipline, and the likely implications of AI
+agents for scholarly publishing.
+\end{abstract}
+
+% ================================================================
+\section{Latest Newsletter Summary}
+% ================================================================
+
+\begin{keybox}{At a glance}
+\textbf{Post:} ``Online version of \emph{The Remix} is now here''
+(\emph{Scott's Mixtape} Substack, \textasciitilde25 August 2026).\\
+\textbf{Theme:} A free, evolving online edition of the causal-inference textbook,
+explicitly designed to be used alongside LLMs and AI coding agents.
+\end{keybox}
+
+\subsection{Main topics}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item Release of a free online version of \emph{Causal Inference: The Remix},
+        the successor to \emph{The Mixtape}.
+  \item Expanded, up-to-date treatment of modern causal-inference methods.
+  \item Integration of the book with LLM-assisted, agentic research workflows.
+\end{itemize}
+
+\subsection{Key points}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item Yale University Press agreed to a \emph{free} online edition, released as a
+        deliberately unfinished ``work in progress'' that will keep growing.
+  \item \emph{The Remix} runs to roughly 750 pages and reorganizes the field around
+        design-based methods: unconfoundedness/matching, instrumental variables,
+        regression discontinuity, fixed effects, difference-in-differences, and
+        synthetic control.
+  \item Difference-in-differences is now spread over two chapters---one on
+        foundations, one on complex designs such as staggered adoption and
+        covariate adjustment.
+  \item The online edition is explicitly built for the LLM era: it will ship with an
+        essay on how to use the book with LLMs, plus suggested ``skills'' and code.
+  \item The release folds into Cunningham's broader project of documenting how AI
+        agents change day-to-day empirical work.
+\end{itemize}
+
+\subsection{Links, resources, and calls to action}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Newsletter:} \url{https://causalinf.substack.com/} (Scott's Mixtape).
+  \item \textbf{Latest post:} \url{https://causalinf.substack.com/p/online-version-of-the-remix-is-now}
+  \item \textbf{Claude Code series:} \url{https://causalinf.substack.com/s/claude-code}
+  \item \textbf{Tooling:} \url{https://github.com/scunning1975/mixtapetools}
+  \item \textbf{Call to action:} read the free online \emph{Remix}, try the suggested
+        LLM ``skills,'' and follow the Claude Code series (also on the podcast,
+        \emph{The Mixtape with Scott}).
+\end{itemize}
+
+% ================================================================
+\section{Why AI Agents Matter for Research}
+% ================================================================
+
+Coding agents such as Claude Code can now read a paper, plan an analysis, write and
+run code across languages, inspect outputs, and revise---inside a single terminal
+session. For empirical social science this shifts the researcher's role from typing
+code to \emph{steering, interrogating, and verifying} an agent that does the typing.
+The central claim running through Cunningham's work is that this is not merely a
+speed-up: used well, agents can raise the \emph{reliability} of empirical research by
+making rigorous checks cheap enough to run by default.
+
+\begin{keybox}{The governing principle}
+``The dialogue is the work, not just the delivery mechanism for the work.''
+Claude is treated as a \emph{thinking partner}, steered iteratively---not as an
+autonomous black box that is handed a task and trusted with the result.
+\end{keybox}
+
+% ================================================================
+\section{Core Concepts and Methods}
+% ================================================================
+
+\subsection{Agentic coding as a steered dialogue}
+The workflow prizes clarity over automation. Rather than one-shot prompts, the
+researcher and agent iterate: state the estimand and identification strategy, plan
+the pipeline, execute, inspect, and revise. Persistent context lives in a
+\texttt{CLAUDE.md} project-memory file so that intent, conventions, and prior
+decisions survive across sessions.
+
+\subsection{Cross-language replication as default verification}
+The signature idea. Coding errors in R, Stata, and Python are \emph{language- and
+package-specific}, so they are plausibly \emph{independent}. Re-implementing the same
+pipeline in all three languages and comparing intermediate results at each stage
+turns that independence into a rigorous check:
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item When non-random quantities (e.g., $R^2$, coefficients) agree to many decimal
+        places across languages, confidence is high.
+  \item When they diverge, a bug or an undocumented data decision is exposed.
+\end{itemize}
+In one audit of a published paper on Brazil's psychiatric reform, an agent wrote
+roughly \textbf{96 scripts across three languages in a single session} and surfaced
+real problems: a variable that mechanically declined over time, large treatment
+vs.\ control imbalance on nearly half of the background characteristics, and
+undocumented duplicate records.
+
+\subsection{``Referee 2'': the five-audit protocol}
+\emph{Referee~2} is a health-inspector protocol for a finished project. It runs in a
+\textbf{fresh terminal}, executed by a Claude instance that has \emph{never seen the
+work}---structural independence enforcing the rule that ``you cannot grade your own
+homework.'' Critically, Referee~2 \emph{never edits the author's code}; it writes only
+independent replication scripts and dated reports.
+
+\begin{center}
+\begin{tabular}{@{}p{0.30\linewidth}p{0.62\linewidth}@{}}
+\toprule
+\textbf{Audit} & \textbf{What it checks} \\
+\midrule
+Code audit & Bugs, missing values, merge diagnostics. \\
+Cross-language replication & R/Stata/Python results must match to $\sim$6+ decimals. \\
+Directory audit & Folder structure and replication-readiness. \\
+Output automation audit & Tables/figures generated programmatically, not by hand. \\
+Econometrics audit & Identification, standard errors, parallel-trends checks. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Complementary tools}
+\begin{itemize}[leftmargin=1.4em,itemsep=3pt]
+  \item \textbf{Blindspot} --- a ``peripheral vision'' audit that surfaces overlooked
+        problems and missed opportunities (unasked questions, unexploited strengths).
+  \item \textbf{Bibcheck} --- many narrow-focus agents, one per citation, to catch
+        transcription errors and mixed bibliography entries.
+  \item \textbf{Split-PDF} --- a deep-read protocol that splits a paper into small
+        chunks with incremental note extraction to curb hallucination.
+  \item \textbf{Read-paper protocol} --- a disciplined way to ingest a paper before
+        replicating or refereeing it.
+\end{itemize}
+
+\subsection{Communication: the ``Three Laws'' of presentation}
+The same agentic discipline extends to communicating results:
+\begin{enumerate}[leftmargin=1.6em,itemsep=2pt]
+  \item Beauty is an attention-earning mechanism.
+  \item Cognitive load is the enemy.
+  \item Slides serve the spoken words, not the reverse.
+\end{enumerate}
+Corollaries: titles are \emph{assertions}, not labels; one idea per slide. Supporting
+commands (e.g.\ \texttt{/compiledeck} for Beamer, a \texttt{/tikz} skill with collision
+detection) embed this rhetoric into the toolchain.
+
+\subsection{Documentation discipline}
+\begin{keybox}{The central tenet}
+``If it's not documented, it didn't happen.'' Every audit produces a dated report
+filed in a \texttt{correspondence/} directory, so the reasoning behind each decision
+is recoverable later.
+\end{keybox}
+
+% ================================================================
+\section{Implications: Reproducibility and Publishing}
+% ================================================================
+
+Two threads run through this body of work. First, \textbf{reproducibility becomes
+cheap}: because an agent can replicate a pipeline from scratch in multiple languages,
+independent verification can be a routine step rather than a heroic one. Second,
+Cunningham speculates---in what he calls ``Claude Code fan fiction''---about the near
+future of \textbf{scholarly publishing}, where agentic referees, automated
+reproducibility audits, and cross-language replication reshape how manuscripts are
+checked and how quickly errors are caught. The consistent message is one of
+\emph{augmentation with guardrails}: agents multiply a researcher's reach, but their
+value depends on independent verification, explicit identification strategy, and a
+documented paper trail.
+
+% ================================================================
+\section*{Sources}
+\addcontentsline{toc}{section}{Sources}
+% ================================================================
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item Scott's Mixtape Substack --- \url{https://causalinf.substack.com/}
+  \item ``Online version of The Remix is now here'' ---
+        \url{https://causalinf.substack.com/p/online-version-of-the-remix-is-now}
+  \item Claude Code series --- \url{https://causalinf.substack.com/s/claude-code}
+  \item ``Claude Code Changed How I Work (Part 1)'' ---
+        \url{https://causalinf.substack.com/p/claude-code-changed-how-i-work-part}
+  \item MixtapeTools (Referee~2, Blindspot, Bibcheck, workflow) ---
+        \url{https://github.com/scunning1975/mixtapetools}
+  \item Author page --- \url{https://www.scunning.com/}
+\end{itemize}
+
+\vfill
+\noindent\footnotesize\emph{Note:} Direct access to the Substack was blocked by the
+execution environment's network egress policy; the newsletter summary above was
+reconstructed from public search snapshots and the author's public repository, and
+figures such as ``96 scripts'' reflect those snapshots.
+
+\end{document}
