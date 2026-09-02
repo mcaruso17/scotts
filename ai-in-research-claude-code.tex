@@ -1,0 +1,243 @@
+% ai-in-research-claude-code.tex
+% Compiles with: pdflatex ai-in-research-claude-code.tex  (run twice for the ToC)
+% A survey of AI applications in empirical research, centred on agentic coding
+% tools (Claude Code), synthesised from Scott Cunningham's "Scott's Mixtape"
+% Substack series on Claude Code for quantitative social science.
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=[rgb]{0.10,0.30,0.55},
+  citecolor=black,
+  pdftitle={AI Applications in Research: Agentic Coding with Claude Code},
+  pdfauthor={Compiled research summary}
+}
+
+\newcommand{\claudemd}{\texttt{CLAUDE.md}}
+\newcommand{\term}[1]{\textbf{#1}}
+
+\title{\vspace{-1.5em}AI Applications in Empirical Research\\[0.3em]
+       \large A Concept Summary Centred on Agentic Coding and Claude Code}
+\author{Compiled from Scott Cunningham's \emph{Scott's Mixtape} Claude Code series\\
+        and related public writing on agentic AI for social science}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarises the main concepts behind applying artificial
+intelligence---and \term{agentic coding assistants} such as \term{Claude Code} in
+particular---to empirical research in the social and quantitative sciences. It
+draws on the ongoing series that economist Scott Cunningham (Baylor University,
+author of \emph{Causal Inference: The Mixtape}) has published on his
+\emph{Scott's Mixtape} Substack since mid-December 2025, together with related
+public discussion. The recurring thesis is that the value of an AI agent in
+research comes not from letting it produce results autonomously, but from a
+disciplined workflow---\emph{design before results}, project-level context
+files, explicit invariants, and independent cross-language replication---that
+turns a fast, sycophantic generator into a rigorous, auditable research
+collaborator.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+%---------------------------------------------------------------------------
+\section{Introduction and Framing}
+\label{sec:intro}
+
+The last few years have moved AI in research from \emph{text assistance}
+(drafting, summarising, explaining) to \term{agentic tooling}: systems that read
+a project directory, run code across languages, edit files, execute a pipeline,
+and iterate toward a goal. Claude Code is the reference example used throughout
+this summary---a command-line coding agent pointed at a research project rather
+than a software product.
+
+Cunningham's distinctive angle is that almost all public material on Claude Code
+is either abstract or written from a \emph{software-developer} point of view. His
+series instead documents, week by week, what actually works when the ``codebase''
+is an \emph{empirical research project}---data cleaning, identification, estimation,
+tables, and figures---and where the accepted output is not a shipped feature but a
+\emph{credible causal estimate}. Two consequences follow and organise the rest of
+the document:
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item Correctness in research is about \emph{design}, not just working code:
+        the right fixed effects, sample restrictions, and standard errors.
+  \item AI agents are fast and \emph{eager to please}, so the workflow must be
+        built to resist that eagerness rather than exploit it.
+\end{enumerate}
+
+%---------------------------------------------------------------------------
+\section{Core Principles}
+\label{sec:principles}
+
+\subsection{The agent as thinking partner, not autopilot}
+The recommended posture is \term{iterative steering}: the researcher supplies the
+judgement and lets the agent execute only when the next move is genuinely clear.
+Claude is treated as a collaborator to argue with, not an oracle to defer to.
+
+\subsection{Design before results}
+The organising principle of the series is \term{``design before results.''}
+Attention belongs on whether the \emph{specification} is correct before any
+coefficient is looked at. A result is the \emph{output of a design}, never the
+goal. This directly counters the failure mode in which an agent (or a researcher)
+optimises toward a desired number.
+
+\subsection{Guard against sycophancy and p-hacking}
+Because LLM agents tend to produce what the user seems to want, they can quietly
+generate ``results researchers want to hear.'' Cunningham's own detour into
+whether AI-drafted papers show \emph{p-hacking} is instructive: he flagged
+suspicious bunching of $t$-statistics, then \emph{publicly walked the claim back}
+after realising the pattern could arise mechanically from rounding coefficients
+and standard errors. The lesson is dual: (i)~AI makes it cheap to over-interpret,
+and (ii)~intellectual honesty means retracting a claim once the evidence
+dissolves.
+
+\subsection{Invariants: state what must not change}
+Before prompting, the researcher writes a short \term{invariants} block---a
+``\texttt{done = \ldots}'' definition plus roughly 3--10 constraints mixing
+\emph{structural} checks (output schema, file layout, formatting contracts,
+traceability, reproducibility) with \emph{empirical} checks (sometimes even a
+predicted qualitative pattern). The agent is then \emph{free to transform the
+implementation}---refactor, reorder, decompose differently---so long as every
+invariant survives. Invariants are the contract; the code is negotiable.
+
+%---------------------------------------------------------------------------
+\section{The Workflow}
+\label{sec:workflow}
+
+Cunningham combines a five-step research protocol with an iterative execution
+loop into a single cycle:
+\[
+  \boxed{\;\text{Dialogue} \;\rightarrow\; \text{Code} \;\rightarrow\;
+          \text{Replicate} \;\rightarrow\; \text{Verify} \;\rightarrow\;
+          \text{Document}\;}
+\]
+
+\begin{description}[leftmargin=1.6em,style=nextline]
+  \item[Dialogue] Argue out the research design and the invariants \emph{before}
+        any estimation---identification strategy, sample, specification.
+  \item[Code] Let the agent implement, refactoring freely within the invariants.
+  \item[Replicate] Reproduce the pipeline \emph{independently} (see
+        Section~\ref{sec:audit}) rather than trusting a single run.
+  \item[Verify] Check results against the pre-stated invariants and
+        design---not against a hoped-for sign or magnitude.
+  \item[Document] Capture the specification, decisions, and replication package
+        so the work is auditable and re-runnable.
+\end{description}
+
+%---------------------------------------------------------------------------
+\section{Project Context: the \claudemd\ File}
+\label{sec:claudemd}
+
+A \claudemd\ file placed at the project root gives the agent durable,
+project-specific context. It states \emph{where truth lives} (canonical data,
+scripts, and outputs), which \emph{conventions matter}, and---critically---what
+\emph{must not change without explicit permission}. This is how tacit lab
+knowledge is made legible to an agent that otherwise starts every session
+context-free, and it is the first artefact to write when pointing Claude Code at
+an existing (even decade-old) project.
+
+%---------------------------------------------------------------------------
+\section{Reproducibility: Cross-Language Auditing}
+\label{sec:audit}
+
+The most concrete methodological contribution is treating reproducibility as an
+\term{audit}, framed memorably as ``\emph{Referee~2 as a health inspector}.''
+Rather than one implementation, a finding is subjected to \emph{parallel,
+independent} audits:
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item \term{Code audit} --- review the implementation for correctness.
+  \item \term{Cross-language replication} --- re-implement the pipeline in
+        \emph{multiple languages and packages} independently and require identical
+        results for every non-random step. The worked example runs
+        difference-in-differences across \emph{three languages} (Python, R, Stata)
+        and \emph{five packages}.
+  \item \term{Directory \& replication package} --- verify the project is
+        self-contained and re-runnable end to end.
+  \item \term{Output automation} --- tables and figures are generated by code,
+        never edited by hand.
+  \item \term{Econometrics audit} --- scrutinise the specification itself
+        (fixed effects, clustering, inference).
+\end{enumerate}
+
+Agreement across independent implementations is strong evidence that a result is
+a property of the \emph{design and data}, not of one toolchain or one lucky run.
+A formal ``referee report'' and a \emph{revise-and-resubmit} loop close the cycle,
+importing peer-review discipline into day-to-day analysis.
+
+%---------------------------------------------------------------------------
+\section{Broader Implications for Research Practice}
+\label{sec:implications}
+
+\subsection{Collapsing cost of production}
+Cunningham estimates that producing a manuscript can now cost on the order of a
+\emph{Claude subscription plus roughly \$100} in editing---a step-change that
+reshapes incentives around volume, review, and gatekeeping.
+
+\subsection{``Claude Code fan fiction''}
+He writes near-future speculative essays---labelled \emph{``Claude Code fan
+fiction''}---imagining how AI agents reshape scholarly \emph{publishing} (not just
+writing) a few months out. These are a device for reasoning about second-order
+effects before they arrive.
+
+\subsection{An education agenda}
+Alongside the technical series runs an explicit teaching mission (a stated goal of
+``educating one million people'') and recurring \emph{Mixtape Sessions} workshops
+on causal inference and difference-in-differences---positioning agentic AI as
+something to be taught rigorously, not adopted casually.
+
+%---------------------------------------------------------------------------
+\section{Summary Table}
+\label{sec:table}
+
+\begin{center}
+\begin{tabular}{@{}p{0.30\textwidth}p{0.62\textwidth}@{}}
+\toprule
+\textbf{Concept} & \textbf{One-line takeaway} \\
+\midrule
+Thinking partner & Steer the agent; supply judgement, execute only when clear. \\
+Design before results & Get the specification right; results are outputs, not goals. \\
+Invariants & Pre-state ``done'' + 3--10 constraints the code must preserve. \\
+\claudemd & Project file: where truth lives, conventions, do-not-change rules. \\
+Dialogue$\rightarrow$Document & Five-step loop: design, code, replicate, verify, document. \\
+Cross-language audit & Same pipeline in 3 languages / 5 packages must agree. \\
+Anti-sycophancy & Build the workflow to resist ``results you want to hear.'' \\
+Cost collapse & A manuscript $\approx$ a subscription + $\sim$\$100 editing. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%---------------------------------------------------------------------------
+\section*{Sources and Caveats}
+\addcontentsline{toc}{section}{Sources and Caveats}
+\label{sec:sources}
+
+This summary was assembled from publicly indexed descriptions of Scott
+Cunningham's \emph{Scott's Mixtape} Substack (\url{https://causalinf.substack.com})
+and related commentary. The Substack itself could not be fetched directly from
+the compiling environment (network egress restrictions), and some series content
+sits behind a paywall; specifics---particularly the exact contents of the single
+most recent issue---should be verified against the primary source:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Scott's Mixtape Substack, Claude Code series:
+        \url{https://causalinf.substack.com/s/claude-code}
+  \item Author profile: \url{https://substack.com/@causalinf}
+  \item \emph{Causal Inference: The Mixtape} --- \url{https://mixtape.scunning.com}
+\end{itemize}
+
+\end{document}
