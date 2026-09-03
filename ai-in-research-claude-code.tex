@@ -1,0 +1,262 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+%  AI Applications in Research: The Case of Claude Code
+%  A concept summary grounded in Scott Cunningham's "Mixtape" workflow.
+%  Compile with:  pdflatex ai-in-research-claude-code.tex  (run twice for ToC)
+% ---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue!60!black,
+  citecolor=black,
+  pdftitle={AI Applications in Research: The Case of Claude Code},
+  pdfauthor={Scheduled research digest}
+}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+       \large The Case of Agentic Coding with Claude Code}
+\author{Research digest \\ \small compiled from Scott Cunningham's ``Mixtape'' workflow}
+\date{September 3, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+Large language models have moved from answering questions to \emph{doing work}:
+reading papers, writing and running code, auditing results, and drafting
+manuscripts. This note summarizes the main concepts behind applying AI to
+scholarly research, with an emphasis on \textbf{Claude Code}---Anthropic's
+agentic, terminal-based coding assistant---as used in empirical social science.
+The framing follows the practice documented publicly by economist Scott
+Cunningham (Baylor University), whose central claim is deceptively simple:
+treat the model as a \emph{thinking partner}, not an autonomous agent, and make
+\emph{verification} and \emph{documentation} first-class parts of the workflow.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ---------------------------------------------------------------------------
+\section{Why AI matters for research}
+% ---------------------------------------------------------------------------
+Research is a pipeline of cognitively expensive, error-prone tasks: literature
+review, data acquisition and cleaning, model specification, estimation,
+robustness checking, figure and table production, and writing. Each step is a
+place where mistakes hide and where progress stalls. Modern AI assistants are
+useful across the \emph{whole} pipeline because they combine three capabilities
+that older tools lacked:
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Language + code together.} The same system can read a PDF,
+        reason about an identification strategy, and emit runnable R, Python, or
+        Stata code.
+  \item \textbf{Agency.} Given tools (a shell, a file system, a browser), the
+        model can \emph{act}---run scripts, inspect outputs, and iterate---rather
+        than only suggest.
+  \item \textbf{Dialogue.} The interaction is conversational, so the researcher
+        can steer, correct, and interrogate the reasoning in real time.
+\end{enumerate}
+
+The payoff is not merely speed. Used well, AI changes the \emph{economics of
+verification}: checks that were previously too tedious to run (e.g.\ replicating
+an estimate in three languages) become cheap enough to run routinely.
+
+% ---------------------------------------------------------------------------
+\section{What Claude Code is}
+% ---------------------------------------------------------------------------
+Claude Code is an \emph{agentic} coding assistant that operates in the terminal
+and directly on a project's files. Rather than pasting snippets back and forth,
+the researcher gives Claude Code access to a working directory; it can read and
+edit files, run commands, execute analysis scripts, inspect the results, and
+loop until a task is done. Key mechanics relevant to research use:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Files as the medium.} Work happens on real project files
+        (scripts, data, \texttt{.tex}, \texttt{.bib}), so outputs are
+        reproducible artifacts, not chat transcripts.
+  \item \textbf{Skills and slash-commands.} Reusable, packaged instructions
+        (e.g.\ ``audit this replication,'' ``build this deck'') let a lab
+        standardize its workflow.
+  \item \textbf{Sub-agents.} Independent Claude instances can be spawned to do
+        narrow, isolated jobs---crucial for adversarial review (below).
+  \item \textbf{External memory.} The model has no memory between sessions, so
+        persistent context lives in a \texttt{CLAUDE.md} file that is re-read at
+        the start of each session.
+\end{itemize}
+
+% ---------------------------------------------------------------------------
+\section{A working philosophy: the thinking partner}
+% ---------------------------------------------------------------------------
+Cunningham's core stance is that the model is ``a collaborator who reasons about
+problems, not just a code generator,'' and that ``the dialogue \emph{is} the
+work.'' This is a deliberate choice of \emph{less} automation than many people
+prefer, and it drives five principles.
+
+\begin{description}[leftmargin=1.5em, style=nextline]
+  \item[Design before results.] Get the identification strategy and
+        specification right first; point estimates only matter after the
+        experimental design is intentional.
+  \item[Heavy verification.] If the same analysis does not match to six or more
+        decimal places across independent implementations, something is wrong.
+  \item[Adversarial review needs structural separation.] A \emph{fresh} model
+        instance should audit work it did not create---``don't ask the student
+        to grade their own exam.''
+  \item[Formal process over intuition.] Checklists and structured protocols with
+        concrete deliverables beat ad-hoc inspection.
+  \item[Documentation as a first-class output.] ``If it's not documented, it
+        didn't happen''---dated reports form a recoverable audit trail.
+\end{description}
+
+% ---------------------------------------------------------------------------
+\section{Applications across the research pipeline}
+% ---------------------------------------------------------------------------
+
+\subsection{Reading and synthesizing the literature}
+Long papers overflow a single prompt, so a \emph{split-and-read} pipeline chunks
+a PDF (e.g.\ four pages at a time), extracts structured notes along fixed
+dimensions, and persists them to markdown. The externalized notes become
+reusable project memory rather than a one-off summary.
+
+\subsection{Data acquisition, cleaning, and mapping}
+Agentic assistants can fetch data, reshape it, and generate figures of the
+identification strategy---for example, building maps that visualize a treatment
+(such as the change in travel distance to the nearest service after a policy
+shock) as a precursor to a continuous-treatment difference-in-differences design.
+
+\subsection{Estimation with cross-language replication}
+A central lesson: fitting the ``same'' model in different software can yield
+\emph{different} answers. In one audit of many specifications for a popular
+difference-in-differences estimator across R, Python, and Stata (multiple
+packages each), estimates diverged---sometimes by several-fold. The culprit was
+mundane but dangerous: differing handling of logit estimation under
+\emph{perfect separation}, where some packages refuse, some silently return
+garbage, and some quietly collapse to a constant-only model despite being asked
+to condition on covariates. The remedy is to treat cross-software replication as
+a standing \textbf{bug detector}.
+
+\subsection{Auditing and robustness}
+Two complementary audit protocols illustrate the pattern:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Independent replication audit} (``Referee~2''): a separate model
+        instance re-implements the analysis and compares to many decimals,
+        checking code, directory structure, output automation, and the
+        econometrics (identification, standard errors, parallel trends, first
+        stage). Crucially, it \emph{never edits the author's code}, preserving
+        independence.
+  \item \textbf{Blind-spot audit}: a structured search for what months of work
+        make invisible---unexplained features, checks not run, unasked
+        heterogeneity questions, and under-exploited identification strength.
+\end{itemize}
+
+\subsection{Bibliographies and citations}
+Narrow-focus sub-agents can verify each \texttt{.bib} entry against canonical
+sources (DOIs, journal pages), catching transcription errors either
+per-citation or per-field, and emitting a corrected file without overwriting the
+source.
+
+\subsection{Writing, figures, and presentations}
+The same agentic loop produces manuscripts and slide decks: audience-aware
+Beamer decks with custom styling, code-first figures, a zero-warning compile
+loop, and automated audits of rhetoric (one idea per slide) and of graphics
+(numerical accuracy, label collisions in Ti\emph{k}Z figures).
+
+% ---------------------------------------------------------------------------
+\section{A concrete workflow}
+% ---------------------------------------------------------------------------
+A representative end-to-end loop:
+\begin{enumerate}[leftmargin=*]
+  \item Read the workflow/philosophy notes; copy a \texttt{CLAUDE.md} into the
+        project as persistent memory.
+  \item Work \emph{with} the model as a thinking partner: specify the design,
+        then estimate.
+  \item Run a blind-spot pass on outputs \emph{before} writing.
+  \item Open a fresh terminal and invoke an independent replication audit.
+  \item Respond to audit findings; iterate to acceptance.
+  \item File dated correspondence documenting every decision.
+\end{enumerate}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Stage} & \textbf{AI contribution} & \textbf{Safeguard} \\
+\midrule
+Literature   & Chunked deep-read to notes      & Structured note dimensions \\
+Data         & Acquire, clean, map             & Reproducible scripts \\
+Estimation   & Multi-language implementation   & Match to $6{+}$ decimals \\
+Robustness   & Independent re-implementation   & Auditor never edits author code \\
+Perception   & Blind-spot grid                 & Fresh eyes, forcing functions \\
+Citations    & Per-entry / per-field checks    & Corrected copy, source intact \\
+Writing      & Drafts, decks, figures          & Rhetoric \& graphics audits \\
+\bottomrule
+\end{tabular}
+\caption{Where AI helps, and the verification safeguard that keeps it honest.}
+\end{table}
+
+% ---------------------------------------------------------------------------
+\section{Risks, limitations, and good practice}
+% ---------------------------------------------------------------------------
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Silent errors.} Models (and packages they call) can fail
+        quietly; visual verification and cross-software replication are the
+        antidote.
+  \item \textbf{Confabulation.} Citations, numbers, and quotations must be
+        checked against primary sources---never trusted on faith.
+  \item \textbf{Self-review bias.} A model asked to review its own output tends
+        to rationalize it; use structurally separate instances.
+  \item \textbf{Statelessness.} Without external memory, context is lost between
+        sessions; keep it in versioned markdown.
+  \item \textbf{Over-automation.} Fully autonomous pipelines remove the
+        researcher's judgment from the loop; keeping a human in the dialogue is
+        a feature, not a limitation.
+  \item \textbf{Reproducibility and disclosure.} Treat AI-assisted steps as part
+        of the replication package and disclose them per venue norms.
+\end{itemize}
+
+% ---------------------------------------------------------------------------
+\section{Takeaways}
+% ---------------------------------------------------------------------------
+\begin{enumerate}[leftmargin=*]
+  \item AI is most valuable in research when it lowers the cost of
+        \emph{verification}, not just the cost of production.
+  \item Claude Code's agency (files, shell, sub-agents) makes rigorous,
+        repeatable audits practical.
+  \item The durable methodology is human: design first, verify relentlessly,
+        separate the auditor from the author, and document everything.
+\end{enumerate}
+
+% ---------------------------------------------------------------------------
+\section*{Sources and further reading}
+\addcontentsline{toc}{section}{Sources and further reading}
+% ---------------------------------------------------------------------------
+\begin{itemize}[leftmargin=*]
+  \item Scott Cunningham, \emph{Scott's Mixtape Substack},
+        \url{https://causalinf.substack.com/} (Claude Code section:
+        \url{https://causalinf.substack.com/s/claude-code}).
+  \item \emph{MixtapeTools} --- Claude Code workflows/skills for research,
+        \url{https://github.com/scunning1975/mixtapetools}.
+  \item \emph{Causal Inference: The Mixtape} (free online),
+        \url{https://mixtape.scunning.com}.
+  \item Anthropic, \emph{Claude Code} documentation,
+        \url{https://docs.anthropic.com/en/docs/claude-code}.
+\end{itemize}
+
+\vfill
+\noindent\footnotesize\textit{Compiled automatically as a scheduled research
+digest. Substack page bodies were not directly retrievable in the build
+environment (network egress restrictions); Claude Code workflow details are
+drawn from Cunningham's public \texttt{mixtapetools} repository.}
+
+\end{document}
