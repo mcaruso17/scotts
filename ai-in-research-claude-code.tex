@@ -1,0 +1,230 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: A Focus on Claude Code
+%  A concise conceptual summary of how agentic AI coding tools
+%  are being adopted in applied empirical research.
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{parskip}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue!60!black,
+    citecolor=black,
+    pdftitle={AI Applications in Research: A Focus on Claude Code},
+    pdfauthor={Scheduled research digest}
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+
+\newcommand{\claudecode}{\textsf{Claude Code}}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+       \large A Conceptual Summary, with a Focus on \claudecode{}}
+\author{Automated research digest}
+\date{September 4, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the use of
+artificial intelligence---particularly \emph{agentic coding assistants} such as
+\claudecode{}---in scientific and applied empirical research. It outlines what
+agentic tools are, the research tasks they now support, and the practices that
+make their use reliable. Throughout, it draws on the growing body of practitioner
+writing in the applied economics and causal-inference community (for example,
+Scott Cunningham's ongoing series on \claudecode{} for quantitative social
+science) to ground the concepts in concrete research workflows.
+\end{abstract}
+
+\tableofcontents
+\vspace{1em}
+
+% ---------------------------------------------------------------
+\section{From Chat Assistants to Research Agents}
+% ---------------------------------------------------------------
+
+The first wave of large language models (LLMs) in research was conversational:
+a researcher pasted a question or a snippet of code into a chat window and copied
+the answer back. The current wave is \emph{agentic}. An agentic tool is given a
+goal, access to a working environment (a file system, a shell, a code
+interpreter, external tools), and the autonomy to take a sequence of actions---
+reading files, running commands, inspecting output, and correcting itself---until
+the goal is met.
+
+\claudecode{} is a representative example: a command-line agent that operates
+directly inside a project directory. Rather than describing code for a human to
+transcribe, it edits files, runs scripts, reads the errors, and iterates. This
+shift---from \textbf{advice} to \textbf{action}---is what makes AI newly relevant
+to the day-to-day mechanics of research rather than only to its exposition.
+
+\begin{description}[leftmargin=1.2em, style=nextline]
+  \item[Advice model] The human is the executor; the model suggests.
+  \item[Agentic model] The model is a (supervised) executor; the human specifies
+        intent, reviews, and verifies.
+\end{description}
+
+% ---------------------------------------------------------------
+\section{Core Research Applications}
+% ---------------------------------------------------------------
+
+\subsection{Code generation and translation across languages}
+Empirical research is fragmented across languages and ecosystems---Stata, R,
+Python, Julia, SAS, MATLAB. Agentic tools lower the cost of moving between them:
+translating a Stata routine into R, reimplementing a Python pipeline in Julia for
+speed, or writing the same estimator three ways to check that results agree.
+This makes multi-language, multi-package \emph{replication} tractable for a single
+researcher.
+
+\subsection{Reproducibility and ``coding audits''}
+A striking use case in the applied community is the \emph{replication audit}:
+asking the agent to reproduce a published pipeline \emph{from scratch}, in several
+languages and with several independent packages, and then to reconcile any
+discrepancies. Because the agent can run all implementations and compare their
+numerical output, it turns reproducibility from a manual chore into an automated
+cross-check. A difference-in-differences estimate that agrees across Python, R,
+and Stata (and across five different packages) is far more credible than one
+produced by a single script.
+
+\subsection{Data cleaning, wrangling, and exploratory analysis}
+Much of empirical work is unglamorous data preparation---merging, reshaping,
+handling missingness, constructing variables, and sanity-checking. Agents excel
+here because the work is well specified and the feedback loop is fast: the agent
+writes the transformation, runs it, and inspects the resulting summary statistics
+or plots, catching its own mistakes before the researcher sees them.
+
+\subsection{Econometrics and causal inference}
+Modern causal inference has a steep implementation surface: staggered
+difference-in-differences, continuous ``dosage'' treatments, event studies,
+synthetic control, instrumental variables, and the many recently proposed
+estimators that correct the biases of two-way fixed effects. Agentic tools help
+researchers (i)~implement these estimators correctly, (ii)~build small
+interactive apps (e.g.\ Shiny dashboards) to visualize weights and identifying
+assumptions, and (iii)~stress-test an analysis by re-deriving quantities such as
+the decomposition of an OLS estimator into its underlying comparisons.
+
+\subsection{Literature work, writing, and documentation}
+Beyond code, agents draft and refine prose: summarizing papers, writing method
+sections, generating docstrings, maintaining a \texttt{README}, and producing
+reproducible reports (e.g.\ via \LaTeX{}, Quarto, or R~Markdown). Used carefully,
+this compresses the distance between ``analysis finished'' and ``paper written.''
+
+\subsection{Teaching and onboarding}
+The same properties make agentic tools strong pedagogical aids: a student can ask
+the agent to explain \emph{why} an estimator is biased, to generate a worked
+example, or to walk through a codebase. Several economists now teach agentic
+coding explicitly as a research skill.
+
+% ---------------------------------------------------------------
+\section{How \claudecode{} Fits a Research Workflow}
+% ---------------------------------------------------------------
+
+\claudecode{} illustrates the design patterns that make an agent useful for
+research rather than merely impressive in a demo:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Project context files.} A \texttt{CLAUDE.md} file at the project
+        root records conventions, data locations, and instructions the agent
+        should always follow---turning tacit lab knowledge into machine-readable
+        context.
+  \item \textbf{Plan-then-act.} The agent can propose a plan before editing,
+        letting the researcher approve the approach before any file changes.
+  \item \textbf{Tool and data access via MCP.} Through the Model Context Protocol,
+        the agent can be connected to databases, document stores, or internal
+        services, so it works against real project data rather than pasted
+        snippets.
+  \item \textbf{Subagents and parallel work.} Independent subtasks (e.g.\
+        replicating a result in each of several languages) can be delegated to
+        parallel agents and their results reconciled.
+  \item \textbf{Version control as a safety net.} Because the agent works in a
+        git repository, every change is reviewable and reversible---essential
+        for research integrity.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{Reliability, Verification, and Research Integrity}
+% ---------------------------------------------------------------
+
+Agentic tools accelerate work; they do not absolve the researcher of
+responsibility. The central discipline is \textbf{verification}:
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item \textbf{Trust nothing unverified.} Treat generated code and numbers as a
+        hypothesis to be checked, not a result. Cross-language agreement,
+        unit tests, and known-answer benchmarks are the currency of trust.
+  \item \textbf{Keep provenance.} Commit prompts, plans, and code so that an
+        analysis remains reproducible and auditable by others.
+  \item \textbf{Watch for confident errors.} LLMs can produce fluent but wrong
+        code or citations; the fast feedback loop of ``run it and read the
+        output'' is the best defense.
+  \item \textbf{Preserve human judgment.} Identification strategy, choice of
+        estimand, and interpretation remain the researcher's job. The agent
+        handles mechanism, not meaning.
+\end{enumerate}
+
+% ---------------------------------------------------------------
+\section{Limitations and Open Questions}
+% ---------------------------------------------------------------
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Correctness at the frontier.} For cutting-edge or rarely used
+        estimators, the agent may lack reliable training signal and can
+        confidently implement the wrong thing.
+  \item \textbf{Data governance.} Sensitive or restricted data raises questions
+        about what may be sent to a model and where computation happens.
+  \item \textbf{Skill atrophy vs.\ leverage.} There is an ongoing debate about
+        whether reliance on agents erodes or amplifies methodological
+        understanding.
+  \item \textbf{Attribution and norms.} The profession is still working out how
+        to disclose AI assistance in published research.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{Summary}
+% ---------------------------------------------------------------
+
+The move from chat-based assistance to agentic tools such as \claudecode{}
+changes AI's role in research from explaining code to executing and verifying it.
+The highest-value applications so far---multi-language replication audits,
+econometric implementation, data preparation, and reproducible reporting---share
+a common feature: the task is well specified and its output is checkable. In that
+setting, an agent operating inside a version-controlled project, connected to real
+data, and supervised by a researcher who insists on verification, can materially
+increase both the speed and the credibility of empirical work.
+
+% ---------------------------------------------------------------
+\section*{Sources and Further Reading}
+\addcontentsline{toc}{section}{Sources and Further Reading}
+% ---------------------------------------------------------------
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Scott Cunningham, \emph{Scott's Mixtape Substack} --- ongoing series on
+        \claudecode{} for practical quantitative social-science research,
+        including cross-language replication audits and difference-in-differences
+        with continuous treatment.
+        \url{https://causalinf.substack.com/}
+  \item \claudecode{} documentation. \url{https://code.claude.com/docs}
+  \item B.~Callaway, A.~Goodman-Bacon, and P.~Sant'Anna, ``Difference-in-Differences
+        with a Continuous Treatment.'' \url{https://arxiv.org/abs/2107.02637}
+\end{itemize}
+
+\vfill
+\noindent\rule{\linewidth}{0.4pt}\\
+{\footnotesize This document was prepared as an automated research digest. The
+underlying newsletter source (\texttt{causalinf.substack.com}) was not directly
+reachable from the generating environment due to an outbound-network policy;
+publicly indexed summaries were used to characterize its current themes.}
+
+\end{document}
