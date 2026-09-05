@@ -1,0 +1,201 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---------------------------------------------------------------------------
+%  AI Applications in Research: Claude Code for Quantitative Social Science
+%
+%  A concept summary distilled from Scott Cunningham's "Scott's Mixtape"
+%  Substack (causalinf.substack.com), in particular his ongoing "Claude Code
+%  for quantitative social scientists" series and the "Odd Couple" live-research
+%  podcast with Caitlin Myers.
+%
+%  Compile with:  pdflatex ai-in-research-claude-code.tex   (run twice for refs)
+% ---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{parskip}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,urlcolor=blue!55!black,citecolor=blue!55!black]{hyperref}
+
+\definecolor{accent}{RGB}{40,80,140}
+\titleformat{\section}{\normalfont\Large\bfseries\color{accent}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{0.6em}{}
+
+\newcommand{\cc}{\textsf{Claude Code}}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Agentic Coding and \cc{} in Quantitative Social Science}
+\author{Compiled summary --- source: Scott Cunningham, \emph{Scott's Mixtape} Substack}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarises the main concepts behind the use of AI in
+empirical research, with an emphasis on \emph{agentic} coding assistants such as
+\cc{}. It distils themes from Scott Cunningham's ongoing documentation of using
+\cc{} for practical quantitative social science: replication and code auditing,
+literature and bibliography automation, data acquisition and cleaning, figure
+and map production, and reproducible workflows. It also states the standing
+cautions --- verification, domain expertise, and provenance --- that keep these
+tools trustworthy in a scientific setting.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ---------------------------------------------------------------------------
+\section{What ``AI in research'' now means}
+% ---------------------------------------------------------------------------
+
+The relevant shift is from AI as a \emph{chat assistant} (a model you paste code
+into) to AI as an \emph{agent} that operates directly in the research
+environment. An agentic tool such as \cc{} runs in the terminal, reads and
+writes files in a project directory, executes code, inspects the output, and
+iterates --- all under the researcher's supervision. The unit of help is no
+longer a snippet but a \emph{task}: ``replicate this pipeline'', ``build the
+bibliography'', ``make the map''.
+
+\begin{description}[style=nextline,leftmargin=1.2em]
+  \item[Chat model] Human copies context in, copies answer out; the model never
+    touches the project.
+  \item[Agentic model] The model has scoped tools (read, edit, run, search) and
+    closes the loop itself, proposing and verifying changes in place.
+\end{description}
+
+Cunningham's framing is that most public material on these tools is either
+abstract or written for software engineers; the gap he documents is what
+agentic AI looks like for an \emph{applied empirical researcher} whose code is
+a means to an estimate, not a product.
+
+% ---------------------------------------------------------------------------
+\section{Core research applications of \cc{}}
+% ---------------------------------------------------------------------------
+
+\subsection{Replication and multi-language code auditing}
+A recurring use is a ``coding audit'': asking the agent to reproduce a result
+independently across languages and packages to check that the finding is not an
+artefact of one implementation. A representative example is a
+difference-in-differences pipeline replicated from scratch across
+\textbf{Python, R, and Stata} using \textbf{five} different estimator packages,
+with the agent reconciling discrepancies. This turns reproducibility from a
+manual chore into a routine cross-check.
+
+\subsection{Resurrecting and modernising old projects}
+Agentic tools are effective at re-entering a directory the author has not
+touched in years --- a ten-year-old project --- mapping its structure,
+recovering the workflow, and getting it to run again. The value is archaeological:
+the AI reconstructs institutional memory that would otherwise be lost.
+
+\subsection{Literature and bibliography automation}
+The series covers using the agent to \emph{create \texttt{.bib} files and
+automate article retrieval} --- fetching references, formatting citations, and
+assembling a bibliography that stays in sync with the manuscript, reducing a
+tedious and error-prone step in writing.
+
+\subsection{Data acquisition, cleaning, and documentation}
+In the live ``Odd Couple'' project (with Caitlin Myers), \cc{} is used to
+\emph{get and prepare the data} for a study of how travel distance to the
+nearest abortion clinic --- following Texas House Bill 2, which closed roughly
+half the state's clinics --- affects downstream outcomes. The agent handles
+sourcing, reshaping, and sanity-checking the data before analysis.
+
+\subsection{Figures, maps, and communicating identification}
+A distinct strength is visualisation: producing publication-quality figures and
+\emph{maps} that make an identification strategy legible --- e.g.\ rendering the
+change in travel distance induced by clinic closures, the geographic variation
+that powers a continuous-treatment diff-in-diff. Good figures here are not
+decoration; they are how the research design is argued.
+
+\subsection{Writing and archive analysis}
+Beyond code, the same tooling can mine a writer's own corpus. Cunningham
+describes using the Substack--Claude integration to analyse his essays back to
+2021, deriving structure and value from years of accumulated writing --- a small
+illustration of AI applied reflexively to the researcher's own output.
+
+% ---------------------------------------------------------------------------
+\section{Why it matters: the case for agentic AI in research}
+% ---------------------------------------------------------------------------
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Lower barriers.} Language- and package-specific friction (Stata
+    vs.\ R vs.\ Python) drops; the researcher can work in whichever ecosystem
+    best fits the question.
+  \item \textbf{Reproducibility as a default.} Independent multi-tool
+    replication becomes cheap enough to do routinely rather than aspirationally.
+  \item \textbf{Faster iteration.} Data cleaning, plotting, and refactoring that
+    once took days compress into a working session.
+  \item \textbf{Transparency and teaching.} Documenting the workflow ``live''
+    (videos, podcast episodes, posts) makes the method inspectable and
+    teachable, not a black box.
+  \item \textbf{Recovering lost work.} Old or undocumented projects become
+    tractable again.
+\end{itemize}
+
+% ---------------------------------------------------------------------------
+\section{Cautions and good practice}
+% ---------------------------------------------------------------------------
+
+The optimism is paired with discipline. The standing cautions:
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item \textbf{Trust but verify.} The agent's output is a hypothesis to be
+    checked against known results, not an authority. Cross-language replication
+    is itself partly a verification device.
+  \item \textbf{Domain expertise is the binding constraint.} The tool amplifies
+    a researcher who knows the identification strategy, the data's provenance,
+    and what a plausible estimate looks like; it does not substitute for that
+    judgement.
+  \item \textbf{Provenance and citations.} Automated literature retrieval must
+    be checked for hallucinated or mis-formatted references before it enters a
+    manuscript.
+  \item \textbf{Supervision, not autopilot.} The productive posture is a human
+    directing scoped tasks and reviewing every diff, keeping the researcher
+    accountable for the result.
+\end{enumerate}
+
+% ---------------------------------------------------------------------------
+\section{A practical workflow sketch}
+% ---------------------------------------------------------------------------
+
+A composite of the workflow Cunningham demonstrates:
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item Point the agent at the project directory; have it map structure and
+    dependencies.
+  \item State the task in plain language (replicate, clean, plot, cite).
+  \item Let the agent propose changes; run the code; inspect output together.
+  \item Cross-check estimates across an alternative language/package.
+  \item Have the agent produce figures/maps that expose the identifying variation.
+  \item Automate the bibliography and keep it synced with the draft.
+  \item Review every change; keep the human as the accountable author.
+\end{enumerate}
+
+% ---------------------------------------------------------------------------
+\section{Sources and further reading}
+% ---------------------------------------------------------------------------
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Scott Cunningham, \emph{Scott's Mixtape} Substack ---
+    \url{https://causalinf.substack.com}
+  \item ``\cc{} for quantitative social scientists'' series (started mid-Dec
+    2025), collected at \url{https://causalinf.substack.com/s/claude-code}
+  \item ``The Odd Couple'' (Season 5, with Caitlin Myers): a research project
+    conducted live on the podcast using \cc{} ---
+    \url{https://causalinf.substack.com/podcast}
+  \item Anthropic, \cc{} documentation --- \url{https://docs.claude.com/en/docs/claude-code}
+\end{itemize}
+
+\vfill
+\noindent\rule{\linewidth}{0.4pt}\\[0.3em]
+\footnotesize
+\emph{Note on sourcing:} this summary was compiled from publicly indexed
+titles, descriptions, and excerpts of the above posts. Article full text was
+not retrieved directly, so specific figures and dates should be confirmed
+against the original posts before citation.
+
+\end{document}
