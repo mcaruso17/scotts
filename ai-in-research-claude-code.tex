@@ -1,0 +1,299 @@
+\documentclass[11pt,a4paper]{article}
+
+% ------------------------------------------------------------------
+% AI Applications in Research: Concepts and the Case of Claude Code
+% Compile with: pdflatex ai-in-research-claude-code.tex  (run twice
+% for the table of contents / cross-references).
+% ------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue!55!black,
+  citecolor=black,
+  pdftitle={AI Applications in Research: Concepts and the Case of Claude Code},
+  pdfauthor={Compiled with Claude Code}
+}
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\setlist[itemize]{leftmargin=1.4em,itemsep=2pt,topsep=3pt}
+\setlist[enumerate]{leftmargin=1.6em,itemsep=2pt,topsep=3pt}
+
+\newcommand{\term}[1]{\textbf{#1}}
+
+\title{\textbf{AI Applications in Research}\\[2pt]
+\large Core Concepts and the Case of Agentic Coding with Claude Code}
+\author{Compiled as a scheduled research briefing}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarises the main concepts behind the use of
+artificial intelligence in research, with particular attention to
+\term{agentic coding assistants} and, specifically, \term{Claude Code}.
+It organises the landscape into three layers---AI as a \emph{knowledge}
+tool, as a \emph{measurement} tool, and as an \emph{execution} tool---and
+then focuses on how Claude Code is changing the day-to-day practice of
+empirical and quantitative research: reproducible pipelines,
+multi-language auditing, agent-driven refactoring, and the new
+methodological cautions that come with delegating parts of the research
+workflow to a model. The framing draws on the applied econometrics of
+large language models (Ludwig, Mullainathan \& Rambachan) and on the
+running, real-world documentation of Claude Code in social-science
+research popularised by Scott Cunningham's ``Scott's Mixtape'' Substack.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ==================================================================
+\section{Why AI matters for research}
+% ==================================================================
+
+Research has always been bottlenecked by a handful of scarce inputs:
+expert attention, careful coding, reproducible data pipelines, and the
+patience to check work. AI systems---especially large language models
+(LLMs) and the agentic tools built on top of them---attack all four
+bottlenecks at once. The practical claim is not that AI ``does the
+science,'' but that it \emph{collapses the cost} of the routine,
+error-prone, and repetitive labour that surrounds a research idea, so
+that the scarce human input (judgement, framing, interpretation) is
+spent where it actually matters.
+
+Three uses are worth separating clearly, because they carry very
+different reliability requirements:
+
+\begin{enumerate}
+  \item \term{AI as a knowledge tool} --- explaining methods, drafting,
+  literature triage, and code generation. Errors here are cheap and
+  caught by the researcher.
+  \item \term{AI as a measurement tool} --- using models to
+  \emph{measure} variables (classify text, extract entities, score
+  sentiment) that then enter a downstream statistical analysis. Errors
+  here silently contaminate estimates and must be quantified.
+  \item \term{AI as an execution tool} --- agentic systems that read a
+  repository, run code, edit files, and iterate. Errors here are
+  operational and are best contained with version control, tests, and
+  auditing.
+\end{enumerate}
+
+% ==================================================================
+\section{The econometrics of using LLMs in research}
+% ==================================================================
+
+When an LLM is used to \emph{produce data} rather than merely to assist,
+the researcher inherits a measurement problem. The applied econometric
+framework of Ludwig, Mullainathan \& Rambachan (\emph{Large Language
+Models: An Applied Econometric Framework}) makes the key distinctions
+that every empirical user should internalise:
+
+\begin{itemize}
+  \item \term{Prediction problems} (forecasting an outcome from text)
+  require \emph{no training leakage}: the phenomenon the researcher is
+  studying must not have entered the model's training data, or apparent
+  predictive power is an artefact. This is controlled through model
+  choice and research design.
+  \item \term{Estimation problems} (using the LLM to \emph{measure} a
+  concept that becomes a regressor or outcome) require a
+  \term{validation sample}: a small, human-labelled subset used to
+  correct and bound the model's measurement error. Without it, the
+  researcher cannot tell whether estimates are consistent.
+  \item \term{Researcher-degrees-of-freedom risk}: absent validation,
+  ``innocuous'' choices---which model, which prompt, which
+  temperature---can move parameter estimates dramatically. Prompt and
+  model become part of the specification and must be reported.
+\end{itemize}
+
+\noindent \textbf{Practical rule.} Treat any LLM-generated variable like
+a noisy instrument or a proxy: document how it was produced, hold out a
+validation set, and report sensitivity to the model and prompt.
+
+% ==================================================================
+\section{Agentic coding assistants}
+% ==================================================================
+
+An \term{agentic} assistant differs from a chat window in three ways: it
+has \emph{tools} (it can read and write files, run shell commands, and
+execute code), it operates in a \emph{loop} (act, observe the result,
+decide the next step), and it is \emph{situated} in the researcher's
+actual project directory rather than a detached conversation. This turns
+the model from an advisor into a collaborator that can carry out
+multi-step work and verify its own output.
+
+Claude Code is an example of this class: a command-line agent that works
+directly inside a repository, plans changes, runs the project's own
+tooling, and iterates until a task is complete. The rest of this
+document uses it as the concrete case.
+
+% ==================================================================
+\section{Claude Code in the research workflow}
+% ==================================================================
+
+The most useful public record of Claude Code applied to \emph{real}
+empirical social science---as opposed to abstract demos or a software
+engineer's use case---is Scott Cunningham's running series on his
+``Scott's Mixtape'' Substack, which he began in mid-December 2025 and has
+continued to document as an ongoing log of ``what I'm learning.'' The
+recurring themes below generalise well beyond economics.
+
+\subsection{Resurrecting and modernising old projects}
+A frequent pattern is pointing the agent at a decade-old project
+directory and having it reconstruct the pipeline, resolve deprecated
+dependencies, and get the analysis running again. The agent's value is
+less in writing new code than in \emph{recovering and stabilising}
+existing work---confronting stale code, deprecation, and the drift of a
+field's software ``canon.''
+
+\subsection{Reproducibility across languages and packages}
+A distinctive research use is the \term{apples-to-apples audit}: asking
+the agent to replicate the same estimand---for example a
+difference-in-differences design---independently in Python, R, and
+Stata, and across competing packages (e.g.\ the several
+Callaway--Sant'Anna implementations), then reconcile any discrepancies.
+This uses the agent to stress-test that a result is a property of the
+\emph{method} and not of one package's defaults.
+
+\subsection{Multiple agents auditing a diff}
+Rather than trusting a single pass, researchers run \emph{multiple}
+agents to audit each other's code changes and the resulting ``diff.''
+Independent review of a change---by another agent or a fresh session---is
+emerging as a lightweight substitute for a second pair of human eyes on
+routine code.
+
+\subsection{Measurement at scale}
+Much of the series concerns using models to \emph{reclassify text}---for
+instance, classifying hundreds of thousands of speeches. Cunningham
+reports that carrying out such a project (on the order of 305{,}000
+historical speeches) is what clarified, for him, exactly what the
+econometricians (Section~2) meant about validation and leakage: the
+measurement caveats stop being abstract once you run them at scale.
+
+\subsection{Communication artefacts}
+Beyond analysis, agents are used to produce \term{teaching and
+presentation artefacts}---slide decks, lecture materials, and
+explainers---directly from the underlying code and notes, closing the gap
+between ``the analysis'' and ``the thing you show people.''
+
+\subsection{New problems, not just solved ones}
+A sober thread runs through the series: agentic tools \emph{create} new
+problems even as they solve old ones, and even when they do not reduce
+total time spent. Examples include an agent silently abandoning
+promising work (motivating the practice of having Claude keep a
+\emph{diary} or journal of everything it did, including discarded
+attempts), and the deeper worry that when models hold on to---or hide---
+their reasons, the researcher loses visibility into \emph{why} an
+analytic choice was made. The provocative endpoint of the series is a
+speculative essay on a near future in which humans no longer hold the
+comparative advantage in research, and what that would mean for peer
+review and the social organisation of science.
+
+% ==================================================================
+\section{A practical operating model for Claude Code}
+% ==================================================================
+
+The following distilled workflow captures the practices that recur
+across the case material and generalise across disciplines.
+
+\begin{enumerate}
+  \item \term{Situate the agent in version control.} Work in a git
+  repository so every agent edit is a reviewable diff and nothing is
+  irreversible.
+  \item \term{Write down the project's context.} Keep a short project
+  file (goals, data locations, how to run the code, conventions) so the
+  agent starts from shared ground rather than guessing.
+  \item \term{Ask for a plan before edits.} Have the agent state its
+  intended steps first; correct the plan, not twenty files afterward.
+  \item \term{Make it run the real checks.} The agent should execute the
+  project's own tests, linters, and analysis scripts and read the
+  output---not merely assert that code ``should'' work.
+  \item \term{Audit the diff.} Review changes as diffs; for anything
+  consequential, have a second, fresh agent session audit them
+  independently.
+  \item \term{Cross-validate results.} For key estimates, reproduce them
+  in a second language or package and reconcile differences.
+  \item \term{Keep a journal.} Have the agent record what it did,
+  including abandoned paths, so decisions remain inspectable.
+  \item \term{Validate every model-generated variable.} Hold out a
+  human-labelled sample; report sensitivity to model and prompt
+  (Section~2).
+\end{enumerate}
+
+% ==================================================================
+\section{Risks and open questions}
+% ==================================================================
+
+\begin{itemize}
+  \item \term{Silent measurement error.} LLM-produced variables can bias
+  downstream estimates in ways invisible without validation.
+  \item \term{Reproducibility of the model itself.} Model versions,
+  prompts, and defaults change; a result can depend on infrastructure
+  that is not archived alongside the paper.
+  \item \term{Loss of legibility.} Delegating steps can erode the
+  researcher's understanding of \emph{why} choices were made; journaling
+  and diff-auditing are partial defences.
+  \item \term{Automation bias.} Fluent output invites over-trust;
+  independent auditing (human or agent) remains necessary.
+  \item \term{Institutional questions.} If routine research labour
+  becomes cheap, the roles of peer review, credit, and training---the
+  ``hidden curriculum'' of how researchers are made---are all up for
+  renegotiation.
+\end{itemize}
+
+% ==================================================================
+\section{Summary}
+% ==================================================================
+
+AI is best understood in research as three distinct tools---knowledge,
+measurement, and execution---each with its own reliability contract.
+Agentic assistants such as Claude Code push hardest on the
+\emph{execution} layer: they read a real repository, run real code, and
+iterate, which makes them powerful for resurrecting old projects,
+enforcing cross-language reproducibility, and auditing changes. The
+measurement layer is where the sharpest cautions live: any variable a
+model \emph{produces} must be validated and its prompt/model reported, or
+inference is unsafe. The through-line of the current practical
+literature---exemplified by Cunningham's ongoing, candid documentation---
+is that these tools genuinely change how research is done while
+introducing new failure modes, so the researcher's job shifts from doing
+the routine work to \emph{designing, auditing, and validating} the work
+the agent does.
+
+% ------------------------------------------------------------------
+\section*{Sources and further reading}
+\addcontentsline{toc}{section}{Sources and further reading}
+% ------------------------------------------------------------------
+\begin{itemize}
+  \item Scott Cunningham, \emph{Scott's Mixtape Substack} --- ``Claude
+  Code'' series (ongoing since mid-December 2025):
+  \url{https://causalinf.substack.com/s/claude-code}
+  \item Jens Ludwig, Sendhil Mullainathan \& Ashesh Rambachan,
+  \emph{Large Language Models: An Applied Econometric Framework}
+  (NBER WP~33344 / SSRN~5094968; forthcoming, \emph{Annual Review of
+  Economics}): \url{https://www.nber.org/papers/w33344}
+  \item Scott Cunningham, ``Explainer of Ludwig, Mullainathan and
+  Rambachan's 2026 Econometrics of LLM Paper'':
+  \url{https://causalinf.substack.com/p/explainer-of-ludwig-mullainathan}
+  \item Claude Code documentation:
+  \url{https://code.claude.com/docs}
+\end{itemize}
+
+\vspace{1em}
+\noindent\rule{\linewidth}{0.4pt}\\[2pt]
+{\footnotesize Compiled with Claude Code. Newsletter references are based
+on publicly indexed titles and excerpts; full post text was behind a
+paywall / not directly retrievable at compile time, so specific claims
+should be verified against the original posts.}
+
+\end{document}
