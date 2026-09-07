@@ -1,0 +1,208 @@
+% !TeX program = pdflatex
+% Compile with: pdflatex ai-in-research-claude-code.tex  (run twice for the ToC/refs)
+% Self-contained; requires only standard TeX Live packages.
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true,linkcolor=BrickRed,urlcolor=RoyalBlue,citecolor=OliveGreen]{hyperref}
+\usepackage{titlesec}
+
+\titleformat{\section}{\normalfont\Large\bfseries\color{RoyalBlue}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{0.6em}{}
+\setlist[itemize]{leftmargin=1.4em,itemsep=2pt,topsep=3pt}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\newcommand{\cc}{\textsc{Claude Code}}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Concepts, Workflows, and the Rise of Agentic Tools such as \cc{}}
+\author{Automated research digest --- Scott Cunningham newsletter routine}
+\date{September 7, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the use of artificial intelligence
+in applied research, with particular emphasis on \emph{agentic coding tools} such as \cc{}. It
+synthesizes recurring themes from Scott Cunningham's \emph{Scott's Mixtape} newsletter---an
+ongoing, hands-on chronicle of using AI agents for quantitative social science---and organizes
+them into a practical reference: what these tools do, how a research pipeline changes when an
+agent drives it, the reproducibility and epistemic risks that follow, and the emerging split
+between \emph{research} and \emph{publishing}. It is intended as a concise conceptual map rather
+than a tutorial. Source material was gathered from public summaries; specifics should be verified
+against the original posts.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+\hrule
+\bigskip
+
+\section{Introduction}
+Large language models (LLMs) have moved from answering questions in a chat window to
+\emph{acting} inside a researcher's environment. An \textbf{AI agent} reads files, writes and runs
+code, inspects the output, and iterates toward a goal with limited human intervention. \cc{} is a
+representative example: a command-line agent that operates directly on a project directory, edits
+source, executes analyses, and reports back. For empirical researchers this reframes the
+computer from a passive tool into an active, if fallible, collaborator.
+
+This shift is the throughline of Scott Cunningham's \cc{} series (running since mid-December 2025),
+which documents---installment by installment---what changes when an agent, rather than a graduate
+student or the researcher alone, executes the pipeline of an applied causal-inference project.
+
+\section{Core concepts}
+
+\subsection{From chatbots to agents}
+\begin{itemize}
+  \item \textbf{Chat model:} generates text in response to a prompt; the human copies code out and runs it.
+  \item \textbf{Agent:} given a goal and tools (a shell, a file system, a compiler), it \emph{takes
+        actions}, observes results, and self-corrects across many steps.
+  \item \textbf{Practical consequence:} the unit of work becomes a \emph{task} (``replicate this
+        pipeline'', ``estimate the effect and stress-test it''), not a single snippet.
+\end{itemize}
+
+\subsection{The agentic research loop}
+A typical agent-driven empirical workflow cycles through:
+\begin{enumerate}[leftmargin=1.6em]
+  \item \textbf{Framing} --- translate a vague research interest into a concrete estimand and design.
+  \item \textbf{Data} --- locate, download, clean, and validate the data; flag anomalies.
+  \item \textbf{Estimation} --- implement the estimator(s) and produce point estimates.
+  \item \textbf{Robustness} --- re-run under alternative specifications and estimators.
+  \item \textbf{Audit} --- replicate the same specification across languages/packages to check agreement.
+  \item \textbf{Write-up} --- draft tables, figures, and prose into a manuscript.
+\end{enumerate}
+The human's role migrates ``up the stack'': from writing code toward \emph{specifying}, \emph{judging},
+and \emph{auditing}.
+
+\subsection{Reproducibility and cross-implementation auditing}
+A central methodological theme is using agents to run the \emph{same} design many ways:
+\begin{itemize}
+  \item Replicate a difference-in-differences pipeline across \textbf{Python, R, and Stata} and across
+        multiple packages implementing the same estimator.
+  \item Empirically, six implementations of the Callaway \& Sant'Anna estimator---same data, same
+        specification, same covariates---\emph{almost never agree exactly}, exposing silent ``method
+        drift'' hidden inside package defaults (e.g.\ how covariates enter, aggregation choices).
+  \item Lesson: an agent makes it \emph{cheap} to run this audit, turning a rarely-done sanity check
+        into routine practice.
+\end{itemize}
+
+\subsection{Judgment as the scarce input}
+When code is cheap, \textbf{judgment} becomes the binding constraint. Agents can produce a plausible
+result quickly; deciding whether the design answers the question, whether an anomaly is a bug or a
+finding, and whether an estimate is trustworthy remains human work. Cunningham's audits repeatedly
+surface \emph{real} defects the agent introduced and then fixed---e.g.\ a Sun--Abraham aggregation
+bug and hundreds of false zeros in a raw dataset---illustrating that verification, not generation,
+is where value concentrates.
+
+\section{Methods that recur in agent-driven causal inference}
+\begin{longtable}{@{}p{0.34\textwidth}p{0.60\textwidth}@{}}
+\toprule
+\textbf{Method / tool} & \textbf{Why it shows up} \\
+\midrule
+\endhead
+Difference-in-differences (DiD) & The workhorse design for policy-change ``natural experiments.'' \\
+Callaway \& Sant'Anna & Modern DiD robust to staggered timing and heterogeneous effects. \\
+Sun \& Abraham; Gardner; TWFE & Alternative estimators used as robustness cross-checks. \\
+Multi-language replication & Python / R / Stata run in parallel to test estimate agreement. \\
+Multi-package auditing & Same estimator, different packages, to expose default-driven divergence. \\
+\bottomrule
+\end{longtable}
+
+\section{Latest from Scott Cunningham's newsletter}
+\emph{Retrieval note: the newsletter host was unreachable from this environment; the following
+reconstructs recent editions from public summaries. Verify against the originals before citing.}
+
+\subsection{Themes of the recent editions}
+\begin{itemize}
+  \item \textbf{Agents as research collaborators} --- end-to-end use of \cc{} for applied work.
+  \item \textbf{Cross-audited causal inference} --- estimators run and checked against one another.
+  \item \textbf{Research vs.\ publishing} --- these become distinct problems once manuscripts are cheap.
+  \item \textbf{Epistemics of machine-found ``facts''} --- what standard of belief a finding warrants
+        when no human designed the study.
+\end{itemize}
+
+\subsection{Selected installments}
+\begin{itemize}
+  \item \textbf{\#27 --- ``Research and Publishing Are Now Two Different Things'':} as the marginal cost
+        of a manuscript approaches zero, causal inference migrates into low-stakes venues (policy memos,
+        city-council questions, PTA meetings).
+  \item \textbf{\#28 / \#31 --- Multi-agent audits of Callaway \& Sant'Anna:} six package implementations
+        rarely agree on identical inputs---a caution about reproducibility.
+  \item \textbf{\#29 --- ``Can Claude Code Find Facts?'':} an overnight prompt yielded a full
+        marijuana-legalization manuscript with modern DiD and a robustness battery; the agent also
+        caught and fixed real bugs in its own draft.
+  \item \textbf{\#34 --- ``Dispatch'':} running \cc{} from a phone to revisit an earlier cannabis paper.
+  \item \textbf{\#36--\#37 --- p-hacking arc:} Cunningham revises his own priors after agent-run analyses
+        of rounding, publication bias, and evidence for p-hacking.
+  \item \textbf{July 2026 note:} Substack's new Claude integration, used to mine his own essays back
+        to 2021.
+\end{itemize}
+
+\subsection{Links and calls to action}
+\begin{itemize}
+  \item Newsletter: \url{https://causalinf.substack.com/}
+  \item \cc{} series hub: \url{https://causalinf.substack.com/s/claude-code}
+  \item Explainer of Ludwig, Mullainathan \& Rambachan (2026),
+        \emph{LLMs: An Applied Econometric Framework}:
+        \url{https://causalinf.substack.com/p/explainer-of-ludwig-mullainathan}
+  \item \textbf{Calls to action:} subscribe; try \cc{} on a stalled project; audit any agent-produced
+        estimate across languages and packages before trusting it; explore Substack's Claude integration
+        on your own archive.
+\end{itemize}
+
+\section{Opportunities and risks}
+
+\subsection{Opportunities}
+\begin{itemize}
+  \item \textbf{Throughput} --- more designs explored, more robustness checks run, faster iteration.
+  \item \textbf{Democratization} --- rigorous methods reach settings that could never previously
+        justify the effort.
+  \item \textbf{Better hygiene} --- cheap cross-implementation audits catch silent errors.
+\end{itemize}
+
+\subsection{Risks}
+\begin{itemize}
+  \item \textbf{Plausible-but-wrong output} --- fluent results can mask design or coding errors.
+  \item \textbf{Reproducibility illusions} --- package defaults diverge; ``it ran'' is not ``it agrees.''
+  \item \textbf{Publication-bias at scale} --- near-zero manuscript cost can flood venues and amplify
+        p-hacking unless norms adapt.
+  \item \textbf{Epistemic drift} --- treating an unaudited machine ``finding'' as an established ``fact.''
+\end{itemize}
+
+\section{Practical guidance}
+\begin{enumerate}[leftmargin=1.6em]
+  \item Specify the estimand and identification strategy \emph{before} letting the agent run.
+  \item Treat every agent result as a draft to be audited, not an answer to be trusted.
+  \item Cross-check estimators and, where feasible, re-implement across languages/packages.
+  \item Keep a human in the loop for design judgment and for interpreting anomalies.
+  \item Version-control prompts, code, and data pulls so a run is reproducible.
+  \item Report the audit, not just the estimate: which packages agreed, and why any diverged.
+\end{enumerate}
+
+\section{Conclusion}
+AI agents such as \cc{} compress the mechanical cost of empirical research and push the researcher's
+value toward specification, judgment, and verification. Scott Cunningham's newsletter is a running
+field report on exactly this transition: it shows both the leverage (whole pipelines executed and
+stress-tested overnight) and the hazards (silent method drift, plausible bugs, and a widening gap
+between producing a finding and establishing a fact). The central discipline the tools demand is
+old and unglamorous---\emph{audit before you believe}---but agents finally make it cheap enough to
+do every time.
+
+\bigskip
+\hrule
+\smallskip
+{\small\emph{Prepared by an automated Claude Code routine on 2026-09-07. Newsletter specifics were
+reconstructed from public search summaries because the source host was unreachable from the build
+environment; verify against the original posts before citing.}}
+
+\end{document}
