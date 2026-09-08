@@ -1,0 +1,313 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+% AI Applications in Research: Concepts and Practice, with a Focus on Claude Code
+%
+% A synthesis document summarizing the main concepts related to the use of
+% AI coding agents (especially Claude Code) in empirical and quantitative
+% research. Much of the applied framing draws on Scott Cunningham's ongoing
+% "Claude Code" series on his Mixtape Substack.
+% ---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue!55!black,
+  pdftitle={AI Applications in Research: Concepts and Practice, with a Focus on Claude Code},
+  pdfauthor={Compiled with Claude Code}
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.75em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\newcommand{\keyterm}[1]{\textbf{#1}}
+
+\title{\textbf{AI Applications in Research:\\ Concepts and Practice, with a Focus on Claude Code}}
+\author{Compiled with Claude Code}
+\date{September 8, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+This document summarizes the main concepts underpinning the use of artificial
+intelligence---and in particular \keyterm{AI coding agents} such as
+\keyterm{Claude Code}---in empirical and quantitative research. It distinguishes
+raw language models from \emph{agents}, introduces the vocabulary of tools,
+memory, subagents, skills, hooks, and the ``harness,'' and maps these onto the
+concrete stages of the research life cycle: ideation, data acquisition,
+cleaning, analysis, econometrics, visualization, and writing. Applied
+illustrations are drawn from Scott Cunningham's ongoing \emph{Claude Code}
+series on his Mixtape Substack, including a low-cost large-language-model (LLM)
+replication of a PNAS text-classification paper and a live collaborative
+diff-in-diff project. The document closes with the emerging themes of
+reproducibility and auditing, the divergence of ``research'' from
+``publishing,'' and the practical cautions that accompany autonomous or
+semi-autonomous research agents.
+\end{abstract}
+
+\tableofcontents
+\vspace{1em}
+
+% ---------------------------------------------------------------------------
+\section{Introduction}
+% ---------------------------------------------------------------------------
+The past two years have seen a rapid shift from using large language models
+(LLMs) as chat-style assistants toward using \keyterm{AI agents} as active
+collaborators embedded directly in a researcher's computing environment.
+Rather than pasting code into a chat window, a researcher now works alongside
+an agent that can read and write files, run code, inspect its own output,
+consult documentation, and iterate---all inside the actual project repository.
+
+Claude Code is a command-line AI coding agent built by Anthropic. Although
+marketed to software engineers, it has been adopted enthusiastically by applied
+empirical researchers, most visibly by the economist Scott Cunningham (Baylor
+University; author of \emph{Causal Inference: The Mixtape}), whose long-running
+Substack series documents, essay by essay, how an AI agent reshapes the daily
+practice of quantitative social science. This document synthesizes the
+recurring conceptual themes of that literature and pairs them with the general
+principles of agentic AI applied to research.
+
+% ---------------------------------------------------------------------------
+\section{From Language Models to Agents}
+% ---------------------------------------------------------------------------
+It is useful to separate three layers.
+
+\begin{description}[leftmargin=1.4em,style=nextline]
+  \item[The model.] A pretrained LLM that maps input tokens to output tokens.
+    On its own it can reason and generate text or code but cannot act on the
+    world.
+  \item[The tools.] Capabilities exposed to the model---reading and writing
+    files, executing shell commands, running a test suite, searching the web,
+    or calling an external service through the Model Context Protocol (MCP).
+    Tools turn a text generator into something that can \emph{do} things.
+  \item[The harness.] The orchestration layer that decides which tools to
+    call, in what order, feeds results back to the model, manages memory and
+    context, and keeps the loop running until a task is complete.
+\end{description}
+
+\noindent An \keyterm{agent} is the combination of these layers: a model that
+plans, acts through tools, observes results, and revises---repeatedly---toward
+a goal. Cunningham's central practical claim is that the leverage for a
+researcher lies less in the raw model and more in \emph{designing a good
+harness for the kind of work they do}.
+
+\subsection{Key building blocks}
+\begin{itemize}[leftmargin=1.4em]
+  \item \keyterm{Context and memory.} A project instruction file (e.g.
+    \texttt{CLAUDE.md}) gives the agent durable, project-specific context---data
+    dictionaries, coding conventions, the research question, prior
+    decisions---so that its behavior is grounded rather than generic.
+  \item \keyterm{Subagents.} Specialized agents spawned to handle a focused
+    sub-task (a literature scan, a data-cleaning pass, a robustness check) in
+    parallel or in isolation, returning only their conclusions.
+  \item \keyterm{Skills.} Packaged, reusable instruction sets that encode a
+    repeatable procedure (a house style for figures, a review checklist, a
+    replication protocol) that the agent can invoke on demand.
+  \item \keyterm{Hooks.} Automated triggers that run at defined points in the
+    agent's loop---e.g. running a linter or test suite after every edit---so
+    that quality checks are enforced by the harness rather than remembered by
+    the human.
+  \item \keyterm{Workflows.} Deterministic, multi-step orchestrations that
+    fan work out across many agents and recombine the results, used when a
+    task decomposes cleanly into independent pieces.
+\end{itemize}
+
+% ---------------------------------------------------------------------------
+\section{Where AI Agents Fit in the Research Life Cycle}
+% ---------------------------------------------------------------------------
+A recurring organizing question in the literature is \emph{which stages of
+research production we should let agents loose on}. The stages, and the current
+practical posture toward each, can be summarized as follows.
+
+\begin{center}
+\begin{longtable}{p{0.26\textwidth} p{0.66\textwidth}}
+\toprule
+\textbf{Stage} & \textbf{Typical agent contribution} \\
+\midrule
+\endhead
+Ideation \& framing & Brainstorming designs, surfacing related literature,
+  stress-testing identification assumptions. Human judgment remains decisive. \\
+Data acquisition & Scraping, API calls, downloading and documenting sources,
+  building reproducible ingest scripts. \\
+Cleaning \& wrangling & Reshaping, merging, deduplicating, and validating
+  data; writing the tedious, error-prone glue code quickly. \\
+Measurement / classification & Using LLMs to label or classify text at scale
+  (e.g. reclassifying historical speeches), often far more cheaply than human
+  annotation. \\
+Estimation \& econometrics & Implementing estimators, running specifications,
+  automating robustness checks; learning and applying methods (e.g. modern
+  difference-in-differences). \\
+Visualization \& communication & Producing clean maps, figures, and
+  presentation decks---an area where ``beauty and story'' materially improve
+  the researcher's own understanding. \\
+Writing \& drafting & Drafting prose, restructuring arguments, and---at the
+  frontier---assembling full manuscripts from a vague proposal. \\
+Verification \& auditing & Re-deriving results, comparing package
+  implementations, and auditing reproducibility. \\
+\bottomrule
+\end{longtable}
+\end{center}
+
+\noindent The general lesson is a \keyterm{human-in-the-loop} division of
+labor: agents excel at breadth, speed, and the mechanical middle of the
+pipeline, while the researcher retains ownership of the question, the
+identification strategy, and the interpretation.
+
+% ---------------------------------------------------------------------------
+\section{Applied Illustrations from the \emph{Claude Code} Series}
+% ---------------------------------------------------------------------------
+
+\subsection{Replicating a PNAS paper with an LLM classifier}
+Across a multi-part arc (roughly Parts 13--22 of the series), Cunningham asked
+Claude Code to replicate the text-classification results of Card et al.'s
+\emph{PNAS} study of roughly 140 years of U.S.\ immigration rhetoric, swapping
+the paper's fine-tuned encoder model for OpenAI's inexpensive
+\texttt{gpt-4o-mini} accessed through a batch API. Notable takeaways:
+\begin{itemize}[leftmargin=1.4em]
+  \item The replication was strikingly \keyterm{cheap}---on the order of a few
+    dollars---demonstrating that large-scale text measurement is now within
+    reach of an individual researcher.
+  \item Even when the LLM \emph{reclassified a large share of individual
+    documents} relative to the original labels, the \keyterm{aggregate trends
+    were stable}---an instructive result about robustness: the substantive
+    time-series conclusion survived considerable disagreement at the
+    document level.
+  \item The exercise doubled as a lesson in engineering a reliable pipeline
+    (batching, validation, cost control) rather than a one-off script.
+\end{itemize}
+
+\subsection{The ``Odd Couple'': a live collaborative project}
+In the Season~5 ``Odd Couple'' podcast/essay series, Cunningham works with
+Caitlin Myers (Middlebury College) to study, in public and largely in real
+time, the effect of travel distance to the nearest abortion clinic on
+marriage in Texas. Claude Code is used throughout to acquire and inspect data,
+build \keyterm{maps} of clinic access, diagnose data irregularities, and
+design the difference-in-differences comparison, while also producing the
+figures and decks the collaborators reason with.
+
+\subsection{Auditing and verification}
+Later entries turn the agent on methods themselves---for example an
+``apple-to-apple'' audit comparing multiple software implementations of the
+Callaway and Sant'Anna difference-in-differences estimator. This reflects a
+broader theme: agents are useful not only for producing results but for
+\keyterm{checking} them, re-deriving quantities, and surfacing discrepancies
+between nominally equivalent tools.
+
+\subsection{Harnesses, beauty, and story}
+A sustained thread (e.g. ``Harnessing AI Agents for Economic Research'' and
+``Beauty and story are key to my workflow harness'') argues that the payoff
+comes from building a \keyterm{personal harness} tuned to one's research
+style. Cunningham emphasizes that well-designed visuals and a clear narrative
+are not cosmetic: they are cognitive tools that help the researcher (and the
+agent) understand what the data are actually saying.
+
+% ---------------------------------------------------------------------------
+\section{Emerging Themes and Debates}
+% ---------------------------------------------------------------------------
+\begin{description}[leftmargin=1.4em,style=nextline]
+  \item[Research and publishing are diverging.] As producing credible
+    empirical work becomes dramatically easier and cheaper, the traditional
+    bottleneck of peer-reviewed publication does not scale at the same rate.
+    ``Research'' and ``publishing'' increasingly look like two distinct
+    activities with different constraints.
+  \item[Toward (semi-)autonomous research.] The series openly entertains a
+    near future in which agents can carry a project from a vague proposal to a
+    full draft. This raises the reflective question captured by one essay's
+    title---whether the satisfaction of research was ever in the
+    \emph{discoveries} or in the \emph{discovering}.
+  \item[Reproducibility as a first-class output.] Because an agent's work is
+    scripted end to end, reproducibility can be built in by default; several
+    contemporaneous research efforts study whether coding agents can reliably
+    reproduce published social-science findings.
+  \item[Interpretive vulnerability.] A recurring caution: agent-produced
+    analyses can be methodologically diverse and empirically consistent yet
+    \keyterm{interpretively vulnerable}---plausible-looking output can embed
+    subtle conceptual errors, so human verification of \emph{meaning} remains
+    essential.
+\end{description}
+
+% ---------------------------------------------------------------------------
+\section{Practical Guidance and Lessons}
+% ---------------------------------------------------------------------------
+\begin{enumerate}[leftmargin=1.5em]
+  \item \keyterm{Invest in the harness, not just the prompt.} Encode project
+    context in a \texttt{CLAUDE.md}, add hooks for automatic checks, and reuse
+    skills for repeated procedures.
+  \item \keyterm{Keep a human in the loop for judgment.} Delegate mechanical
+    breadth; retain ownership of the question, identification, and
+    interpretation.
+  \item \keyterm{Verify, then trust.} Reproduce a known result before trusting
+    a new pipeline; use the agent itself to audit and cross-check.
+  \item \keyterm{Control cost and scale deliberately.} Batch large LLM jobs and
+    validate a sample before running at full scale.
+  \item \keyterm{Treat figures and narrative as thinking tools.} Clear maps,
+    plots, and decks improve comprehension for both researcher and agent.
+  \item \keyterm{Make reproducibility the default.} Script every step so the
+    project can be re-run and audited from scratch.
+\end{enumerate}
+
+% ---------------------------------------------------------------------------
+\section{Conclusion}
+% ---------------------------------------------------------------------------
+AI coding agents such as Claude Code are shifting the practice of empirical
+research from writing code toward \emph{orchestrating} an agentic system that
+writes, runs, and checks code. The frontier concept is the researcher-specific
+harness---context, tools, subagents, skills, and hooks assembled around a
+capable model. The applied record, exemplified by Cunningham's series, shows
+concrete wins in data work, large-scale measurement, econometrics, and
+communication, alongside genuine cautions about interpretation, verification,
+and what the changing economics of research mean for scholarly publishing.
+
+% ---------------------------------------------------------------------------
+\section*{Sources and Further Reading}
+\addcontentsline{toc}{section}{Sources and Further Reading}
+% ---------------------------------------------------------------------------
+\small
+Selected entries from Scott Cunningham's Mixtape Substack (\url{https://causalinf.substack.com}):
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item ``Claude Code Part 12: How I Use Claude Code for Empirical Research.''
+  \item ``Claude Code Part 13--22'': replicating the Card et al.\ PNAS
+    immigration-rhetoric classification with \texttt{gpt-4o-mini}.
+  \item ``Claude Code 25: More Autonomous Agents Are Coming to Research.''
+  \item ``Claude Code 27: Research and Publishing Are Now Two Different Things.''
+  \item ``Claude Code 47: Many Agent Frameworks for Skills.''
+  \item ``Claude Code 51: Harnessing AI Agents for Economic Research.''
+  \item ``Claude Code 55: Beauty and story are key to my workflow harness.''
+  \item ``The Odd Couple'' (Season 5, with Caitlin Myers): using Claude Code for
+    a Texas abortion-clinic-distance and marriage diff-in-diff project.
+  \item ``Which stages of research production should we let AI Agents loose.''
+\end{itemize}
+
+\noindent Related research literature (arXiv):
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item ``AI Coding Agents Can Reproduce Social Science Findings.''
+  \item ``AI Coding Agents in Social Science: Methodologically Diverse,
+    Empirically Consistent, Interpretively Vulnerable.''
+  \item ``An Auditable AI Agent Loop for Empirical Economics: A Case Study in
+    Forecast Combination.''
+\end{itemize}
+
+\vspace{0.5em}
+\noindent\emph{Note:} This document is a synthesis compiled from
+publicly indexed summaries of the above posts and papers; direct access to the
+full (partly paywalled) Substack articles was not available at compile time, so
+specific figures and dates should be verified against the primary sources.
+\normalsize
+
+\end{document}
