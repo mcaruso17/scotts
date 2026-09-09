@@ -1,0 +1,220 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: The Case of Claude Code
+%  A concept summary compiled from Scott Cunningham's "Scott's
+%  Mixtape" Claude Code series and the broader literature on
+%  agentic AI for quantitative social science.
+% ---------------------------------------------------------------
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{parskip}
+\usepackage[colorlinks=true,linkcolor=RoyalBlue,urlcolor=RoyalBlue,citecolor=RoyalBlue]{hyperref}
+
+\title{\textbf{AI Applications in Research}\\[4pt]
+       \large Concepts, Workflows, and the Use of Claude Code\\
+       in Quantitative Social Science}
+\author{Compiled for the Scott Cunningham newsletter routine}
+\date{9 September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind using AI --- and
+in particular \emph{Claude Code}, an agentic command-line coding assistant ---
+in empirical research. It draws on Scott Cunningham's ongoing ``Claude Code''
+series on \emph{Scott's Mixtape} Substack, which documents in real time how an
+applied economist integrates AI agents into causal-inference work. The emphasis
+throughout is on \textbf{reproducibility}, \textbf{cross-implementation
+auditing}, and the practical reshaping of the research workflow, alongside the
+new risks these tools introduce.
+\end{abstract}
+
+\tableofcontents
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ===============================================================
+\section{What is Claude Code and why researchers care}
+% ===============================================================
+
+Claude Code is a terminal-based ``agentic'' assistant: rather than answering a
+single prompt, it reads a project directory, plans multi-step work, edits files,
+runs code, inspects the output, and iterates toward a goal. For a researcher
+this changes the unit of interaction from ``write me a function'' to
+``\emph{take this project and do X}.'' Cunningham's recurring framing is that
+the interesting question is not Claude Code in the abstract or from a software
+engineer's point of view, but its usefulness for \textbf{applied empirical work}
+--- econometrics, replication, and causal inference.
+
+Key properties that matter for research:
+
+\begin{itemize}
+  \item \textbf{Repository awareness.} The agent operates over a whole
+        project (data, scripts, notes), not an isolated snippet, so it can
+        resurrect and extend old codebases --- e.g., taking a ten-year-old
+        project and reconstructing its workflow.
+  \item \textbf{Multi-language fluency.} It moves across Stata, R, and Python
+        in a single session, which is central to the auditing use cases below.
+  \item \textbf{Autonomy with a human in the loop.} It proposes and executes
+        steps while the researcher supervises, corrects, and documents ---
+        Cunningham calls the resulting practice ``my workflow'' rather than
+        pure automation.
+\end{itemize}
+
+% ===============================================================
+\section{Core concepts of AI-assisted research}
+% ===============================================================
+
+\subsection{Multi-agent code auditing (replication as verification)}
+The signature idea in the recent series is using \emph{multiple independent
+agents} to replicate the same analytical pipeline from scratch across different
+languages and packages, then checking whether the deterministic outputs agree.
+The worked example is difference-in-differences estimated over:
+
+\begin{itemize}
+  \item \textbf{Three languages:} Python, R, and Stata.
+  \item \textbf{Five packages:} two Stata packages (\texttt{csdid},
+        \texttt{csdid2}), one R package (\texttt{did}), and two Python
+        packages (\texttt{diff-diff}, \texttt{differences}), centered on the
+        Callaway and Sant'Anna estimator.
+\end{itemize}
+
+Because non-random quantities (number of observations, means, $R^2$, point
+estimates) should be identical across correct implementations, disagreement
+flags a bug in one of them. AI turns an otherwise prohibitively expensive
+cross-package replication into a routine \textbf{robustness and validation
+check}.
+
+\subsection{Resurrecting and extending old projects}
+Agents lower the cost of returning to dormant work: pointing Claude Code at a
+legacy directory to rebuild the pipeline and then extend it with newer methods
+(for instance, moving an old binary-treatment paper toward
+\emph{continuous} difference-in-differences).
+
+\subsection{Reproducibility and documentation}
+The workflow externalizes tacit knowledge: the agent's plan, commands, and
+diffs become an auditable record. Documenting ``what works and what doesn't''
+in public is itself part of Cunningham's method --- the newsletter is a live
+lab notebook.
+
+\subsection{New problems created by AI, even when it saves time}
+A recurring, honest theme: AI solves old problems while \emph{creating new
+ones}, sometimes without even reducing total time spent. Examples include
+over-trust in plausible-but-wrong output, loss of the friction that used to
+force careful thinking, and the effort of verifying agent work. The multi-agent
+auditing pattern is partly a response to exactly this risk.
+
+% ===============================================================
+\section{The research workflow, step by step}
+% ===============================================================
+
+A representative Claude-Code-in-research loop:
+
+\begin{enumerate}
+  \item \textbf{Point the agent at a directory} --- an existing project or a
+        fresh replication target.
+  \item \textbf{Ask for a plan}, then supervise as the agent reads data and
+        code and proposes steps.
+  \item \textbf{Fan out across implementations} --- have separate agents build
+        the same estimand in Stata, R, and Python.
+  \item \textbf{Diff the deterministic outputs} to confirm agreement;
+        investigate any mismatch as a candidate bug.
+  \item \textbf{Extend the analysis} with newer estimators or specifications.
+  \item \textbf{Document} the session so the result is reproducible and the
+        reasoning is inspectable.
+\end{enumerate}
+
+% ===============================================================
+\section{Benefits and risks at a glance}
+% ===============================================================
+
+\newcommand{\pro}{\textcolor{ForestGreen}{$+$}}
+\newcommand{\con}{\textcolor{BrickRed}{$-$}}
+
+\begin{itemize}
+  \item[\pro] Cross-language, cross-package replication becomes cheap enough to
+        do routinely.
+  \item[\pro] Old projects can be revived and modernized quickly.
+  \item[\pro] Workflows are more legible and reproducible when the agent's
+        actions are recorded.
+  \item[\con] Confident-but-wrong output demands active verification.
+  \item[\con] Time savings are not guaranteed --- new verification and
+        supervision costs appear.
+  \item[\con] Skills can erode if researchers offload reasoning wholesale
+        rather than supervising.
+\end{itemize}
+
+% ===============================================================
+\section{Latest newsletter summary}
+% ===============================================================
+
+\textbf{Most recent identifiable post:} \emph{``Claude Code 24: Multiple Agents
+Auditing Your Diff-in-Diff Code (Part 1)''}, from \emph{Scott's Mixtape}
+Substack.\footnote{Live retrieval of the Substack was not possible from this
+environment (network egress to \texttt{causalinf.substack.com} is blocked), so
+this summary is compiled from public search results rather than the full post
+body. As the series is ongoing, a still-newer installment may exist.}
+
+\paragraph{Main topics.}
+\begin{itemize}
+  \item Using several AI agents in parallel to audit difference-in-differences
+        code.
+  \item Cross-implementation replication as a correctness check.
+  \item Continuation of the practical ``Claude Code for quantitative social
+        scientists'' series begun in mid-December 2025.
+\end{itemize}
+
+\paragraph{Key points (one line each).}
+\begin{itemize}
+  \item Multiple agents each rebuild the same diff-in-diff pipeline
+        independently, from scratch.
+  \item The comparison spans Stata (\texttt{csdid}, \texttt{csdid2}), R
+        (\texttt{did}), and Python (\texttt{diff-diff}, \texttt{differences}).
+  \item Non-random outputs should match across all correct implementations;
+        divergence signals a bug.
+  \item The Callaway and Sant'Anna estimator is the focal method.
+  \item ``Part 1'' signals a multi-post treatment of the auditing pattern.
+\end{itemize}
+
+\paragraph{Links, resources, and calls to action.}
+\begin{itemize}
+  \item Claude Code series hub:
+        \url{https://causalinf.substack.com/s/claude-code}
+  \item This post:
+        \url{https://causalinf.substack.com/p/claude-code-24-multiple-agents-auditing}
+  \item Cunningham's tooling repository (\emph{MixtapeTools}):
+        \url{https://github.com/scunning1975/mixtapetools}
+  \item Implicit call to action: subscribe to \emph{Scott's Mixtape} and try
+        the multi-agent audit on your own diff-in-diff code.
+\end{itemize}
+
+% ===============================================================
+\section{Takeaways}
+% ===============================================================
+
+\begin{enumerate}
+  \item Agentic AI shifts research assistance from snippets to whole-project
+        execution.
+  \item The most valuable pattern for empiricists is \emph{redundant,
+        cross-implementation replication} used as verification.
+  \item Reproducibility improves when the agent's plan and actions are recorded.
+  \item Verification and supervision are non-negotiable --- AI creates new
+        failure modes even as it removes old ones.
+\end{enumerate}
+
+\vspace{1em}
+\hrule
+\vspace{0.5em}
+\footnotesize
+Sources: \emph{Scott's Mixtape} Substack (\url{https://causalinf.substack.com});
+Claude Code series hub (\url{https://causalinf.substack.com/s/claude-code}).
+Compiled from public search results; the newsletter body could not be fetched
+directly from this environment.
+
+\end{document}
