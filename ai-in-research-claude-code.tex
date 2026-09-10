@@ -1,0 +1,380 @@
+\documentclass[11pt]{article}
+
+%======================================================================
+%  AI Applications in Research: Concepts from Scott Cunningham's
+%  "Claude Code" series (Scott's Mixtape Substack)
+%
+%  A concept summary compiled from recent newsletter essays, focused on
+%  the use of AI agents -- and Claude Code in particular -- in empirical
+%  research.
+%======================================================================
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue]{hyperref}
+\usepackage{titlesec}
+\usepackage{parskip}
+
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{1em}{}
+
+\newcommand{\term}[1]{\textbf{#1}}
+
+\title{\textbf{AI Applications in Research}\\[2pt]
+\large Core Concepts on the Use of Claude Code and AI Agents in Empirical Work}
+\author{Concept summary compiled from Scott Cunningham's \emph{Scott's Mixtape Substack}}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document distills the main concepts that have emerged in Scott
+Cunningham's ``Claude Code'' essays on using AI agents for research. It is
+organized around a single governing idea: that empirical research produced with
+AI agents must pass through three stages---\emph{production}, \emph{verification},
+and \emph{understanding}---under a \emph{zero-error constraint}. Around that spine
+it collects the economics of research under agents (``understanding is the new
+bottleneck''), the boundaries of autonomy, the checklist/harness philosophy, the
+governance of agents through markdowns, skills, and hooks, and the emerging role
+of connectors and the Model Context Protocol (MCP). It is a conceptual map, not
+an endorsement of any single tool, and all interpretive framing is attributed to
+the source essays.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+\hrule
+\bigskip
+
+%----------------------------------------------------------------------
+\section{Context and Motivation}
+%----------------------------------------------------------------------
+
+AI coding agents---Claude Code chief among them in these essays---have made it
+possible to run a full quantitative empirical project largely from natural-language
+instruction: forming a question, choosing an identification strategy, locating and
+downloading data, writing replicable code, producing tables and figures, and
+drafting a manuscript. The author reports that, as early as six months prior,
+an agent could ``3-D print'' a submittable paper end to end in well under an hour.
+
+The interesting problem is therefore \emph{not} whether agents can produce research.
+They can. The problem is that raw productive capability does not by itself deliver
+\emph{trustworthy} or \emph{understood} research. The essays are an extended attempt
+to name what is missing and to engineer it back in.
+
+%----------------------------------------------------------------------
+\section{The Central Framework: Production, Verification, Understanding}
+%----------------------------------------------------------------------
+
+The organizing metaphor is a triangle. Research done with agents must pass through
+three distinct ``doors'':
+
+\begin{description}[leftmargin=2em,style=nextline]
+  \item[\term{Production}] Generating the analysis and artifacts: code, datasets,
+        exhibits, and prose. This is the stage agents already handle well and can
+        do autonomously.
+  \item[\term{Verification}] Confirming the output is accurate---\emph{and} that
+        what should \emph{not} have been done was not done. Verification is
+        endogenous to a \emph{target estimand fixed ex ante}; it is not merely
+        re-running code in several languages. Agents can assist, but should not be
+        relied on exclusively, because there is a class of errors (things that
+        should not have happened) that leave nothing for an agent to check.
+  \item[\term{Understanding}] Genuine human comprehension of what was done and why.
+        This is framed as the scarcest of the three and the hardest to recover once
+        the human is no longer the producer.
+\end{description}
+
+The author's own shorthand for the goal is simply ``production, verification, and
+understanding.''
+
+\subsection{The CEO metaphor}
+The researcher is cast as the \emph{CEO} of the research enterprise. A CEO
+delegates---she need not write the code---but she must still hold an approximately
+correct understanding of what was done, by whom, and what was found. Accountability
+does not transfer to a delegate, and (invoking the old IBM line) a machine cannot
+be held accountable, so it cannot be handed the final decision.
+
+%----------------------------------------------------------------------
+\section{The Economics of Research Under AI Agents}
+%----------------------------------------------------------------------
+
+Cunningham frames the shift with a supply-and-demand picture that will be intuitive
+to economists:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item Before agents, research was produced up to the point where marginal benefit
+        equalled a relatively high marginal cost $MC_b$, itself fixed by scarce
+        time and human capital.
+  \item With agents, the marginal cost of production collapses toward
+        $\widehat{MC}_{AI}\approx \varepsilon$ (just above zero), so equilibrium
+        research output rises from $Q^{*}_b$ to $Q^{*}_{AI}$.
+\end{itemize}
+
+\begin{equation*}
+  MC_b \;\longrightarrow\; \widehat{MC}_{AI} \approx \varepsilon
+  \qquad\Longrightarrow\qquad
+  Q^{*}_b \;\longrightarrow\; Q^{*}_{AI}, \quad Q^{*}_{AI} > Q^{*}_b .
+\end{equation*}
+
+\subsection{Understanding as a lost byproduct}
+The subtle point is about \emph{surplus}. Under the human mode of production,
+understanding was generated \emph{almost as a byproduct} of doing the work---an
+externality of production, ``mental ownership'' acquired by making the thing.
+When the agent produces instead, that byproduct is no longer automatic. The freed-up
+time \emph{could} in principle be reallocated to rebuild understanding, but there is
+no guarantee that understanding produced deliberately can fully replace understanding
+that used to arrive for free.
+
+\subsection{``Understanding is the new bottleneck''}
+A popular slogan holds that \emph{verification} is the new bottleneck. The essays
+push further: because agents may eventually verify as well as they produce, the
+truly binding constraint is \term{understanding}, not verification. Two related
+cautions:
+\begin{itemize}[leftmargin=1.5em]
+  \item \term{Cognitive debt.} Treating the \texttt{git diff} as ``the unit of
+        verification'' (an idea credited to Paul Goldsmith-Pinkham) helps, but
+        skimming and silently accepting diffs accrues cognitive debt rather than
+        clearing it.
+  \item \term{Principal--agent risk.} Trusting an agent you cannot check is a
+        principal--agent problem; if human skills atrophy, it becomes ``the blind
+        leading the blind.''
+\end{itemize}
+
+\subsection{Zero errors as a constraint, not an objective}
+A recurring formal stance: \emph{zero errors is a constraint, not the objective
+function}. Minimizing errors quietly licenses the notion of ``optimal errors,''
+which is unacceptable. Instead, optimal research output is pursued
+\emph{subject to} a zero-error constraint that itself requires verification and
+understanding:
+\begin{equation*}
+  \max_{\text{research}} \; (\text{research output})
+  \quad \text{s.t.} \quad \text{errors} = 0,
+\end{equation*}
+where satisfying the constraint is what demands verification and understanding.
+
+%----------------------------------------------------------------------
+\section{The Boundaries of Autonomy}
+%----------------------------------------------------------------------
+
+A guiding analogy: today's agents are less like a fully self-driving car and more
+like \emph{lane-keeping plus cruise control}---impressive assistance, but not
+unsupervised autonomy. Evidence that autonomous \emph{production} is real includes
+large-scale demonstrations (e.g., a lab generating on the order of a thousand
+automated program-evaluation papers, with humans controlling the prompting and
+agents controlling the production).
+
+The practical stance that follows:
+\begin{itemize}[leftmargin=1.5em]
+  \item \term{Automate freely} the mechanical parts of production: writing code,
+        downloading and organizing data, making maps, time-series aggregations,
+        tables, and figures, and wiring exhibits into a deck or manuscript.
+  \item \term{Do not fully automate conception.} The stage where the project is
+        understood and framed should stay human-led (see the ``bite'' stage below).
+  \item \term{Watch for endogenous specification search.} Agents have been observed
+        sorting into specifications not because they were told to, but in response to
+        true statements made in a project's context---a reason verification must be
+        anchored to a pre-registered estimand.
+\end{itemize}
+
+%----------------------------------------------------------------------
+\section{The Harness and the Checklist Philosophy}
+%----------------------------------------------------------------------
+
+The proposed answer to the ``something is not quite right'' feeling is a
+\term{harness}: a disciplined, visual staging of the whole workflow, built around a
+\term{checklist}. The checklist idea is borrowed from Atul Gawande's
+\emph{The Checklist Manifesto}: experts skip steps more than novices (Kahneman's
+System~1 vs.\ System~2), so high-stakes work needs enforced steps. The harness is
+described less as a tool than as ``a staging of my own cognition''---and is being
+prototyped visually, including toward an Apple Vision Pro interface, partly to
+compensate for the loss of ``seeing'' one's code that comes with delegating to agents
+(the author has aphantasia and relies on visual, ``flippable card'' representations
+to remember prior work).
+
+\subsection{Design-based thinking and the ``bite'' stage}
+The harness is explicitly rooted in \emph{design-based} causal inference (crediting
+Rubin's ``Design Trumps Analysis,'' and the work of Imbens, Angrist, and
+Sant'Anna). The first substantive checklist stage is \term{bite}: exhaustively
+documenting the first-stage, boots-on-the-ground response to a treatment before any
+estimation---mapping it across \emph{space} and \emph{time}. Bite is where the
+\emph{treatment assignment mechanism} is deciphered, which in turn governs the credible
+design:
+\begin{itemize}[leftmargin=1.5em]
+  \item \term{Human rationality / essential heterogeneity} (endogenous selection)
+        makes naive causal inference hard.
+  \item \term{Instruments} assign treatment to compliers $\Rightarrow$ instrumental
+        variables (with the exclusion restriction).
+  \item \term{Randomization} on the treatment itself $\Rightarrow$ RCT logic.
+  \item \term{Running variables} (e.g., a legal threshold) $\Rightarrow$ regression
+        discontinuity.
+\end{itemize}
+The point of emphasis: \emph{bite} is the least automatable stage, because it is
+where insight and understanding are formed, even though agents can execute all of its
+mechanical outputs.
+
+\subsection{Interviews and the \texttt{/quiz} skill}
+To manufacture understanding deliberately, the author experiments with agent-run
+``interviews'' that elicit the researcher's own priors (e.g., which covariates,
+which target parameter), and a \texttt{/quiz} skill in which the agent builds
+teaching slides and then asks the human multiple-choice questions about them---modeled
+on corporate ``training video + quiz'' formats---to force \emph{continuous
+understanding} on top of verification.
+
+%----------------------------------------------------------------------
+\section{Governing Agents: Markdowns, Skills, and Hooks}
+%----------------------------------------------------------------------
+
+A central practical lesson: \emph{prose does not constrain an agent}. Markdown
+instructions (\texttt{CLAUDE.md}, README, prompts) produced both false positives
+and false negatives. The author organizes the three control mechanisms in a
+$3\times 3$ matrix (who runs it, whether it can be skipped, when it is chosen),
+and maps them to the branches of government:
+
+\begin{description}[leftmargin=2em,style=nextline]
+  \item[\term{Markdowns} (legislative)] State the rules, but assume the agent will
+        read and follow them. Necessary context; not enforcement.
+  \item[\term{Skills} (e.g.\ \texttt{/referee2}, \texttt{/beautiful\_deck})] Reusable
+        procedures, but assume the \emph{human} remembers to invoke them.
+  \item[\term{Hooks} (executive)] Scripts that intercept the agent's tool calls and
+        actually \emph{permit or deny} them. Hooks are the only genuinely enforceable
+        layer.
+\end{description}
+
+\subsection{Drift}
+\term{Drift} is the author's name for an agent quietly doing its own thing despite the
+markdown rules---not malice, but lapsed judgment or cost-minimizing shortcuts. A
+vivid example: an agent ``vibe-coded'' a synthetic-control permutation inference
+directly in the terminal, producing a figure but writing \emph{no reproducible
+script}, so the result could not be edited or replicated afterward. Every caught
+instance raises the haunting question of how many went uncaught. Drift also shows up
+as proliferating new files and stale, un-rerunnable code.
+
+\subsection{How a hook works}
+Because an agent ``has no hands,'' every action passes through a named tool
+(\texttt{Read}, \texttt{Edit}, \texttt{Write}, \texttt{Bash}), each announced in
+advance as a structured request. A hook stands at that announcement, inspects one or
+two fields, and answers yes/no \emph{before} anything happens. Two mechanics:
+\begin{itemize}[leftmargin=1.5em]
+  \item \term{Pre-action (``locked door'')}: cancels a disallowed action before it
+        runs---independent of any prose sign.
+  \item \term{Post-action (``shout'')}: fires after the fact so a problem is fixed in
+        the same sitting rather than days later.
+  \item \term{Fails open}: if the hook's own code breaks, it lets the human through
+        rather than freezing the workflow---a deliberate guard against
+        over-engineering.
+\end{itemize}
+
+\subsection{The canonical example: \texttt{protect-raw-data}}
+The flagship hook enforces one axiom: \emph{raw data is untouchable}. It registers
+only against \emph{mutating} tools (\texttt{Write}, \texttt{Edit}, \texttt{Bash});
+if the target path lives under \texttt{/data/raw}, the call is denied with an
+instruction to write to a derived folder (e.g.\ \texttt{/data/clean}) instead.
+Crucially, \texttt{Read} is left open---the agent may look at every byte; it simply
+cannot alter the original. This works where markdown failed because nothing must be
+``held in mind'': the path either starts with \texttt{raw/} or it does not, and that
+single question is asked on every write, forever. The stated set of five hooks:
+\begin{enumerate}[leftmargin=2em,label=\arabic*.]
+  \item \texttt{protect-raw-data}
+  \item \texttt{no-fabricated-exhibit}
+  \item \texttt{no-off-book-exhibit}
+  \item \texttt{deck-from-pipeline}
+  \item \texttt{no-stale-canon}
+\end{enumerate}
+The design rule behind them: \emph{anything that can happen will happen with enough
+trials}, so fatal failure modes must be driven to probability zero by construction,
+not merely discouraged.
+
+%----------------------------------------------------------------------
+\section{Connectors and the Model Context Protocol (MCP)}
+%----------------------------------------------------------------------
+
+The most recent essay turns to \term{connectors}: the mechanism that extends Claude
+from a local machine into cloud services and onto the phone (the Claude app),
+including for ``normal users'' who never touch Claude Code itself. Connectors are
+powered by the \term{Model Context Protocol (MCP)}---an open standard that lets AI
+applications connect securely to external data sources and tools and take actions;
+in the essay's metaphor, ``a new kind of piping'' into cloud services.
+
+Observations from the connector directory (thousands of connectors, hundreds tagged
+``Code''):
+\begin{itemize}[leftmargin=1.5em]
+  \item \term{Two tiers}: Anthropic-originated connectors vs.\ \term{Community}
+        (user-created, peer-reviewed but not fully vetted---``buyer beware'').
+  \item \term{Productivity / assistant} connectors (e.g., an ``Inkbox''-style
+        communication identity giving an assistant email/SMS/iMessage) could support
+        a full personal-productivity system.
+  \item \term{Financial-services} connectors (Stripe, PayPal, QuickBooks, Gusto,
+        Dropbox) could let one person run a small business; notably \emph{banking}
+        access is largely absent, plausibly for security reasons.
+\end{itemize}
+
+\subsection{The ``solopreneur'' thesis and productivity}
+Connectors are linked to the rise of \term{solo-entrepreneurs}---very small (often
+one-person) firms, some reportedly reaching \$1M--\$10M in revenue---because they
+make the chatbot side materially more productive. This is tied back to growth
+economics: labor productivity ($Y/N$) drives per-capita income
+($Y/\text{Pop}$), feeding both ``the wealth of nations'' (growth) and what the author
+calls ``the wages of nations'' (distribution). For \emph{research} specifically, the
+payoff of connectors is still uncertain; the author expects the eventual causal-inference
+harness to make heavy use of them while remaining a visual, GUI-driven staging of
+production, verification, and understanding.
+
+%----------------------------------------------------------------------
+\section{Human-in-the-Loop and the Learning Motive}
+%----------------------------------------------------------------------
+
+A related essay (prompted by a Hugging Face / Data \& Society paper) asks \emph{where}
+and \emph{how} the human should remain in the loop. The through-line across all the
+essays is a preference for agents that \emph{sit in the cockpit} with the researcher
+rather than autopilot while the researcher sleeps---motivated less by competition than
+by a ``romance about learning.'' The technical mechanisms (checklists, hooks,
+quizzes, visual harnesses) are all in service of keeping a human meaningfully
+understanding the work.
+
+%----------------------------------------------------------------------
+\section{Practical Takeaways}
+%----------------------------------------------------------------------
+
+\begin{enumerate}[leftmargin=2em,label=\arabic*.]
+  \item Treat every research artifact as needing to pass \term{production},
+        \term{verification}, and \term{understanding}---not just production.
+  \item Fix the \term{target estimand ex ante}; make verification confirm both what
+        \emph{was} done and what \emph{should not} have been done.
+  \item Automate mechanical production; keep \term{conception} (the ``bite'' stage)
+        human-led.
+  \item Do not rely on prose to constrain agents; encode non-negotiables as
+        \term{hooks} that intercept tool calls, and let them \emph{fail open}.
+  \item Protect raw data by construction (\texttt{protect-raw-data}); keep a numbered,
+        rerunnable pipeline as the single source of every number, table, and figure.
+  \item Budget deliberate time to rebuild the \term{understanding} that agent
+        production no longer generates for free (e.g., interviews, a \texttt{/quiz}
+        routine, visual review).
+  \item Explore \term{connectors/MCP} to extend workflows into cloud services and the
+        phone, distinguishing vetted from Community connectors.
+  \item Hold \term{zero errors} as a constraint, not an objective.
+\end{enumerate}
+
+%----------------------------------------------------------------------
+\section*{Sources}
+\addcontentsline{toc}{section}{Sources}
+%----------------------------------------------------------------------
+Compiled from recent essays in Scott Cunningham's \emph{Scott's Mixtape Substack}
+(\href{https://causalinf.substack.com/}{causalinf.substack.com}), notably:
+\begin{itemize}[leftmargin=1.5em]
+  \item ``Connectors and My Harness Idea'' (Sep~9, 2026).
+  \item ``Which stages of research production should we let AI Agents loose'' (Aug~14, 2026).
+  \item ``How and why I am using hooks (part 1)'' (Aug~24, 2026).
+  \item ``How to improve understanding with Claude Code'' (Aug~7, 2026).
+  \item Related essays: ``Where and how will the human be in the loop?'' (Sep~4, 2026);
+        ``Some thoughts about AI in practice'' (Sep~2, 2026);
+        ``\,`Memory is the residue of thought' and fixing that when working with AI agents'' (Aug~20, 2026).
+\end{itemize}
+\emph{This is an independent concept summary. All interpretive framing above is
+attributable to the source essays; any errors of paraphrase are the compiler's.}
+
+\end{document}
