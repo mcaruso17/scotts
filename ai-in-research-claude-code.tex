@@ -1,0 +1,206 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: The Use of Claude Code
+%  A concept summary grounded in Scott Cunningham's
+%  "Scott's Mixtape Substack" (Sept. 2026) and general practice.
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{parskip}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black,
+  pdftitle={AI Applications in Research: The Use of Claude Code},
+  pdfauthor={Compiled summary}
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\newcommand{\term}[1]{\textbf{#1}}
+
+\title{\vspace{-1.5em}AI Applications in Research:\\ The Use of Claude Code}
+\author{Concept summary}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts around applying agentic
+AI to research work, with an emphasis on \term{Claude Code}. It draws on the
+practical, first-person experience reported in Scott Cunningham's
+\emph{Scott's Mixtape Substack} (an economist adopting AI agents for empirical
+causal-inference work) and on general practice for AI-assisted research. The
+themes are organized as: (i) what agentic coding tools are; (ii) how they
+extend to external systems via connectors and the Model Context Protocol
+(MCP); (iii) the emerging discipline of a research ``harness''; and (iv) the
+recurring cautions of \emph{production, verification, and understanding}.
+\end{abstract}
+
+\section{Why AI Agents in Research}
+
+Traditional research computing has the researcher writing code directly in a
+text editor, reading and seeing every line. \term{Agentic AI} tools invert
+this: the researcher delegates implementation to a model that reads the
+project, plans, edits files, runs code, and reports back. The promise is a
+large increase in \term{labor productivity}---one person can accomplish what
+previously required a team---while the risk is a loss of direct visibility
+into what was actually done.
+
+Cunningham frames the productivity gain in explicitly economic terms: as a
+single worker produces more output ($Y/N$), that output feeds per-capita
+income ($Y/\text{Pop}$) and, through market mechanisms, both growth (``the
+wealth of nations'') and distribution (``the wages of nations''). A concrete
+signal is the rise of \term{solo-entrepreneurs} (``solopreneurs'')---very
+small firms, sometimes a single employee, an increasing share of which report
+\$1--10M in annual revenue---a phenomenon partly enabled by AI tooling and
+payment/back-office integrations.
+
+\section{Claude Code: The Agentic Coding Environment}
+
+\term{Claude Code} is a command-line agent that operates inside a project. Its
+core research-relevant capabilities are:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \term{Whole-project context}: it reads the repository, not just a
+        single snippet, so it can navigate a real analysis codebase.
+  \item \term{Tool use}: it runs shell commands, executes scripts, edits
+        files, and inspects outputs in a loop.
+  \item \term{Reproducibility discipline}: good practice (echoed by
+        Cunningham) is to \emph{never edit raw data} in place and to route all
+        transformation through inspectable, re-runnable code.
+  \item \term{Hooks}: user-defined scripts that fire on agent events (e.g.
+        before/after a tool call) to enforce guardrails---formatting,
+        validation, or protecting raw data---so the workflow encodes the
+        researcher's standards automatically.
+  \item \term{Availability beyond the laptop}: the same agentic capability is
+        increasingly reachable from the Claude app (including on a phone) and
+        from cloud environments, not only the local machine.
+\end{itemize}
+
+\section{Connectors and the Model Context Protocol (MCP)}
+
+A central late-2026 theme is \term{connectors}: integrations that let the
+assistant reach out to external data sources and services and take actions in
+them. Key points:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \term{MCP (Model Context Protocol)} is the open standard underneath
+        connectors---``a new kind of piping'' that lets an AI application
+        securely connect to external tools and data and perform actions in
+        real time.
+  \item The connector directory functions like an ``app store,'' on the order
+        of \emph{thousands} of entries and growing, spanning categories such
+        as \emph{Code}, \emph{Financial Services}, and productivity tools.
+  \item \term{First-party vs.\ Community connectors}: some are published by
+        the vendor; \emph{Community} connectors are user-created and only
+        lightly vetted---adopt them with a ``buyer beware'' posture,
+        especially where credentials or sensitive data are involved.
+  \item \term{Business/back-office reach}: connectors for Stripe, PayPal,
+        QuickBooks, Gusto (payroll), and Dropbox make it feasible for one
+        person to run substantial operations from the chat interface; banking
+        APIs (e.g.\ direct bank access) remain conspicuously absent, plausibly
+        for security reasons.
+  \item \term{Research relevance is still emerging}: Cunningham is candid that
+        the payoff of connectors for \emph{empirical research} (as opposed to
+        running a small business) is not yet obvious to him, but he expects
+        some cloud-only resources will eventually be reachable efficiently
+        \emph{only} through a connector.
+\end{itemize}
+
+\section{The ``Harness'': Staging Research Cognition}
+
+The most distinctive research concept in Cunningham's writing is the
+\term{harness}---not a single tool but a structured \emph{staging of the
+researcher's own cognition} so that projects move through disciplined stages.
+Its design principles:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \term{Checklist philosophy}: each stage maps to a checklist. This
+        mirrors the end-of-chapter ``Practical Tips / Practical Advice /
+        Concluding Remarks'' distilled throughout his book \emph{Causal
+        Inference: The Remix}, and the design-based tradition he credits to
+        Don Rubin, Guido Imbens, and Pedro Sant'Anna.
+  \item \term{Design principles for causal inference}: the harness is meant to
+        \emph{discipline the mind}---forcing the analyst to state the
+        identification strategy, covariate choices, and assumptions
+        \emph{before} trusting an estimate.
+  \item \term{Visualization to restore ``seeing''}: because delegating code to
+        an agent removes the direct sight of one's own code, the harness
+        re-introduces visual structure---interactive, ``flippable card''
+        figures and a dashboard---so the researcher can remember and review
+        what has been done. Cunningham even imagines mapping the harness into
+        an Apple Vision Pro spatial interface.
+  \item \term{Connector-supported, not connector-defined}: he expects the
+        eventual harness to \emph{use} connectors heavily but to remain a
+        graphical, workflow-centered environment of its own.
+\end{itemize}
+
+\section{The Governing Triad: Production, Verification, Understanding}
+
+Cunningham reduces the goal of AI-assisted research to three requirements that
+serve as a useful rubric for any researcher adopting these tools:
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item \term{Production}---actually generating the analysis (estimates,
+        tables, figures) efficiently.
+  \item \term{Verification}---confirming the output is what the researcher
+        intended \emph{and} that it does what it claims to do (the estimator
+        is correctly specified, the data pipeline is sound, results
+        replicate).
+  \item \term{Understanding}---maintaining a continuous, human grasp of what
+        has been done, so the researcher is not merely accepting agent output
+        on trust.
+\end{enumerate}
+
+The honest tension he reports---``drinking from a firehose'' and having to
+``wrestle'' the agent to work on his terms---is itself an important concept:
+raw agent speed is not the same as trustworthy research, and the whole point
+of the harness and the triad is to convert capability into \emph{credible},
+inspectable scholarship.
+
+\section{Practical Takeaways for Researchers}
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Treat the agent as a fast collaborator, not an oracle: keep raw data
+        immutable, route everything through re-runnable code, and read the
+        diffs.
+  \item Encode your standards mechanically (hooks, checklists) rather than
+        relying on remembering them each session.
+  \item Adopt connectors deliberately; prefer vetted ones and scrutinize
+        Community connectors before granting access to sensitive systems.
+  \item Build (or borrow) a lightweight ``harness'': explicit stages, a
+        verification step, and a visual record of what was produced.
+  \item Judge every workflow against production, verification, and
+        understanding---if any one is missing, the result is not yet research.
+\end{itemize}
+
+\section*{Sources}
+\small
+\begin{itemize}[leftmargin=1.4em]
+  \item Scott Cunningham, ``Connectors and My Harness Idea,'' \emph{Scott's
+        Mixtape Substack}, 9 Sept.\ 2026.
+        \url{https://causalinf.substack.com/p/connectors-and-my-harness-idea}
+  \item Related recent posts (same publication, Aug.--Sept.\ 2026): ``How and
+        why I am using hooks,'' ``Some thoughts about AI in practice,''
+        ``Where and how will the human be in the loop?,'' and ``Memory is the
+        residue of thought.''
+  \item Scott's Mixtape Substack: \url{https://causalinf.substack.com/}
+  \item Scott Cunningham, \emph{Causal Inference: The Remix} (Yale University
+        Press, 2026).
+\end{itemize}
+
+\end{document}
