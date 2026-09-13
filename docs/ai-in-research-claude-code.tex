@@ -1,0 +1,328 @@
+%==============================================================================
+%  AI Applications in Research: Claude Code and Agentic Tools
+%  for Quantitative Social Science
+%
+%  Compile with any standard TeX distribution:
+%      pdflatex ai-in-research-claude-code.tex
+%      pdflatex ai-in-research-claude-code.tex   % run twice for the ToC / refs
+%
+%  Uses only widely available packages (article class + hyperref, geometry,
+%  enumitem, booktabs, listings, xcolor). No external files required.
+%==============================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{amssymb} % \checkmark
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue!55!black,
+  pdftitle={AI Applications in Research: Claude Code and Agentic Tools},
+  pdfauthor={Scheduled research routine}
+}
+
+\definecolor{codebg}{gray}{0.96}
+\lstset{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{codebg},
+  frame=single,
+  rulecolor=\color{gray!40},
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  xleftmargin=0.5em,
+  aboveskip=1em,
+  belowskip=1em
+}
+
+\setlist{itemsep=2pt, topsep=4pt}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+       \large Agentic Coding Tools and the Use of Claude Code\\
+       in Quantitative Social Science}
+\author{Compiled by a scheduled research routine}
+\date{13 September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+Large language models (LLMs) have moved, in a few short years, from
+autocomplete curiosities to \emph{agents} that read a codebase, run commands,
+inspect their own output, and iterate toward a goal. This document surveys the
+main concepts behind that shift and focuses on one concrete instance of it:
+\textbf{Claude Code}, Anthropic's command-line coding agent, and its emerging
+use in empirical research. We organize the material around the research
+lifecycle---literature synthesis, data preparation, analysis, reproducibility
+auditing, and writing---and use difference-in-differences (DiD) estimation as a
+worked motivating example, echoing the public ``Claude Code for quantitative
+social scientists'' series by economist Scott Cunningham. We close with
+workflow best practices, and an honest account of the limitations and
+verification burden that agentic tools introduce rather than remove.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+\hrule
+\bigskip
+
+%==============================================================================
+\section{Introduction: from chatbots to research agents}
+%==============================================================================
+
+Applying AI to research is not new---statistical learning, text mining, and
+machine-learning-based estimation have been part of the empirical toolkit for
+years. What is new is the arrival of \emph{general-purpose agents} built on
+LLMs: systems that do not merely answer a question but take a goal, decompose
+it, act in the world (edit files, run code, query data), observe the results,
+and correct course. This closes the loop between \emph{reasoning} and
+\emph{doing} that earlier chatbot interfaces left open.
+
+For researchers the practical consequence is a change of interface. Instead of
+copying snippets between a chat window and an editor, the researcher hands an
+agent a repository and a task. The agent works where the data and code live,
+which makes it possible to automate whole segments of the empirical
+pipeline---and which raises the stakes for verification, because the agent's
+mistakes now land directly in the analysis rather than in a chat transcript.
+
+\paragraph{Scope of this document.} We concentrate on \textbf{agentic coding
+tools for quantitative research}, with Claude Code as the running example. The
+concepts generalize to other agents, but the specifics (a terminal-native
+agent operating on a git repository) are what make the research applications
+below concrete.
+
+%==============================================================================
+\section{What Claude Code is}
+%==============================================================================
+
+\textbf{Claude Code} is a command-line coding agent from Anthropic. Rather than
+a plugin bolted onto an editor, it is an agent that lives in the terminal and
+operates on the project directory the researcher launches it from. Its core
+loop is the standard agentic loop:
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item \textbf{Read context} --- the repository, relevant files, and any
+        project conventions (e.g.\ a \texttt{CLAUDE.md} instructions file).
+  \item \textbf{Plan} --- decompose the task into steps.
+  \item \textbf{Act with tools} --- read/write files, run shell commands,
+        execute scripts, search code, and (via the Model Context Protocol,
+        MCP) reach external systems such as databases or issue trackers.
+  \item \textbf{Observe} --- inspect command output, test results, and errors.
+  \item \textbf{Iterate} --- revise and repeat until the goal is met or a
+        checkpoint requires human input.
+\end{enumerate}
+
+Several properties matter for research use:
+
+\begin{itemize}
+  \item \textbf{Repository-aware.} It reasons over the actual code and data
+        layout, not an idealized description, so it can reproduce a real
+        pipeline rather than a toy one.
+  \item \textbf{Executes and verifies.} Because it can run code and read the
+        output, it can check its own work---run a regression, compare
+        coefficients, re-run a test suite.
+  \item \textbf{Multi-language.} It moves across Python, R, Stata, shell, and
+        \LaTeX{} within a single task, which is exactly the polyglot reality of
+        applied empirical work.
+  \item \textbf{Version-control native.} It commits, branches, and opens pull
+        requests, so its work is reviewable and reversible.
+  \item \textbf{Extensible via MCP and skills.} Reusable instructions
+        (``skills'') and external connectors let a lab encode its own
+        conventions and data sources.
+\end{itemize}
+
+%==============================================================================
+\section{Applications across the research lifecycle}
+%==============================================================================
+
+\subsection{Literature and knowledge synthesis}
+Agents can gather, deduplicate, and summarize prior work; extract estimands,
+samples, and identification strategies from a set of papers into a structured
+table; and draft annotated bibliographies. The value is triage and structure;
+the risk is fabricated or mis-attributed citations, so every reference must be
+checked against a primary source.
+
+\subsection{Data preparation and pipeline construction}
+Data cleaning is where agentic tools pay off first and most reliably: parsing
+messy files, harmonizing variable names and encodings, reshaping panels,
+merging sources, and generating documented, re-runnable scripts. Because the
+agent runs the code, it catches type errors, key collisions, and silent
+coercions as it goes rather than at analysis time.
+
+\subsection{Analysis and econometric modeling}
+Agents can implement estimators, wire up specifications, produce diagnostic
+plots, and assemble regression tables. They are most trustworthy as
+\emph{implementers} of a design the researcher has specified, and least
+trustworthy when asked to choose an identification strategy---the latter is a
+substantive judgment, not a coding task.
+
+\subsection{Reproducibility and cross-implementation auditing}
+This is the application with the most distinctive leverage, and the centerpiece
+of the motivating example in Section~\ref{sec:did}. Because one agent can
+implement the \emph{same} analysis in several languages and packages, it can be
+used to \textbf{audit} a result: agreement across independent implementations
+is evidence the estimate is real and the specification is understood; a
+disagreement localizes a bug or a hidden modeling default.
+
+\subsection{Writing and reproducible manuscripts}
+Agents draft and revise prose, keep a \LaTeX{} document in sync with the
+numbers it cites, regenerate figures and tables from source, and maintain the
+build. This document itself is an artifact of that workflow.
+
+%==============================================================================
+\section{Worked example: a difference-in-differences coding audit}
+\label{sec:did}
+%==============================================================================
+
+Difference-in-differences (DiD) is a natural stress test: it is ubiquitous in
+applied economics, it has well-known estimation subtleties (two-way fixed
+effects bias under staggered adoption, the no-anticipation assumption,
+covariate adjustment, continuous ``dosage'' treatments), and it is implemented
+by \emph{many} packages that do not always agree by default.
+
+The audit pattern---mirroring Scott Cunningham's public series---is:
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item Fix a single dataset and a single estimand (e.g.\ an event-study
+        average treatment effect on the treated).
+  \item Have the agent implement the estimator independently across
+        \textbf{three languages}---Python, R, and Stata---and \textbf{several
+        packages} within them.
+  \item Run all implementations and \textbf{compare the point estimates and
+        standard errors}.
+  \item Treat agreement as corroboration; treat any gap as a lead to
+        investigate---usually a differing default (clustering, base period,
+        weighting, or how covariates enter).
+\end{enumerate}
+
+\begin{table}[h]
+\centering
+\caption{Illustrative structure of a cross-implementation DiD audit. Values are
+schematic, not from a specific study.}
+\medskip
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Language} & \textbf{Package / command} & \textbf{Estimand} & \textbf{Agrees?} \\
+\midrule
+Python & \texttt{differences} / \texttt{pyfixest} & ATT (event study) & \checkmark \\
+R      & \texttt{did} (Callaway--Sant'Anna)       & ATT (event study) & \checkmark \\
+R      & \texttt{fixest} (\texttt{sunab})          & ATT (event study) & \checkmark \\
+Stata  & \texttt{csdid}                            & ATT (event study) & \checkmark \\
+Stata  & \texttt{reghdfe} (naive TWFE)             & ATT (event study) & \textbf{differs} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+The pedagogical payoff is that the \emph{disagreement} is the finding: a naive
+two-way-fixed-effects row that departs from the modern estimators makes the
+staggered-adoption bias visible and concrete. The agent's contribution is
+doing the tedious polyglot re-implementation quickly enough that this
+comparison becomes routine rather than a project in itself.
+
+%==============================================================================
+\section{Workflow best practices}
+%==============================================================================
+
+\begin{itemize}
+  \item \textbf{Encode conventions once.} A \texttt{CLAUDE.md} (project
+        instructions) file that states the stack, data locations, coding style,
+        and ``always run the tests'' rules keeps the agent aligned across
+        sessions.
+  \item \textbf{Plan before acting.} For non-trivial tasks, have the agent
+        propose a plan and approve it before it edits---cheaper to redirect a
+        plan than a wrong implementation.
+  \item \textbf{Demand verification.} Ask for the check, not just the change:
+        a passing test, a re-run regression, a diff of coefficients. ``It
+        should work'' is not evidence.
+  \item \textbf{Keep changes reviewable.} Work on a branch, commit in small
+        steps, and open a pull request; the git history is the audit trail.
+  \item \textbf{Human owns the design.} Delegate implementation and
+        mechanical checking; retain identification, interpretation, and the
+        decision about what counts as an answer.
+  \item \textbf{Prefer reproducible artifacts.} Scripts and Makefiles over
+        one-off interactive sessions, so a result can be regenerated from
+        source.
+\end{itemize}
+
+%==============================================================================
+\section{Limitations, risks, and the verification burden}
+%==============================================================================
+
+Agentic tools relocate effort; they do not abolish it.
+
+\begin{itemize}
+  \item \textbf{Confident errors.} LLMs can produce plausible, wrong code and
+        fabricated citations. Cross-implementation agreement and real tests are
+        the defense, not the model's own confidence.
+  \item \textbf{Silent defaults.} Much of the DiD example's value comes from
+        exposing package defaults; an agent can adopt a bad default just as a
+        human can. Comparison across implementations is what surfaces it.
+  \item \textbf{Reproducibility of the agent itself.} Model versions and prompts
+        drift, so pin the \emph{outputs} (committed code, saved results), not
+        the conversation.
+  \item \textbf{Data governance.} Sending data or code to an external service
+        has privacy, licensing, and confidentiality implications that must be
+        cleared before use.
+  \item \textbf{Deskilling and over-trust.} Convenience tempts researchers to
+        stop reading the code. The remedy is to treat agent output as a
+        capable collaborator's draft: useful, and always reviewed.
+\end{itemize}
+
+%==============================================================================
+\section{Conclusion}
+%==============================================================================
+
+The shift from chat-based assistants to repository-aware agents such as Claude
+Code changes empirical research in a specific way: it makes the tedious,
+polyglot, reproducibility-oriented parts of the pipeline cheap enough to do
+routinely. The most compelling application is not that the agent produces an
+answer, but that it can produce the \emph{same} answer five different ways and
+make disagreements diagnostic. That reframing---agents as reproducibility
+engines under firm human direction---captures both the promise and the
+discipline the tools demand. Design, identification, and judgment remain the
+researcher's; the mechanical breadth becomes the agent's.
+
+%==============================================================================
+\section*{Resources and further reading}
+\addcontentsline{toc}{section}{Resources and further reading}
+%==============================================================================
+
+\begin{itemize}
+  \item Scott's Mixtape Substack (``Claude Code for quantitative social
+        scientists'' series):
+        \url{https://causalinf.substack.com/}
+  \item Difference-in-differences section:
+        \url{https://causalinf.substack.com/s/difference-in-differences}
+  \item \emph{Causal Inference: The Mixtape} (free online):
+        \url{https://mixtape.scunning.com/}
+  \item Author site --- Scott Cunningham:
+        \url{https://www.scunning.com/}
+  \item Claude Code documentation:
+        \url{https://code.claude.com/docs/}
+  \item Model Context Protocol (MCP):
+        \url{https://modelcontextprotocol.io/}
+\end{itemize}
+
+\vfill
+\noindent\rule{\linewidth}{0.4pt}\\[0.4em]
+{\small This document was compiled automatically as part of a scheduled
+research routine. It is a conceptual overview, not an endorsement or a
+substitute for the primary sources linked above. Because Substack was not
+directly reachable from the build environment, statements attributed to the
+newsletter series are reconstructed from public listings and should be
+verified against the source.}
+
+\end{document}
