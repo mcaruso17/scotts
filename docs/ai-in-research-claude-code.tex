@@ -1,0 +1,274 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---------------------------------------------------------------------------
+% AI Applications in Research: Concepts and the Use of Claude Code
+% A concept summary grounded in Scott Cunningham's "Scott's Mixtape Substack"
+% (causalinf.substack.com), late 2026.
+% ---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,urlcolor=blue!55!black,
+            citecolor=blue!55!black]{hyperref}
+\usepackage{titlesec}
+
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{0.75em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{0.6em}{}
+\setlist[itemize]{leftmargin=1.4em,itemsep=0.15em,topsep=0.25em}
+\setlist[enumerate]{leftmargin=1.6em,itemsep=0.2em,topsep=0.25em}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Core Concepts and the Practical Use of Claude Code}
+\author{Concept summary compiled from \emph{Scott's Mixtape Substack}}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts surrounding the use of
+artificial-intelligence (AI) agents in academic and quantitative research, with
+particular attention to \textbf{Claude Code} as a research ``harness.'' It
+synthesizes the recurring themes developed by economist Scott Cunningham in his
+newsletter \emph{Scott's Mixtape Substack} through late 2026---agentic
+workflows, hooks, connectors and the Model Context Protocol (MCP), memory
+management, the human-in-the-loop question, and the discipline of
+\emph{production, verification and understanding}. It also situates these tools
+within their emerging economic context (the rise of the ``solopreneur'' and the
+link between labor productivity and per-capita income). The aim is a compact,
+scannable reference to the ideas, not a tutorial.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ---------------------------------------------------------------------------
+\section{Introduction: agents enter the research workflow}
+% ---------------------------------------------------------------------------
+Over 2025--2026 AI coding agents matured from autocomplete assistants into
+systems capable of carrying substantial portions of an empirical research
+project---data cleaning, estimation, table and figure production, and drafting.
+A central observation of the period is that agents can, in principle,
+autonomously produce a manuscript of contemporary quantitative empirical
+research from start to finish. The open questions are therefore no longer
+\emph{whether} an agent can do the work, but \emph{which stages} it should be
+trusted with, \emph{how} a human stays meaningfully in the loop, and \emph{what}
+scaffolding keeps the output correct and comprehensible to the researcher who
+signs their name to it.
+
+This document collects the concepts that answer those questions, using Claude
+Code---Anthropic's command-line coding agent---as the concrete running example.
+
+% ---------------------------------------------------------------------------
+\section{Claude Code as a research ``harness''}
+% ---------------------------------------------------------------------------
+The organizing metaphor is the \textbf{harness}: not a single tool but a staged
+environment that structures how a researcher and an agent work together. A
+harness is less a piece of software than a \emph{staging of one's own
+cognition}, so that a person can move efficiently through a project while
+retaining control and understanding.
+
+\subsection{The three obligations: production, verification, understanding}
+A useful way to frame the goal of any research harness is three obligations that
+must all hold at once:
+\begin{itemize}
+  \item \textbf{Production} --- the analysis actually gets built and run.
+  \item \textbf{Verification} --- the output is confirmed to be what it claims
+        to be and what the researcher intended.
+  \item \textbf{Understanding} --- the researcher retains a continuous, current
+        grasp of what has been done and why.
+\end{itemize}
+Agentic speed threatens the second and third obligations: it is easy to generate
+correct-looking results faster than one can check or comprehend them---the
+``drinking from a firehose'' problem. A good harness deliberately slows the loop
+where verification and understanding demand it.
+
+\subsection{Design principles over ad-hoc prompting}
+The harness is built around explicit \emph{design principles} for the research
+domain (in Cunningham's case, causal inference), often encoded as
+\textbf{checklists}. Checklists discipline the mind, make each analytical step
+inspectable, and give the agent a stable specification to work against rather
+than a moving target of one-off instructions.
+
+% ---------------------------------------------------------------------------
+\section{Core building blocks}
+% ---------------------------------------------------------------------------
+
+\subsection{Hooks}
+\textbf{Hooks} are user-defined rules that fire automatically at defined points
+in the agent's workflow, enforcing invariants the researcher cares about without
+having to restate them each session. A canonical example from empirical work is
+the rule \emph{``don't edit raw data''}: a hook can guard the raw-data directory
+so that no agent action mutates the original inputs, forcing all transformations
+into reproducible, downstream scripts. Hooks turn good practice into
+infrastructure rather than intention.
+
+\subsection{Connectors and the Model Context Protocol (MCP)}
+\textbf{Connectors} extend an agent beyond the local machine into external and
+cloud services. Two capabilities they unlock are especially relevant:
+\begin{itemize}
+  \item using the agent from the \textbf{phone app}, not only the desktop
+        command line; and
+  \item reaching \textbf{cloud services} rather than only local files.
+\end{itemize}
+Connectors are built on \textbf{MCP (Model Context Protocol)}, an open standard
+that lets AI applications connect securely to external data sources and tools to
+read real-time information and take actions---effectively the ``piping'' between
+the model and outside services. The connector directory functions like an app
+store, with thousands of entries; some are first-party (vendor-vetted) and some
+are labeled \textbf{Community} (user-created, only lightly reviewed---``buyer
+beware'').
+
+\paragraph{Illustrative categories.}
+\begin{itemize}
+  \item \emph{Code} --- hundreds of developer-oriented connectors (e.g.\
+        ``Inkbox,'' which gives an assistant a communication identity: an email
+        address, phone number, and SMS/iMessage capability).
+  \item \emph{Financial services} --- Stripe and PayPal (micropayments),
+        QuickBooks (accounting), Gusto (payroll), Dropbox (files); direct bank
+        API access is conspicuously rare, plausibly for security reasons.
+\end{itemize}
+For research specifically, the payoff of connectors is still emerging: the
+expectation is that some cloud-only resources will become reachable
+\emph{efficiently only through a connector}, making them instrumental to future
+workflows even if the immediate wins are in productivity and small-business
+operations rather than estimation.
+
+\subsection{Memory: fighting the residue problem}
+A recurring difficulty is that agents (and their users) lose the thread of prior
+work across sessions---captured by the maxim \emph{``memory is the residue of
+thought.''} If thinking is not deliberately externalized, little residue
+remains, and continuity is lost. Practical responses include persistent project
+notes, checklists tied to the analysis stage, and---at the interface level---
+making artifacts re-inspectable (for example, figures rendered as scrollable,
+``flippable cards'') so the researcher can quickly reconstruct what has been
+done.
+
+\subsection{The human in the loop}
+\emph{Where and how} the human sits in the loop is treated as a first-order
+design question rather than an afterthought. The concern is not only accuracy
+but the researcher's own \emph{sight}---the loss of the direct, visual contact
+with code and results that a text editor once provided. This motivates
+\textbf{visual harnesses}: dashboards (and, aspirationally, spatial/AR
+interfaces such as the Apple Vision Pro) that re-embody the work, stage it, and
+keep the human an active, seeing participant rather than a rubber stamp.
+
+% ---------------------------------------------------------------------------
+\section{Which stages of research to delegate}
+% ---------------------------------------------------------------------------
+Because full end-to-end automation is now technically feasible, the responsible
+question becomes \emph{selective delegation}: matching each stage of the
+research production function to the degree of autonomy it can safely bear.
+\begin{enumerate}
+  \item \textbf{Data ingestion \& cleaning} --- high leverage, but must be
+        guarded (see the ``don't edit raw data'' hook) and kept reproducible.
+  \item \textbf{Estimation \& specification} --- benefits from agent speed, but
+        is exactly where domain design principles and verification must bite
+        hardest (see the covariate discussion below).
+  \item \textbf{Tables, figures \& reproducibility artifacts} --- strong fit for
+        automation, provided outputs remain inspectable.
+  \item \textbf{Interpretation \& writing} --- assistive, but the researcher
+        must retain authorship and understanding.
+\end{enumerate}
+The governing principle is that autonomy should expand only as far as the
+harness can still guarantee verification and understanding.
+
+% ---------------------------------------------------------------------------
+\section{Domain application: causal inference}
+% ---------------------------------------------------------------------------
+The clearest test of these ideas is a substantive methodological domain. In
+recent work on \textbf{covariate inclusion} in difference-in-differences,
+Cunningham distinguishes ``rungs'' of how and when covariates enter estimators
+such as \textbf{Callaway and Sant'Anna}. The relevance to AI-assisted research
+is direct:
+\begin{itemize}
+  \item Such choices are \emph{design decisions}, not mechanical steps, so they
+        are precisely what a checklist-driven harness should surface for human
+        judgment rather than silently automate.
+  \item They show why an agent's fluent, plausible output is insufficient:
+        without an explicit specification of \emph{which} covariates and
+        \emph{when}, the ``correct-looking'' result may embed an unjustified
+        modeling choice.
+\end{itemize}
+The broader point: the value of the harness is that it forces the estimator's
+assumptions to the surface, where a knowledgeable researcher---not the
+agent---owns them.
+
+% ---------------------------------------------------------------------------
+\section{Economic context: solopreneurs and productivity}
+% ---------------------------------------------------------------------------
+The same connector-and-agent stack that supports research also lowers the cost
+of running a business, giving rise to the \textbf{``solopreneur''}: a firm with
+a handful of employees, sometimes just one. Payment-processor data (e.g.\
+Stripe's economics team) indicate rapid growth in solo founding since roughly
+the second quarter of 2025, with a nontrivial share of such firms reaching
+\$1M--\$10M in annual revenue with minimal headcount.
+
+Framed in growth terms, if $Y$ is output, $N$ is labor, and $\mathrm{Pop}$ is
+population, per-capita income can be written schematically as
+\[
+  \frac{Y}{\mathrm{Pop}} = f\!\left(\frac{Y}{N},\, \ldots\right),
+\]
+so that gains in labor productivity ($Y/N$) plausibly propagate---through market
+mechanisms and labor income---into per-capita income ($Y/\mathrm{Pop}$). The
+suggestion is that agentic tools may raise individual productivity enough to
+matter at this aggregate level, feeding both the ``wealth of nations'' (growth)
+and its distribution (the ``wages of nations'').
+
+% ---------------------------------------------------------------------------
+\section{Open challenges}
+% ---------------------------------------------------------------------------
+\begin{itemize}
+  \item \textbf{Verification at speed} --- keeping checking and comprehension
+        from falling behind generation.
+  \item \textbf{Trust and vetting} --- Community connectors are only lightly
+        reviewed; sensitive integrations (e.g.\ banking) remain gated, partly
+        over data-breach risk.
+  \item \textbf{Loss of ``sight''} --- restoring the researcher's direct,
+        visual relationship to code and results through better (possibly
+        spatial) interfaces.
+  \item \textbf{Fit for research vs.\ operations} --- connectors' payoff for
+        empirical estimation is still less proven than their payoff for
+        business/productivity tasks.
+\end{itemize}
+
+% ---------------------------------------------------------------------------
+\section{Conclusion}
+% ---------------------------------------------------------------------------
+Claude Code exemplifies a shift from AI-as-assistant to AI-as-agent in research.
+The durable concepts are not the individual features but the \emph{harness}
+philosophy that surrounds them: hooks that encode good practice as
+infrastructure, connectors/MCP that extend reach into cloud services, deliberate
+memory and visual design that preserve understanding, and an explicit contract
+of production, verification, and understanding. Delegation should expand only as
+fast as that contract can be honored---and in a methodological field such as
+causal inference, the design decisions that define an estimator must remain the
+researcher's own.
+
+% ---------------------------------------------------------------------------
+\section*{Sources and further reading}
+\addcontentsline{toc}{section}{Sources and further reading}
+% ---------------------------------------------------------------------------
+Primary source: \emph{Scott's Mixtape Substack} by Scott Cunningham,
+\url{https://causalinf.substack.com/}. Concepts above draw on posts from
+August--September 2026, including:
+\begin{itemize}
+  \item ``Connectors and My Harness Idea''
+        (\url{https://causalinf.substack.com/p/connectors-and-my-harness-idea}), 9 Sep 2026.
+  \item ``Four Rungs of Covariate Inclusion in Callaway and Sant'Anna,'' 7 Sep 2026.
+  \item ``Where and how will the human be in the loop?,'' 4 Sep 2026.
+  \item ``Which covariates? When to include them?,'' 3 Sep 2026.
+  \item ``Some thoughts about AI in practice,'' 2 Sep 2026.
+  \item ``How and why I am using hooks (part 1),'' 24 Aug 2026.
+  \item ``\,`Memory is the residue of thought' and fixing that when working with AI agents,'' 20 Aug 2026.
+  \item ``Which stages of research production should we let AI Agents loose,'' 14 Aug 2026.
+\end{itemize}
+Related: \emph{Causal Inference: The Remix} (Yale University Press, 2026);
+Model Context Protocol (\url{https://modelcontextprotocol.io}); Stripe on
+solo founders.
+
+\end{document}
