@@ -1,0 +1,196 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+% AI Applications in Research, with a Focus on Claude Code
+% A concept summary informed by Scott Cunningham's "Claude Code for
+% quantitative social scientists" writing and the broader agentic-research
+% literature. Compiles with a standard pdflatex/xelatex toolchain.
+% ---------------------------------------------------------------------------
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue,citecolor=black]{hyperref}
+
+\setlist{itemsep=2pt,topsep=3pt}
+\titleformat*{\section}{\large\bfseries}
+\titleformat*{\subsection}{\normalsize\bfseries}
+
+\title{\textbf{AI Applications in Research}\\[2pt]
+\large Concepts and Workflows, with a Focus on Claude Code}
+\author{Prepared from Scott Cunningham's newsletter and the agentic-research literature}
+\date{September 15, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This note surveys how AI---and \emph{agentic} coding assistants such
+as Anthropic's \textbf{Claude Code} in particular---are being used in
+empirical research. It draws on the running series Scott Cunningham has
+published for quantitative social scientists, and organizes the ideas into a
+research life cycle, a set of reusable building blocks (skills, subagents,
+verification protocols), and a discussion of what changes and what does
+\emph{not} when an agent joins the workflow. The recurring theme is that
+agents commoditize the mechanical parts of empirical work while raising the
+premium on research \emph{design} and identification judgment.
+\end{abstract}
+
+\section{What ``AI in research'' now means}
+
+The center of gravity has shifted from \emph{chat} assistants that answer
+questions to \emph{agents} that take actions: read and edit files, run code,
+inspect results, and iterate toward a stated goal. Claude Code is a
+command-line, repository-aware agent of this kind. Instead of pasting
+snippets into a chat window, the researcher points the agent at a project
+directory and delegates concrete, verifiable tasks. Three properties make
+this qualitatively different from earlier tools:
+
+\begin{itemize}
+  \item \textbf{Grounding in the project.} The agent reads the actual data
+    dictionaries, code, and drafts, so its suggestions are specific rather
+    than generic.
+  \item \textbf{A feedback loop.} It can run the code it writes, read the
+    error or the estimate, and correct itself---closing the loop that a chat
+    assistant leaves open.
+  \item \textbf{Composability.} Instructions, ``skills,'' and subagents can be
+    saved and reused, turning ad-hoc prompting into durable research
+    infrastructure.
+\end{itemize}
+
+\section{The empirical research life cycle with an agent}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}p{3.4cm}p{10.2cm}@{}}
+\toprule
+\textbf{Stage} & \textbf{How an agent contributes} \\
+\midrule
+Ideation \& design & Sharpen the research question, enumerate identification
+  strategies, and stress-test the credibility of a proposed design. \\
+Literature \& context & Summarize methods, surface relevant estimators, and
+  translate an approach across the econometrics literature. \\
+Data engineering & Clean, merge, reshape, and document data; generate
+  codebooks and sanity checks the human might skip. \\
+Estimation & Implement estimators (e.g.\ matching, RDD, IV, difference-in-differences),
+  including modern, correctly-specified variants. \\
+Robustness & Produce placebo tests, alternative specifications, and
+  sensitivity analyses on request. \\
+Verification & Replicate results in a second language and referee the project
+  adversarially (see \S\ref{sec:verify}). \\
+Writing & Draft prose, tables, and \LaTeX; keep the paper consistent with the
+  code that produced the numbers. \\
+\bottomrule
+\end{tabular}
+\caption{Agent contributions across the empirical workflow. The human owns the
+design decisions; the agent accelerates execution and verification.}
+\end{table}
+
+\section{Reusable building blocks}
+
+\subsection{Skills}
+A \emph{skill} is a packaged set of instructions for a recurring task---an
+estimator template, a table-formatting convention, a house style for figures.
+Once written, it is invoked by name and behaves consistently across projects,
+so methodological standards travel with the researcher instead of being
+re-typed each session. Community efforts already package causal-inference
+methods (DiD, RDD, IV, synthetic control, matching) as Claude Code skills with
+code templates in Python, R, and Stata.
+
+\subsection{Subagents and ``agent-thinking'' specifications}
+Large tasks are decomposed and delegated to \emph{subagents}, each with a
+narrow brief and its own context, which then report back. Paired with explicit
+specifications of \emph{how} an agent should reason about a problem, this keeps
+long projects organized and makes the division of labor auditable.
+
+\subsection{Cross-language replication}
+A distinctive practice is re-implementing an analysis in a second language
+(e.g.\ replicating a Stata result in R, or Python in R). Agreement across
+independent implementations is strong evidence that a result is not an artifact
+of one script's bug or one package's default.
+
+\section{Verification: the ``Referee 2'' idea}
+\label{sec:verify}
+
+The most important lesson from using agents seriously is that
+\textbf{generation is cheap, so verification must be systematic}. Cunningham
+describes a multi-audit protocol---nicknamed ``Referee 2''---that runs
+\emph{after} a project is complete:
+
+\begin{itemize}
+  \item a fixed sequence of audits over data, code, and claims;
+  \item cross-language replication of the headline results;
+  \item a formal, written referee report with a revise-and-resubmit loop;
+  \item crucially, the review is performed in a \emph{fresh terminal by an
+    agent instance that has never seen the work}, so it cannot rationalize
+    prior choices---an adversarial, from-scratch reader.
+\end{itemize}
+
+\noindent The principle generalizes beyond any one tool: pair every generative
+step with an independent, adversarial check, and prefer checks that a mistake
+cannot silently pass.
+
+\section{A worked case study}
+
+A running, public example is Cunningham's collaboration with Caitlin Myers,
+writing a paper with Claude Code on the effect of Texas \emph{House Bill 2}
+abortion-clinic closures using \textbf{continuous difference-in-differences}.
+The value of the example is less the estimate than the demonstrated
+\emph{process}: ideation, data construction, estimation, and repeated
+verification carried out interactively with an agent, documented episode by
+episode.
+
+\section{What changes, and what does not}
+
+\begin{itemize}
+  \item \textbf{Commoditized:} boilerplate coding, data wrangling, first-pass
+    estimation, and routine writing---faster and cheaper with an agent.
+  \item \textbf{More valuable:} research design and identification---choosing
+    the comparison that actually recovers a causal effect. This is the
+    ``changing market conditions'' thesis: agents raise, not lower, the return
+    to knowing causal inference deeply.
+  \item \textbf{Unchanged:} accountability. The researcher remains responsible
+    for correctness, and human judgment sets the questions and vets the
+    answers. Agents are collaborators to be supervised, not oracles.
+\end{itemize}
+
+\section{Practical guidance}
+
+\begin{enumerate}[label=\arabic*.]
+  \item Delegate concrete, \emph{verifiable} tasks rather than vague ones.
+  \item Never accept a number you cannot reproduce; build replication into the
+    workflow, ideally across languages.
+  \item Capture recurring instructions as skills so standards persist.
+  \item Reserve a separate, adversarial pass for verification---ideally a fresh
+    agent with no memory of how the result was produced.
+  \item Keep design decisions human; let the agent execute and check.
+  \item Treat reproducibility (version-controlled code, documented data, seeds)
+    as the substrate that makes agentic work trustworthy.
+\end{enumerate}
+
+\section{Key resources}
+
+\begin{itemize}
+  \item Scott's Mixtape Substack --- \url{https://causalinf.substack.com/}
+  \item ``Claude Code'' series section ---
+    \url{https://causalinf.substack.com/s/claude-code}
+  \item MixtapeTools (coding/teaching/presentation tooling) ---
+    \url{https://github.com/scunning1975/MixtapeTools}
+  \item Causal Inference: The Mixtape --- \url{https://mixtape.scunning.com/}
+  \item Mixtape Sessions (workshops) --- \url{https://www.mixtapesessions.io/}
+\end{itemize}
+
+\vfill
+\noindent\rule{\linewidth}{0.4pt}\\[2pt]
+\small Compiled from public newsletter metadata and the broader agentic-research
+literature as of September 15, 2026. Specific attributions to Scott
+Cunningham's posts reflect publicly available titles and summaries; consult the
+original posts for exact wording.
+
+\end{document}
