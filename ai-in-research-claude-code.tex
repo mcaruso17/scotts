@@ -1,0 +1,244 @@
+\documentclass[11pt]{article}
+
+% --- Packages (kept to a common, widely-available set) ---
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,urlcolor=blue!55!black,citecolor=blue!55!black]{hyperref}
+\usepackage{parskip}
+
+\setlist{itemsep=2pt,topsep=4pt}
+
+\title{\textbf{AI Applications in Research}\\[4pt]
+\large Concepts and Workflows for Empirical Research with AI Agents,\\ with a Focus on Claude Code}
+\author{Compiled from the ideas circulating in applied causal-inference practice\\ \small (notably Scott Cunningham's \emph{Scott's Mixtape Substack})}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts that have emerged around the use of
+AI agents---and Claude Code in particular---in quantitative empirical research. It
+organizes the material around a single framework, \emph{production, verification, and
+understanding}, and connects it to the practical machinery of Claude Code: hooks,
+skills, connectors, the Model Context Protocol (MCP), and diff-based review. The aim is
+a compact, self-contained reference for researchers deciding \emph{which} parts of the
+research pipeline to hand to an agent, and \emph{how} to keep human judgment in control
+of the rest.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ------------------------------------------------------------------
+\section{The New Economics of Research Production}
+
+The arrival of capable coding agents has sharply lowered the marginal cost of producing
+empirical research. In simple economic terms, if a researcher historically produced
+research up to the point where marginal benefit equaled a relatively high marginal cost
+$MC_{b}$, agents push that marginal cost down toward a small $\varepsilon > 0$:
+%
+\[
+MC_{b} \;\longrightarrow\; \widehat{MC}_{AI} \approx \varepsilon .
+\]
+%
+Two things follow. First, the \emph{quantity} of research a single person can produce
+rises substantially. Second, existing work is now produced with far fewer time inputs,
+freeing capacity that can---in principle---be reallocated to other tasks.
+
+The open question is whether the freed time actually restores the tacit
+\emph{understanding} that used to be generated as a by-product of doing the work by hand.
+This document argues, following current practice, that it does not do so automatically:
+understanding must be deliberately engineered back into the workflow.
+
+% ------------------------------------------------------------------
+\section{Autonomous Production Is Real---but It Is Not Full Autonomy}
+
+A useful, sobering observation: AI agents can already produce, start to finish, a
+submittable empirical manuscript---choosing a question, an identification strategy,
+locating and downloading data, selecting estimators, writing replicable code, generating
+tables and figures, running robustness checks, and drafting a 20-page paper---often in
+under an hour. This capability has been demonstrated at scale (for example, projects
+generating on the order of a thousand automated program-evaluation papers using
+difference-in-differences, instrumental variables, and related designs).
+
+The important qualifier is that this is \emph{not} full self-driving research. The right
+analogy is lane-keeping plus cruise control, not a truly autonomous vehicle: the agent
+handles a great deal, but a human must remain the responsible driver. The reason is that
+the hardest part of credible empirical work is not code generation but \emph{judgment}
+about design, and judgment is exactly what cannot be safely delegated.
+
+% ------------------------------------------------------------------
+\section{The Core Framework: Production, Verification, Understanding}
+
+The central organizing idea is that research must pass through three distinct
+``doors'':
+
+\begin{description}[leftmargin=1.6em,style=nextline]
+  \item[\textcolor{blue!55!black}{Production}] Generating the analysis: data, code,
+  estimates, exhibits, and prose. This is the door agents open most easily and most
+  fully.
+  \item[\textcolor{blue!55!black}{Verification}] Confirming that what was intended was in
+  fact done---\emph{and} that what should \emph{not} have been done was not done.
+  \item[\textcolor{blue!55!black}{Understanding}] The researcher's own, non-delegable
+  comprehension of what was done, why, and what it means.
+\end{description}
+
+\subsection{Verification is subtler than replication}
+Re-running code in multiple languages, or confirming that every table and figure traces
+to stored code, are \emph{necessary but not sufficient} conditions for verification. A
+subtle failure mode is \emph{endogenous specification search}: an agent can drift into a
+model specification in response to true statements made in the project context, rather
+than any explicit instruction to do so. True verification is therefore relative to a
+\emph{pre-specified target estimand}: it checks both that the intended analysis was
+executed and that nothing off-target crept in. The latter---confirming the absence of
+what was never supposed to happen---cannot be delegated to the agent, because from the
+agent's point of view there is nothing to verify.
+
+\subsection{Understanding is the real bottleneck}
+A popular slogan holds that ``verification is the new bottleneck.'' A sharper statement
+is that \textbf{understanding is the new bottleneck}. Agents may eventually verify as
+well as they produce, but that still would not guarantee that the human understands the
+result. Historically, understanding was almost an \emph{externality} of production---a
+by-product created accidentally by the act of doing the work. When production is
+outsourced, that by-product disappears unless it is intentionally rebuilt. The
+governing principle (often attributed to IBM) is that since a machine cannot be held
+accountable, it cannot be trusted to make the decision: agents must either help the human
+understand the work, or not be used for it.
+
+\subsection{Zero errors as a constraint, not an objective}
+A recurring discipline: treat \emph{zero errors} as a hard constraint, not as something
+to be minimized. Framing it as minimization quietly licenses ``optimal errors,'' which is
+unacceptable when the elasticity of research supply is high. In Lagrangean terms, one
+maximizes research value \emph{subject to} production, verification, and understanding all
+being satisfied, with zero errors imposed as a binding constraint.
+
+% ------------------------------------------------------------------
+\section{Checklists and ``Harnesses''}
+
+Because experts skip steps---often \emph{more} than beginners, a consequence of fast,
+System-1 thinking---high-stakes work benefits from explicit checklists (in the spirit of
+Atul Gawande's \emph{The Checklist Manifesto} and Daniel Kahneman's
+\emph{Thinking, Fast and Slow}). In empirical practice, checklists are already implicit in
+the design-based tradition (e.g., ``design trumps analysis''), where credible inference
+depends on understanding the \emph{treatment assignment mechanism} before estimating
+anything.
+
+A \textbf{harness} extends the checklist into software: a visual staging environment that
+routes a project through the production--verification--understanding stages. A worked
+example is a difference-in-differences harness whose early ``bite'' stage exhaustively
+documents the first-stage, boots-on-the-ground response to an intervention (maps, time
+series, comparison groups) \emph{before} any estimation. Notably, this conception stage
+is the part one should \emph{least} automate: agents can draw the maps and write the code,
+but the researcher must own the detective work of establishing how, where, and to whom the
+treatment actually reached the world.
+
+% ------------------------------------------------------------------
+\section{Claude Code in Practice}
+
+Several concrete Claude Code features map directly onto the framework above.
+
+\subsection{Hooks}
+Hooks let the researcher wire deterministic, repeatable actions into the agent's workflow
+(for example, standardized figure and table production, or a guardrail such as
+``never edit raw data''). Hooks are best made \emph{specific} to each checklist stage
+rather than abstract and universal---they are the mechanism by which verification steps are
+enforced automatically.
+
+\subsection{Skills}
+Skills are reusable, invokable routines. A representative example is a \texttt{/quiz}
+skill built explicitly to defend \emph{understanding}: Claude Code generates teaching
+slides on the current analysis and then asks the researcher multiple-choice questions
+about it---modeled, only half-jokingly, on corporate ``training-video quizzes.'' The point
+is to force continuous comprehension on top of verification.
+
+\subsection{The git diff as the unit of verification}
+A common review practice is to treat each git diff as the atomic unit of verification.
+This is valuable, but carries a warning: skimming and rubber-stamping diffs accumulates
+\emph{cognitive debt}. Checking off a diff is supposed to clear that debt; in practice it
+is easy to accept changes without genuine understanding. Diff review should therefore be
+paired with an active understanding practice (such as the \texttt{/quiz} idea above),
+so the goal becomes two things---verification \emph{and} understanding---not one.
+
+\subsection{Connectors and the Model Context Protocol (MCP)}
+\emph{Connectors} extend Claude beyond the local machine into external cloud services, and
+work not only in Claude Code but also in the phone-based Claude app. They are powered by
+the \textbf{Model Context Protocol (MCP)}, an open standard that lets AI applications
+securely connect to external data sources and tools to fetch real-time information and take
+actions---effectively the ``piping'' between the model and outside systems. The connector
+directory functions like an app store (on the order of thousands of entries) and mixes
+first-party connectors with lightly-vetted \emph{community} ones, so a ``buyer beware''
+posture is warranted. For research, connectors are promising but still exploratory; their
+clearest near-term value is convenience (e.g., searching cloud file storage from the
+phone) and, more speculatively, reaching cloud resources that are only efficiently
+accessible through an MCP connection.
+
+% ------------------------------------------------------------------
+\section{Keeping the Human in the Loop}
+
+The recurring worry is a principal--agent problem: the researcher trusts that the agent did
+the work well, but the agent is not a real accountable party, and if the researcher's own
+skills atrophy, they may lose even the ability to judge whether the work \emph{was} done
+well---``the blind leading the blind.'' The mitigations that follow from the framework are:
+
+\begin{itemize}
+  \item Decide \emph{ex ante} which stages are automated and which are reserved for human
+  judgment (design and the ``bite''/conception stage are prime candidates to keep manual).
+  \item Encode verification as hooks so it happens by construction, not by memory.
+  \item Add an explicit understanding practice (quizzes, interviews, teaching slides) so
+  comprehension is produced on purpose rather than left to chance.
+  \item Hold zero errors as a constraint and a pre-registered target estimand as the anchor
+  for verification.
+\end{itemize}
+
+% ------------------------------------------------------------------
+\section{A Practical Workflow Checklist}
+
+\begin{enumerate}
+  \item \textbf{State the target estimand} and the design before touching data; write it
+  down so verification has an anchor.
+  \item \textbf{Pin the environment} (packages and versions) so results are reproducible.
+  \item \textbf{Do the ``bite'' work by hand} (or closely supervised): document the
+  first-stage, real-world response to the intervention exhaustively.
+  \item \textbf{Automate production} of exhibits and robustness checks via hooks and
+  skills, keeping raw data immutable.
+  \item \textbf{Verify against the estimand}, checking both that intended steps ran and
+  that no off-target specification search occurred.
+  \item \textbf{Review diffs actively}, not passively; refuse to accept changes you cannot
+  explain.
+  \item \textbf{Quiz yourself} on the analysis to convert verification into durable
+  understanding.
+  \item \textbf{Treat any error as a stop condition}---zero errors is the constraint.
+\end{enumerate}
+
+% ------------------------------------------------------------------
+\section{Conclusion}
+
+AI agents have made research \emph{production} nearly free at the margin, and Claude Code
+supplies concrete tools---hooks, skills, connectors, and diff review---to industrialize
+it. But cheap production shifts the binding constraint downstream to
+\emph{verification} and, most of all, to \emph{understanding}, which no longer arrives for
+free as a by-product of doing the work. The practical response is to build a disciplined
+harness: automate production, enforce verification mechanically, and deliberately
+manufacture understanding, all under a hard zero-error constraint. Used this way, agents
+sit in the cockpit \emph{with} the researcher rather than flying the plane while the
+researcher sleeps.
+
+\bigskip
+\hrule
+\bigskip
+\noindent{\small \emph{Sources and further reading:} Scott Cunningham,
+\emph{Scott's Mixtape Substack} (Claude Code series), including ``Which stages of research
+production should we let AI agents loose,'' ``How to improve understanding with Claude
+Code,'' and ``Connectors and My Harness Idea''
+(\url{https://causalinf.substack.com}); Scott Cunningham,
+\emph{Causal Inference: The Remix} (Yale University Press); Atul Gawande,
+\emph{The Checklist Manifesto}; Daniel Kahneman, \emph{Thinking, Fast and Slow};
+Geoffrey Litt, ``Understanding is the new bottleneck.''}
+
+\end{document}
