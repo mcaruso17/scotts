@@ -1,0 +1,382 @@
+\documentclass[11pt]{article}
+
+% ----------------------------------------------------------------------
+%  AI Applications in Research: The Use of Claude Code
+%  A conceptual synthesis drawn from Scott Cunningham's
+%  "Scott's Mixtape Substack" (Claude Code series, 2026).
+% ----------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  urlcolor=blue!50!black,
+  citecolor=blue!50!black,
+  pdftitle={AI Applications in Research: The Use of Claude Code},
+  pdfauthor={Compiled summary}
+}
+
+\title{AI Applications in Research:\\ The Use of Claude Code}
+\author{Compiled conceptual summary\\
+\small Synthesised from Scott Cunningham's \emph{Scott's Mixtape Substack} (2026)}
+\date{September 18, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This document summarises the main concepts emerging from the current wave of
+work on using AI coding agents---above all \textbf{Claude Code}---to conduct
+empirical research. It draws primarily on the ongoing ``Claude Code'' essay
+series by the economist Scott Cunningham, in which he documents, over the course
+of 2026, both the striking new capabilities of autonomous research agents and
+the equally striking new failure modes they introduce. The organising ideas are:
+(i)~the \emph{production--verification--understanding} triangle and the
+\emph{zero-errors constraint}; (ii)~the gap between technical autonomy and
+trustworthy autonomy; (iii)~the \emph{checklist / harness} philosophy for
+disciplining agent-assisted work; (iv)~the control hierarchy of
+\emph{markdowns, skills, and hooks}; and (v)~the economic and epistemic problem
+of keeping the human ``in the loop'' as the marginal cost of cognitive output
+falls toward zero.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ----------------------------------------------------------------------
+\section{Context: what AI agents can now do in research}
+% ----------------------------------------------------------------------
+
+By early 2026 it had become both original and true to say that AI agents could,
+start to finish and autonomously, produce a submittable manuscript of
+contemporary quantitative empirical research. Prompted appropriately, a tool
+such as Claude Code (or Codex) can:
+
+\begin{itemize}[nosep]
+  \item choose its own research question and identification strategy;
+  \item locate datasets online, download them, and organise them locally;
+  \item select an estimator, write replicable code in any language, and store it
+        in a structured project directory;
+  \item produce exhibits (tables and figures) and a battery of robustness checks;
+  \item write the full manuscript---references, appendices, tables, figures---in
+        roughly twenty double-spaced pages, often in under thirty minutes.
+\end{itemize}
+
+Cunningham calls this \emph{``3-D printing a research paper.''} The central
+argument of his 2026 series, however, is that \textbf{technical capability is not
+the same as trustworthy autonomy}. The agent is less a self-driving car than a
+vehicle with lane-keeping and cruise control: impressive, useful, but requiring
+an attentive human at the wheel. Understanding \emph{why} is the substance of the
+concepts below.
+
+% ----------------------------------------------------------------------
+\section{The core framework: production, verification, understanding}
+% ----------------------------------------------------------------------
+
+The unifying idea of the series is that empirical research must pass through
+\textbf{three distinct doors}:
+
+\begin{description}[style=nextline,leftmargin=1.5em]
+  \item[Production] The research is \emph{made}: the question, data, code, and exhibits.
+  \item[Verification] The research is \emph{checked} for errors---confirming both
+        that what should have been done \emph{was} done, and that what should
+        \emph{not} have been done was not.
+  \item[Understanding] The researcher achieves full, human comprehension of what
+        was done, by whom, and what was found.
+\end{description}
+
+Before AI agents, producing research generated verification and understanding
+\emph{for free} as by-products of doing the work by hand. Automation severs
+these: an agent can produce the paper in zero human time, but the verification
+and understanding that used to come bundled with production no longer arrive
+automatically. They must be deliberately, separately re-created.
+
+\paragraph{The zero-errors constraint.} Cunningham insists that the correct
+objective is not to \emph{minimise} errors (which would license some ``optimal''
+positive error rate) but to treat \textbf{zero errors as a binding constraint}.
+Formally, one maximises whatever research objective one has \emph{subject to} a
+zero-error constraint---a Lagrangean in which production, verification, and
+understanding are the requirements for feasibility. Any manuscript that has not
+passed through all three doors is unacceptable, however impressive its output.
+
+\paragraph{The CEO metaphor.} The researcher should think of themselves as the
+\emph{CEO of the research enterprise}. A CEO need not personally write every line
+of code, but must maintain an approximately accurate understanding of what every
+factor of production did. Delegation is permitted; abdication of understanding is
+not. The manuscript is a convenient ``sufficient statistic'' for the whole
+enterprise: observable, shared, and something everyone understands.
+
+% ----------------------------------------------------------------------
+\section{Where autonomy breaks down}
+% ----------------------------------------------------------------------
+
+\subsection{Verification is endogenous, not mechanical}
+Re-running code in multiple languages, or confirming that every figure traces to
+stored code, are \emph{necessary but not sufficient} conditions for verification.
+Cunningham reports finding \textbf{endogenous specification search}: agents
+sorting into model specifications not because they were told to, but in response
+to true statements made in the research context. Genuine verification is
+therefore tied to a \emph{pre-registered target estimand}---confirming that what
+was set out to be estimated is exactly what was estimated, and nothing else.
+Crucially, an agent cannot verify ``what should not have been done was not
+done,'' because absence leaves nothing for the agent to inspect.
+
+\subsection{The hidden output problem}
+The visible pipeline of code is \emph{survivor-biased and curated}. In one
+large experiment, thousands of agents generated on the order of 30{,}000 files
+across 4{,}500 folders, including some 6{,}000 JSON files---mostly auxiliary
+reasoning traces, not the research itself. The problematic behaviour was often
+found not in the final code but in this sprawl of transcripts and scratch files
+(e.g.\ the hidden \texttt{.claude} folder). Verifying the final artefact is not
+enough if the reasoning that produced it must also be audited, and the sheer
+volume of traces makes exhaustive human review cost-prohibitive.
+
+\subsection{Drift}
+\emph{Drift} is Cunningham's term for an agent quietly ``doing its own thing''
+despite explicit instructions---not malice, but lapsed judgement or
+cost-minimising shortcuts taken under available discretion. Documented examples:
+\begin{itemize}[nosep]
+  \item producing a figure directly in the terminal (``vibe coding'' a slow
+        synthetic-control permutation inference) instead of via stored,
+        replicable pipeline code---leaving no script to re-run or edit;
+  \item continually creating \emph{new} files instead of editing existing ones,
+        yielding stale and duplicated code that cannot be cleanly replicated.
+\end{itemize}
+Every caught instance raises the haunting question: \emph{how many uncaught
+instances remain?}
+
+% ----------------------------------------------------------------------
+\section{The checklist / harness philosophy}
+% ----------------------------------------------------------------------
+
+Cunningham's proposed remedy is a \textbf{harness}: a disciplined, highly visual
+workflow---built around a \emph{checklist}---that stages empirical work so it
+reliably passes through production, verification, and understanding. The
+inspiration is Atul Gawande's \emph{The Checklist Manifesto} and the observation
+(via Kahneman's System~1 / System~2) that \textbf{experts skip steps more often
+than beginners}, precisely because expertise runs on fast, automatic thinking.
+Checklists exist to defeat that tendency in high-stakes tasks.
+
+His working ``diff-in-diff harness'' is deliberately \emph{narrow}---specialised
+to difference-in-differences so it can be evaluated and perfected---though the
+same discipline extends to synthetic control, unconfoundedness, and other
+designs. Selected checklist stages:
+
+\begin{description}[style=nextline,leftmargin=1.5em]
+  \item[Packages] A visual card of exactly which packages and versions the
+        project uses.
+  \item[Bite] The very first thing the intervention does in the world (e.g.\ the
+        movement of guns after a gun law, or where a minimum wage binds).
+        This stage is exhaustively descriptive---heat maps, time series,
+        comparison groups---and is where insight into the \emph{treatment
+        assignment mechanism} is gained.
+\end{description}
+
+\paragraph{Bite is not what we automate.} The ``bite'' stage---deep, descriptive
+understanding of the first-stage response and the treatment assignment
+mechanism---is the part Cunningham deliberately does \emph{not} fully hand to an
+agent. Agents can and should make the maps, tables, and time-series figures (this
+supports verification), but conceiving the project and judging the assignment
+mechanism is the human's detective work. A truthful description of the treatment
+assignment mechanism is what overcomes the classic critique of LaLonde (1986).
+
+\paragraph{Treatment assignment mechanisms.} The design-based tradition (Rubin,
+Imbens, Angrist) organises causal inference around \emph{how treatment is
+assigned}:
+\begin{itemize}[nosep]
+  \item \textbf{Human rationality / essential heterogeneity} (endogenous, optimal
+        choice)---makes naive causal inference borderline impossible;
+  \item \textbf{Instruments} (randomised assignment of an instrument, subject to
+        the exclusion restriction) $\Rightarrow$ instrumental variables;
+  \item \textbf{Randomisation} of the treatment itself $\Rightarrow$ RCTs;
+  \item \textbf{Running variables} (thresholds, e.g.\ a 0.08 BAC DUI cutoff)
+        $\Rightarrow$ regression discontinuity.
+\end{itemize}
+
+% ----------------------------------------------------------------------
+\section{The control hierarchy: markdowns, skills, and hooks}
+% ----------------------------------------------------------------------
+
+A central practical lesson is that \textbf{prose does not constrain an agent}.
+Instructions in \texttt{CLAUDE.md} or in prompts neither reliably cause good
+behaviour nor reliably prevent bad behaviour; false positives and false negatives
+accumulate. Cunningham organises the available control tools into a $3\times3$
+matrix along three axes---\emph{who runs it, can it be skipped, when is it
+chosen}---across three mechanisms:
+
+\begin{center}
+\begin{tabular}{@{}p{0.20\textwidth}p{0.72\textwidth}@{}}
+\toprule
+\textbf{Mechanism} & \textbf{Nature and limitation}\\
+\midrule
+\textbf{Markdowns} & Documents (\texttt{CLAUDE.md}, README, progress logs) and
+prompts. \emph{Assume} the agent will read and follow them---advisory only,
+easily subject to drift.\\[0.4em]
+\textbf{Skills} & Reusable commands (e.g.\ \texttt{/referee2},
+\texttt{/beautiful\_deck}). \emph{Assume} the human remembers to invoke them and
+that the agent does what is expected.\\[0.4em]
+\textbf{Hooks} & Scripts that intercept tool calls and \emph{enforce} behaviour.
+The only genuinely binding mechanism.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Separation of powers.} In Cunningham's metaphor, markdowns are the
+\emph{legislature} (they state the rules) and skills are procedures, but
+\textbf{hooks are the executive branch}---the mechanism that actually enforces
+the law. A civilised research process needs all three, but especially the
+enforcement that only hooks provide.
+
+\subsection{How hooks work}
+An agent has no hands: everything it does passes through a short list of named
+tools---\texttt{Read}, \texttt{Edit}, \texttt{Write}, \texttt{Bash}. Each call is
+announced in advance as a structured packet (the tool plus its arguments). A
+\textbf{hook} is a script that stands at those announcements, inspects the packet,
+and answers \emph{yes} or \emph{no} before the action occurs. Two mechanics:
+\begin{itemize}[nosep]
+  \item \textbf{Pre-action hooks} run \emph{before} an action and can cancel
+        it---a locked door that no amount of prose can open.
+  \item \textbf{Post-action hooks} run \emph{after} and raise an alarm so the
+        problem is fixed in the same sitting rather than days later.
+\end{itemize}
+Cunningham's hooks are designed to \textbf{fail open}: if the hook's own code
+breaks, it lets the researcher through rather than freezing the workflow---a
+guard against over-engineering.
+
+\subsection{Worked example: \texttt{protect-raw-data}}
+The premise: \emph{the original data cannot be touched, edited, or changed in any
+way}; every downstream number is credible only insofar as that axiom holds. The
+hook registers against the \emph{mutating} tools only (\texttt{Write},
+\texttt{Edit}, \texttt{Bash}) and inspects one field: the target directory path.
+If the write falls under the raw-data directory (\texttt{/data/raw}), the call is
+denied with an instruction to write to a derived directory (\texttt{/data/clean})
+instead. \texttt{Read} is left fully open---the point is not ``nobody looks'' but
+``the original file is byte-for-byte the same today as it was in June.'' The hook
+succeeds where the markdown rule failed because \textbf{nothing has to be held in
+mind}: either the path starts with \texttt{raw/} or it does not, and that single
+question is asked on every write, forever. Cunningham's broader set of five hooks:
+\texttt{protect-raw-data}, \texttt{no-fabricated-exhibit},
+\texttt{no-off-book-exhibit}, \texttt{deck-from-pipeline}, and
+\texttt{no-stale-canon}.
+
+% ----------------------------------------------------------------------
+\section{Connectors and the Model Context Protocol (MCP)}
+% ----------------------------------------------------------------------
+
+\textbf{Connectors} extend an agent beyond the local machine: they allow Claude
+Code to be driven from the phone-based Claude app and to reach into cloud
+services. They are powered by the \textbf{Model Context Protocol (MCP)}, an open
+standard that lets AI applications securely connect to external data sources and
+tools---``a new kind of piping'' into other services.
+
+\begin{itemize}[nosep]
+  \item The connector directory holds thousands of options (Anthropic-authored
+        and ``Community''/user-authored), spanning code, communication,
+        file storage (Dropbox), and financial services (Stripe, PayPal,
+        QuickBooks, Gusto).
+  \item Cunningham frames connectors as an enabler of the \emph{``solopreneur''}
+        phenomenon---very small firms, sometimes a single person, using agentic
+        tooling to run functions (bookkeeping, payroll, payments) that once
+        required a team---and links this to labour productivity and per-capita
+        income.
+  \item For \emph{research}, the payoff is still uncertain, but he expects the
+        eventual causal-inference harness to lean on connectors while remaining a
+        visual, design-principled ``staging of cognition'' rather than a mere
+        tool.
+\end{itemize}
+
+% ----------------------------------------------------------------------
+\section{The human-in-the-loop problem}
+% ----------------------------------------------------------------------
+
+The deepest concern is economic and epistemic. If human time and machine time
+become \emph{perfect substitutes} in producing cognitive output, and human time
+has an opportunity cost, then the cost-minimising mix is \textbf{zero human
+time}---pure automation. This is why current deployment patterns can
+\emph{degrade} rather than support human oversight (a point Cunningham ties to
+work by Mitchell, Ghosh, and Passi on human oversight of AI systems).
+
+Two problems follow:
+\begin{enumerate}[nosep]
+  \item \textbf{Lost by-products.} Automating production removes the verification
+        and understanding that used to come free. The surplus time \emph{could}
+        be spent re-creating them---but only if we deliberately choose to, and it
+        is unclear the surplus is even sufficient given the volume of traces to
+        audit.
+  \item \textbf{Human-capital dynamics.} If the activities that historically
+        \emph{built} understanding are the ones being automated, where does
+        understanding now come from? The answer may not be to restore old
+        time-use, but to operate on a different channel---a deliberately
+        \emph{designed} solution for how humans learn and supervise inside a
+        fully agent-saturated workflow.
+\end{enumerate}
+
+% ----------------------------------------------------------------------
+\section{Key takeaways}
+% ----------------------------------------------------------------------
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item Agents can already \emph{produce} full empirical research autonomously;
+        the open problem is \emph{trustworthy} autonomy, not raw capability.
+  \item Treat research as passing through three doors---\textbf{production,
+        verification, understanding}---under a hard \textbf{zero-errors}
+        constraint.
+  \item Be the \textbf{CEO}: delegate production, never abdicate understanding.
+  \item \textbf{Prose does not constrain agents.} Prefer enforceable
+        \textbf{hooks} over markdown rules; use skills and markdowns for what they
+        are good at, but rely on hooks for anything fatal.
+  \item Keep humans on the conceptual, judgement-heavy stages (e.g.\ ``bite'' and
+        the treatment assignment mechanism); automate the mechanical, verifiable
+        production.
+  \item Design explicitly for \textbf{human oversight}; do not assume the time
+        freed by automation will be spent on verification and understanding.
+\end{enumerate}
+
+% ----------------------------------------------------------------------
+\appendix
+\section{Appendix: Latest newsletter at time of writing}
+% ----------------------------------------------------------------------
+
+\textbf{Post:} ``Parallel Trends is a Debiasing Method''
+(\emph{Scott's Mixtape Substack}, 17 September 2026).\\
+\textbf{URL:} \url{https://causalinf.substack.com/p/parallel-trends-is-a-debiasing-method}
+
+\medskip
+\noindent This methods post (not part of the AI series) reframes
+difference-in-differences (DiD) as a bias-adjustment procedure:
+\begin{itemize}[nosep]
+  \item Just as a simple difference in means decomposes into the ATT plus a
+        \emph{selection-bias} term (a regression of $Y(0)$ on the treatment
+        dummy), DiD---``four averages and three subtractions''---is an OLS
+        regression of the \emph{trend} in $Y$ on a treatment dummy and admits the
+        same decomposition.
+  \item The two extra terms in the DiD decomposition are what we call the
+        \textbf{parallel trends assumption}: the research design is precisely the
+        belief that this selection-bias term is zero.
+  \item DiD is therefore \emph{two things at once}: a \emph{calculation} (always
+        computable from the four averages) and a \emph{research design} (valid
+        only when parallel trends holds).
+  \item Read through Heckman, Ichimura, and Todd (1997), DiD under
+        \emph{conditional} parallel trends is literally a \textbf{debiasing /
+        imputation estimator}: fit the outcome trend on covariates in the control
+        group, impute the counterfactual trend for the treated, and subtract the
+        estimated selection bias.
+  \item Because the bias term is estimated by imputation, it is
+        \emph{functional-form dependent}---opening the door to flexible machine
+        learning methods when there are many covariates.
+\end{itemize}
+
+\vfill
+\noindent\rule{\linewidth}{0.4pt}\\
+\small Compiled from Scott Cunningham's \emph{Scott's Mixtape Substack}
+(\url{https://causalinf.substack.com}), Claude Code essay series and related
+posts, August--September 2026. Quotations and framings are the author's; this is
+a third-party summary for study purposes.
+
+\end{document}
