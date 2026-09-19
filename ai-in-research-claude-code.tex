@@ -1,0 +1,293 @@
+\documentclass[11pt]{article}
+
+% ----------------------------------------------------------------------
+% AI Applications in Research: Agentic Coding and Claude Code
+% A conceptual summary inspired by Scott Cunningham's "Mixtape" Substack
+% Claude Code series and the broader literature on AI for research.
+% Compile with: pdflatex ai-in-research-claude-code.tex
+% ----------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage[hidelinks]{hyperref}
+
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{\textbf{AI Applications in Research:\\ Agentic Coding and the Use of Claude Code}}
+\author{Compiled summary of core concepts\\
+\small (Inspired by Scott Cunningham's ``Scott's Mixtape'' Claude Code series)}
+\date{September 19, 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the use of
+artificial intelligence---and specifically agentic coding tools such as
+Claude Code---in quantitative and empirical research. It draws on the
+public themes of Scott Cunningham's long-running Claude Code essay series
+on his ``Mixtape'' Substack, together with the broader emerging literature
+on AI agents for scientific work. The goal is to give researchers a
+conceptual map: what agentic AI changes about the research workflow, which
+tasks it accelerates, how to preserve rigor and reproducibility, and what
+new risks it introduces. It is intended as a reference note, not an
+endorsement of any single tool or vendor.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+\hrule
+
+% ----------------------------------------------------------------------
+\section{Introduction: From Assistants to Agents}
+% ----------------------------------------------------------------------
+
+The use of AI in research has moved through three overlapping phases:
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Predictive AI as an object of study} --- machine learning
+        models used \emph{as} the research subject (e.g.\ prediction
+        policy problems, text-as-data, LLMs as measurement instruments).
+  \item \textbf{Conversational assistants} --- chat interfaces that answer
+        questions, draft prose, and suggest code snippets that a human then
+        copies and runs.
+  \item \textbf{Agentic coding tools} --- systems such as Claude Code that
+        operate \emph{inside} a project directory, read and write files,
+        execute commands, run tests, and iterate autonomously toward a goal.
+\end{enumerate}
+
+The third phase is the focus here. The defining shift is that the AI is no
+longer a source of suggestions the researcher transcribes by hand; it is an
+actor with read/write access to the actual codebase, data, and results. This
+changes both the productivity ceiling and the nature of the researcher's
+job---from ``author of every line'' to ``director and verifier of work.''
+
+% ----------------------------------------------------------------------
+\section{What Claude Code Is}
+% ----------------------------------------------------------------------
+
+Claude Code is a command-line, terminal-native agent that a researcher runs
+against a project folder. In a research context its distinguishing features
+are:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Filesystem and shell access.} It can open, edit, and create
+        scripts (Python, R, Stata, Julia, LaTeX, shell) and run them,
+        observing the output and reacting to errors.
+  \item \textbf{Project memory.} Repository-level instructions (for example a
+        \texttt{CLAUDE.md} file) let the researcher encode conventions, data
+        locations, and rules the agent should follow on every task.
+  \item \textbf{Subagents and parallelism.} A main agent can dispatch
+        specialized subagents to search, replicate, or audit in parallel,
+        then aggregate their findings.
+  \item \textbf{Tool use / MCP.} Through the Model Context Protocol it can
+        connect to external tools and data sources (GitHub, databases,
+        document stores) under an explicit permission model.
+  \item \textbf{A running log of its own work.} The agent keeps a trace of
+        what it attempted---\emph{including work it later abandoned}---which
+        becomes a valuable, if underappreciated, record of the reasoning path.
+\end{itemize}
+
+% ----------------------------------------------------------------------
+\section{Core Research Workflows}
+% ----------------------------------------------------------------------
+
+Cunningham's series and related work converge on a recurring set of tasks
+where agentic coding delivers the most value.
+
+\subsection{Replication and cross-language auditing}
+A central theme is using the agent to \emph{replicate an analysis from
+scratch}, often re-implementing the same estimator across multiple languages
+and packages (e.g.\ difference-in-differences in Python, R, and Stata using
+several competing packages). Agreement across independent implementations is
+strong evidence the result is real; disagreement localizes a bug or a
+modeling choice. The agent turns replication from a rare, expensive activity
+into a routine check.
+
+\subsection{The ``coding audit'' paradigm}
+Rather than trusting a single pipeline, the researcher asks the agent to
+audit code: trace data lineage, check that sample restrictions match the
+text, confirm that standard errors are clustered correctly, and flag silent
+type coercions or dropped observations. Multiple agents auditing the same
+pipeline independently reduce the chance of a shared blind spot.
+
+\subsection{Text-as-data and classification}
+Early parts of the series used the agent to orchestrate large-scale text
+reclassification (e.g.\ labeling documents with a smaller model such as
+\texttt{gpt-4o-mini}) and to build the surrounding data-processing scaffolding.
+The agent handles the plumbing---batching, retries, schema validation---so the
+researcher focuses on the measurement design.
+
+\subsection{Data cleaning and pipeline construction}
+Merging messy administrative data, reshaping panels, building reproducible
+ingestion pipelines, and writing the tests that guard them are natural fits.
+The agent is fast at boilerplate and disciplined about edge cases when asked.
+
+\subsection{Writing, exposition, and presentation}
+Beyond code, the tools generate slide decks, figures, and draft prose
+(including LaTeX), and can analyze a researcher's own back catalog of writing
+to surface themes and value. This document itself is an example of the
+category: a structured LaTeX artifact assembled from a research corpus.
+
+% ----------------------------------------------------------------------
+\section{The Central Discipline: Verification}
+% ----------------------------------------------------------------------
+
+The recurring warning across the series is that \textbf{speed is not the
+bottleneck---verification is.} When an agent can produce more correct-looking
+work than a human can check, the binding constraint becomes human attention.
+Practical implications:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Human verification is the scarce resource.} As output volume
+        rises, the researcher's comparative advantage shifts to reading,
+        questioning, and validating---not producing.
+  \item \textbf{Congestion from ``too much better work.''} More good output
+        can paradoxically slow a project if it outpaces the reviewer,
+        creating a queue of unverified results.
+  \item \textbf{Reasons matter, not just answers.} The agent's log of what it
+        tried and \emph{abandoned} is part of the audit trail; retaining and
+        reading it improves trust in the final result.
+  \item \textbf{Independent cross-checks beat single runs.} Replication across
+        languages/packages and multi-agent auditing are the practical tools
+        for scaling verification.
+\end{itemize}
+
+% ----------------------------------------------------------------------
+\section{Reproducibility and Scientific Norms}
+% ----------------------------------------------------------------------
+
+Agentic coding can strengthen reproducibility if used deliberately:
+
+\begin{longtable}{p{0.32\textwidth} p{0.60\textwidth}}
+\toprule
+\textbf{Practice} & \textbf{Why it matters with an agent} \\
+\midrule
+Version control everything & The agent changes many files quickly; commits
+give a rollback point and a human-readable diff to review. \\
+Encode conventions in project memory & A \texttt{CLAUDE.md} (or equivalent)
+keeps behavior consistent across sessions and collaborators. \\
+Keep the agent's work log & Provides provenance for how a result was reached,
+including discarded paths. \\
+Deterministic seeds \& pinned environments & Ensures the agent's runs are
+reproducible by others, not just by the agent. \\
+Independent replication & Cross-language/package agreement is the strongest
+routine evidence of correctness. \\
+Explicit permissions for tools/data & Prevents unintended writes, leaks, or
+external calls. \\
+\bottomrule
+\end{longtable}
+
+% ----------------------------------------------------------------------
+\section{Risks and Limitations}
+% ----------------------------------------------------------------------
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Plausible-but-wrong output.} Agents can produce confident,
+        well-formatted, and incorrect analyses; unreviewed output is a
+        liability, not a result.
+  \item \textbf{Security and supply-chain risk.} Viral, permissive agent
+        tooling has repeatedly shipped with serious vulnerabilities; running
+        agents with broad filesystem/network access demands sandboxing,
+        least-privilege permissions, and scrutiny of third-party tools.
+  \item \textbf{Verification debt.} Accumulating unchecked output creates
+        hidden risk that surfaces late.
+  \item \textbf{Over-delegation and skill atrophy.} Researchers who stop
+        engaging with the mechanics may lose the ability to catch subtle
+        errors the agent makes.
+  \item \textbf{Data governance.} Sensitive or licensed data must not leave
+        approved boundaries; permission and egress controls are essential.
+  \item \textbf{Reproducibility of the agent itself.} Model versions change;
+        pinning behavior and recording the tool version matter for
+        long-lived projects.
+\end{itemize}
+
+% ----------------------------------------------------------------------
+\section{Practical Recommendations}
+% ----------------------------------------------------------------------
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Start on a real, self-contained project} you already
+        understand, so you can judge the agent's output.
+  \item \textbf{Write down the rules} (data paths, estimators, style) in
+        project memory before asking for substantive work.
+  \item \textbf{Prefer small, verifiable steps} with commits between them
+        over one large opaque task.
+  \item \textbf{Replicate, don't trust.} Ask for the same result via an
+        independent implementation and compare.
+  \item \textbf{Read the log.} Treat the agent's reasoning and abandoned
+        attempts as part of the deliverable.
+  \item \textbf{Budget for verification} explicitly---plan reviewer time as
+        the true constraint.
+  \item \textbf{Constrain permissions} to the minimum tools, files, and
+        network access the task requires.
+\end{enumerate}
+
+% ----------------------------------------------------------------------
+\section{Conclusion}
+% ----------------------------------------------------------------------
+
+Agentic coding tools like Claude Code represent a genuine change in how
+empirical research can be done: replication and auditing become routine, the
+plumbing of data work is largely automated, and a single researcher can
+direct a small team of agents. The gains are real, but they relocate the hard
+part of research rather than removing it. The scarce resource becomes
+\emph{human verification}, and the enduring scientific virtues---replication,
+provenance, least privilege, and skepticism toward confident output---are
+exactly what make these tools safe and productive to use.
+
+% ----------------------------------------------------------------------
+\appendix
+\section{Appendix: Latest Newsletter Snapshot}
+% ----------------------------------------------------------------------
+
+\textit{Note on sourcing:} At compile time the live newsletter archive
+(\texttt{causalinf.substack.com}) was not directly reachable from the build
+environment and most posts are subscriber-only, so the snapshot below is
+reconstructed from public post titles, previews, and syndicated notes rather
+than full article text.
+
+\textbf{Publication:} \emph{Scott's Mixtape Substack} (Scott Cunningham,
+Baylor University economist and author of \emph{Causal Inference: The
+Mixtape}).
+
+\textbf{Running series:} An extended, 50+\,post series on using Claude Code
+for practical quantitative social-science research.
+
+\textbf{Recent identifiable entries:}
+\begin{itemize}[leftmargin=*]
+  \item \emph{``Deriving the Value of these Claude Code Essays''} --- uses
+        Substack's Claude integration to analyze his own essays back to 2021
+        and estimate their value.
+  \item \emph{``Claude Code 50: Claude is Holding On To Its Reasons''} ---
+        the agent keeps a diary of everything it did, including abandoned
+        work, which serves as an audit trail.
+  \item \emph{``Claude Code 25: More Autonomous Agents Are Coming to
+        Research''} --- more autonomous agents, plus a cautionary note on the
+        security fallout from permissive viral agent tooling.
+  \item \emph{``Claude Code 21: Attention, Human Verification and
+        Congestion''} --- the problem of ``too much better work'' outpacing
+        human review.
+  \item \emph{Cross-language replication / multiple-agent auditing} of
+        difference-in-differences across Python, R, and Stata.
+\end{itemize}
+
+\textbf{Calls to action / resources referenced:}
+\begin{itemize}[leftmargin=*]
+  \item Subscribe to the Substack: \url{https://causalinf.substack.com/}
+  \item Claude Code series hub:
+        \url{https://causalinf.substack.com/s/claude-code}
+  \item Tooling: \emph{MixtapeTools} on GitHub
+        (\url{https://github.com/scunning1975/MixtapeTools}).
+  \item A forthcoming book on AI agents for research workers.
+\end{itemize}
+
+\end{document}
