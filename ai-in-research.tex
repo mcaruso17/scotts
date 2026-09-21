@@ -1,0 +1,230 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+% AI Applications in Research, with a Focus on Claude Code
+% A concept summary compiled for Scott's Mixtape readers.
+% Compiles with pdflatex or xelatex using standard TeX Live packages.
+% ---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue,citecolor=black]{hyperref}
+
+\definecolor{codebg}{gray}{0.96}
+\lstset{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{codebg},
+  frame=single,
+  rulecolor=\color{gray!40},
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  xleftmargin=0.5em,
+  xrightmargin=0.5em,
+}
+
+\title{\textbf{AI Applications in Research}\\[2pt]
+\large A Concept Summary, with a Focus on Agentic Coding and Claude Code}
+\author{Compiled for \emph{Scott's Mixtape Substack} readers}
+\date{September 21, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main ways artificial intelligence---and
+large language models (LLMs) in particular---are being used across the research
+workflow, from ideation to replication. It gives special attention to
+\emph{agentic coding assistants}, using Anthropic's \textbf{Claude Code} as the
+running example, and to the methodological guardrails that keep AI-assisted
+research valid and reproducible. A short case study revisits the
+Ludwig--Mullainathan--Rambachan (2026) econometric framework for LLMs, which was
+the subject of a recent \emph{Scott's Mixtape} explainer.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ---------------------------------------------------------------------------
+\section{Introduction}
+% ---------------------------------------------------------------------------
+LLMs have moved from a curiosity to a general-purpose instrument in empirical
+research. Two shifts drive this. First, models can now read, write, and reason
+over text and code at a scale and cost that make previously infeasible projects
+routine. Second, \emph{agentic} tools---systems that can plan, call other tools,
+edit files, and execute commands---let researchers delegate multi-step technical
+work rather than only asking for isolated answers. This document maps where AI
+adds value in the research pipeline, then focuses on the agentic coding case
+(Claude Code) and the conditions under which AI-assisted results remain
+scientifically valid.
+
+% ---------------------------------------------------------------------------
+\section{Where AI Enters the Research Workflow}
+% ---------------------------------------------------------------------------
+AI applications span the full arc of a project. The table below organizes them by
+stage, with the caveat that the highest-leverage uses are also the ones that most
+require human verification.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}p{3.1cm}p{7.4cm}p{3.3cm}@{}}
+\toprule
+\textbf{Stage} & \textbf{Representative AI uses} & \textbf{Primary risk} \\
+\midrule
+Ideation \& scoping & Brainstorming hypotheses, mapping a literature, stress-testing identification strategies. & Plausible-but-wrong framing. \\
+Literature review & Summarizing papers, extracting claims, building citation maps. & Hallucinated references. \\
+Data collection & Scraping, parsing PDFs, structuring unstructured text. & Silent parsing errors. \\
+Measurement / labeling & Coding text into economic variables (sentiment, topics, categories) at scale. & Non-classical measurement error. \\
+Analysis \& coding & Writing, refactoring, and debugging analysis code; building pipelines. & Subtle logic bugs. \\
+Writing & Drafting, editing, tightening prose; formatting \LaTeX{} and tables. & Overconfident claims. \\
+Replication & Reconstructing pipelines, porting code across languages, writing tests. & Undetected divergence. \\
+Review & Checking robustness, generating counterarguments, sanity-checking results. & False reassurance. \\
+\bottomrule
+\end{tabular}
+\caption{AI uses across the research workflow, and the dominant failure mode at each stage.}
+\end{table}
+
+\paragraph{The measurement case is special.} When an LLM \emph{labels} data whose
+labels then enter a regression, the tool stops being a convenience and becomes
+part of the estimator. This is where formal econometric care is required
+(Section~\ref{sec:casestudy}).
+
+% ---------------------------------------------------------------------------
+\section{Agentic Coding Assistants and Claude Code}
+% ---------------------------------------------------------------------------
+A chat assistant answers questions; an \emph{agentic} assistant does work. It
+operates inside your project, reads and edits files, runs commands, inspects the
+results, and iterates toward a goal you specify in natural language.
+
+\subsection{What Claude Code Is}
+\textbf{Claude Code} is Anthropic's command-line (and IDE / web) agent for
+software and data work. Given a task, it can:
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item explore an unfamiliar codebase and explain how it fits together;
+  \item write, edit, and refactor code across many files;
+  \item run tests, linters, and analysis scripts, then read the output and fix what broke;
+  \item perform version-control operations (branches, commits, pull requests);
+  \item extend its own reach through the Model Context Protocol (MCP) and specialized subagents.
+\end{itemize}
+The interaction model is a loop: \emph{you state intent $\rightarrow$ the agent
+plans and acts $\rightarrow$ you inspect the diff and results $\rightarrow$ you
+refine.} The human stays in the loop as reviewer and director.
+
+\subsection{Why It Fits Research Computing}
+Research code is often a thicket of scripts glued together under deadline
+pressure. Agentic assistance helps most where that friction lives:
+\begin{description}[leftmargin=1.6em,style=nextline,itemsep=3pt]
+  \item[Reproducible pipelines] Turn ad-hoc scripts into an ordered, documented, re-runnable pipeline (e.g., a \texttt{Makefile} or a numbered script sequence) with a single clean entry point.
+  \item[Code archaeology] Onboard onto a collaborator's or your own past project by asking the agent to trace data flow from raw inputs to final tables.
+  \item[Language ports] Translate an estimator or simulation between R, Python, Stata, and Julia while preserving numerical behavior, then diff the outputs.
+  \item[Testing] Generate unit tests and regression tests around analysis functions so that later edits cannot silently change results.
+  \item[Writing \& \LaTeX{}] Draft, restructure, and format papers, tables, and figures; wire up captions, labels, and references.
+  \item[Data wrangling] Parse messy PDFs, harmonize inconsistent files, and build cleaning steps that are inspectable rather than opaque.
+\end{description}
+
+\subsection{Working Practices That Pay Off}
+\begin{enumerate}[leftmargin=1.6em,itemsep=3pt]
+  \item \textbf{Write a project brief the agent can read.} A \texttt{CLAUDE.md} (or equivalent) file describing conventions, data locations, and ``never do this'' rules keeps behavior consistent across sessions.
+  \item \textbf{Prefer small, verifiable steps.} Ask for one change at a time and inspect the diff; a validated small push beats a sprawling unreviewed one.
+  \item \textbf{Make the agent prove its work.} Have it run the tests/linters and show passing output before you accept a change---and reproduce a bug before ``fixing'' it.
+  \item \textbf{Pin the environment.} Lockfiles, fixed seeds, and recorded package versions are what make an AI-built pipeline reproducible by others.
+  \item \textbf{Keep secrets out.} Do not paste credentials or private data into prompts or committed files.
+  \item \textbf{Treat the agent as a fast junior collaborator, not an oracle.} It accelerates the mechanical work; you own the scientific judgment.
+\end{enumerate}
+
+\subsection{A Minimal Workflow Sketch}
+A typical Claude Code loop for a research task reads like a conversation with a
+capable assistant who then goes and does the work:
+
+\begin{lstlisting}[language=bash]
+# 1. Point the agent at the task, in plain language:
+"Refactor analysis/clean.R into an idempotent pipeline,
+ add tests for the winsorization step, and keep outputs
+ byte-identical to the current results/ directory."
+
+# 2. The agent explores, edits, and runs the checks itself:
+Rscript analysis/clean.R
+Rscript tests/test_clean.R        # <- agent reads pass/fail
+
+# 3. You review the diff, then let it commit:
+git add -A && git commit -m "Refactor cleaning into tested pipeline"
+\end{lstlisting}
+
+The point is not that the agent replaces the researcher, but that it collapses
+the distance between intent (``make this reproducible and tested'') and a
+concrete, inspectable diff.
+
+% ---------------------------------------------------------------------------
+\section{Methodological Guardrails}
+% ---------------------------------------------------------------------------
+AI accelerates production; it does not by itself guarantee validity. Four
+recurring hazards deserve explicit management.
+
+\begin{description}[leftmargin=1.6em,style=nextline,itemsep=3pt]
+  \item[Hallucination] Generated text and citations can be confidently wrong; verify every factual claim and reference against primary sources.
+  \item[Training leakage] If a model has effectively ``seen'' the answer (or the test data) during training, apparent predictive success is illusory; control it through model choice and design.
+  \item[Non-classical measurement error] LLM labels can be wrong in ways correlated with the truth, biasing coefficients in any direction---including sign flips---so high accuracy alone is not a defense.
+  \item[Reproducibility drift] Model versions, prompts, and sampling temperature all move results; record them as you would any other part of a research protocol.
+\end{description}
+
+% ---------------------------------------------------------------------------
+\section{Case Study: The Econometrics of LLMs}
+\label{sec:casestudy}
+% ---------------------------------------------------------------------------
+A recent \emph{Scott's Mixtape} post explains Ludwig, Mullainathan, and
+Rambachan's \emph{``Large Language Models: An Applied Econometric Framework''}
+(Annual Review of Economics, 2026). The framework is the cleanest current answer
+to ``when may I use an LLM in an empirical study?'' and it divides the question in
+two.
+
+\paragraph{Prediction problems.} When the goal is to predict an outcome, validity
+requires \textbf{no training leakage} between the LLM's training data and the
+researcher's evaluation sample. This is enforceable through careful model
+selection and research design.
+
+\paragraph{Estimation (measurement) problems.} When an LLM \emph{measures} an
+economic concept whose values then enter downstream analysis, valid inference
+requires pairing LLM outputs with a \textbf{small human-coded validation sample}.
+That validation sample is what makes it possible to estimate---and correct
+for---the LLM's labeling error.
+
+\paragraph{Why the validation sample is non-negotiable.} Absent it, researchers
+cannot assess the error in LLM outputs, and seemingly innocuous choices (which
+model, which prompt) can produce \emph{dramatically different} parameter
+estimates. Because LLM measurement error is non-classical, raw accuracy does not
+bound the bias; a modest, well-designed validation set does. The practical rule
+for AI-assisted measurement: spend a little human labeling to debias a lot of
+cheap machine labeling.
+
+% ---------------------------------------------------------------------------
+\section{Conclusion}
+% ---------------------------------------------------------------------------
+AI, and agentic tools such as Claude Code in particular, compress the mechanical
+cost of research: exploring code, building reproducible pipelines, testing,
+porting, drafting, and formatting. The gains are real and large. But the same
+tools introduce failure modes---hallucination, leakage, non-classical
+measurement error, and reproducibility drift---that require the researcher to
+stay firmly in the loop as verifier and author. Used with a project brief, small
+verifiable steps, pinned environments, and (for measurement) a validation
+sample, AI becomes a dependable collaborator rather than a source of hidden risk.
+
+% ---------------------------------------------------------------------------
+\section*{References \& Resources}
+% ---------------------------------------------------------------------------
+\addcontentsline{toc}{section}{References \& Resources}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item Ludwig, J., Mullainathan, S., \& Rambachan, A. (2026). \emph{Large Language Models: An Applied Econometric Framework}. Annual Review of Economics, 18, 283--316. \url{https://www.nber.org/papers/w33344} \, / \, \url{https://arxiv.org/abs/2412.07031}
+  \item Cunningham, S. \emph{Explainer of Ludwig, Mullainathan and Rambachan's 2026 Econometrics of LLM Paper}. Scott's Mixtape Substack. \url{https://causalinf.substack.com/p/explainer-of-ludwig-mullainathan}
+  \item Cunningham, S. \emph{Causal Inference: The Mixtape}. \url{https://mixtape.scunning.com/}
+  \item Anthropic. \emph{Claude Code documentation}. \url{https://code.claude.com/docs}
+\end{itemize}
+
+\end{document}
