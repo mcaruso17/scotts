@@ -1,0 +1,235 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+% AI Applications in Research: Agentic Coding and Claude Code
+% A conceptual summary
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black,
+  pdftitle={AI Applications in Research: Agentic Coding and Claude Code},
+  pdfauthor={Prepared with Claude Code}
+}
+
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{}
+\setlist{itemsep=2pt, topsep=3pt}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Agentic Coding, Verification, and the Case of Claude Code}
+\author{Prepared with Claude Code}
+\date{22 September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the use of
+artificial-intelligence (AI) agents in scholarly research, with particular
+attention to \emph{agentic coding} tools such as Anthropic's \textbf{Claude
+Code}. It organizes the landscape into four themes: (i)~what agentic AI adds to
+the research workflow, (ii)~how Claude Code operates as a research assistant,
+(iii)~why \emph{verification} is the central methodological problem such tools
+create, and (iv)~a concrete verification protocol drawn from applied
+economics. The running example throughout is the work of economist Scott
+Cunningham, whose multi-part series on using Claude Code for quantitative social
+science has helped popularize these practices. The aim is a compact conceptual
+map rather than a tutorial.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ---------------------------------------------------------------
+\section{From assistants to agents}
+
+Early research uses of large language models (LLMs) were \emph{conversational}:
+a researcher asked a question and received text back. \emph{Agentic} AI is
+different in kind. An agent is given a goal, a set of tools, and permission to
+act in a loop---reading files, running code, inspecting output, and revising its
+own plan---until the goal is met or a stopping condition is reached. The shift
+matters for research because most empirical work is not a single question but a
+\emph{pipeline}: acquire data, clean it, transform it, estimate a model, produce
+tables and figures, and write up the result.
+
+Key properties that distinguish agentic tools from a chat assistant:
+
+\begin{itemize}
+  \item \textbf{Tool use.} The agent can execute shell commands, edit files,
+        query APIs, and run analysis code, so its ``answers'' are grounded in
+        real execution rather than recollection.
+  \item \textbf{Iteration.} It observes the result of each action and adapts,
+        allowing it to debug, re-run, and converge on a working pipeline.
+  \item \textbf{Long-horizon tasks.} It can carry a multi-step task across many
+        actions while keeping context, which is what makes end-to-end
+        replication feasible.
+  \item \textbf{Persistence and reuse.} Instructions, project conventions, and
+        reusable ``skills'' can be stored and re-invoked, turning ad hoc prompts
+        into durable research infrastructure.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{Claude Code as a research instrument}
+
+\textbf{Claude Code} is a command-line agent that operates directly inside a
+project's file system and terminal. In a research context it functions less like
+an autocomplete and more like a capable research assistant that can be directed,
+audited, and held to a standard. Several mechanisms make it well suited to
+scholarly work:
+
+\begin{description}[leftmargin=1.5em, style=nextline]
+  \item[Project memory (\texttt{CLAUDE.md}).] A file in the project root that
+        records conventions, data locations, estimation choices, and standards.
+        It gives the agent a persistent, version-controlled description of the
+        project, so behavior is reproducible across sessions.
+  \item[Skills.] Packaged, reusable instruction sets for recurring tasks---for
+        example, reading a PDF of a paper, running a code review, or performing a
+        reproducibility audit. Skills convert a researcher's tacit workflow into
+        shareable tooling.
+  \item[Subagents.] The main agent can dispatch independent worker agents to run
+        sub-tasks in parallel or in isolation. Isolation is methodologically
+        useful: a fresh agent that never saw the original code can critique it
+        without inheriting its assumptions.
+  \item[Multi-language execution.] Because it runs real interpreters, the same
+        analysis can be independently re-implemented in \textsf{R},
+        \textsf{Stata}, and \textsf{Python} and the numerical results compared.
+\end{description}
+
+\noindent Representative research tasks that such an agent can carry end to end
+include: crawling and downloading a replication archive; cleaning and merging
+raw data; classifying large text corpora (e.g., hundreds of thousands of
+documents); estimating models such as difference-in-differences; and generating
+the tables and figures for a manuscript. In one widely discussed demonstration
+before the U.S.\ Federal Reserve Board (March 2026), an agent downloaded roughly
+305{,}000 congressional speeches, classified each by immigration sentiment, and
+broadly reproduced the findings of a prior study---live, during the talk.
+
+% ---------------------------------------------------------------
+\section{The central problem: verification, not generation}
+
+The productivity gain from agentic coding is real, but it reframes the hard part
+of research. Generating a plausible-looking pipeline becomes cheap; knowing
+whether that pipeline is \emph{correct} becomes the binding constraint. Three
+failure modes are especially salient:
+
+\begin{enumerate}
+  \item \textbf{Silent errors.} A merge that drops observations, a mishandled
+        missing value, or a mis-constructed variable can produce clean-looking
+        but wrong results.
+  \item \textbf{Specification search.} An agent optimizing for a ``significant''
+        or ``expected'' result may drift toward specifications that flatter the
+        hypothesis, a machine-scale version of $p$-hacking.
+  \item \textbf{Hardcoded or hallucinated facts.} In-text statistics that are
+        typed rather than programmatically generated, or ``facts'' asserted
+        without a traceable source, break reproducibility.
+\end{enumerate}
+
+\noindent The methodological response is to make \textbf{verification} a
+first-class, adversarial step---separate from generation, performed by an agent
+that did not write the code, and producing concrete, dated artifacts. A useful
+slogan from this literature: \emph{if it is not documented, it did not happen.}
+A corollary is that AI does not lower the returns to expertise; it raises them,
+because judging whether a result is credible still requires understanding
+identification and econometrics.
+
+% ---------------------------------------------------------------
+\section{A concrete protocol: the ``Referee 2'' five-audit workflow}
+
+Scott Cunningham's \emph{Referee~2} protocol operationalizes independent
+verification. It is invoked \emph{after} a project is complete, in a fresh
+session by an agent with no prior exposure to the work, and it runs five
+parallel audits, each yielding a written referee report:
+
+\begin{enumerate}
+  \item \textbf{Code audit.} Scrutinize implementation for coding errors,
+        missing-value handling, merge diagnostics, and variable construction,
+        pointing to exact files and line numbers and explaining why each issue
+        matters.
+  \item \textbf{Cross-language replication.} Independently re-implement the
+        analysis in two additional languages (e.g., \textsf{R}~$\rightarrow$
+        \textsf{Stata}~$+$~\textsf{Python}) and compare results to six or more
+        decimal places.
+  \item \textbf{Replication package.} Check folder structure, relative paths,
+        naming, master script, README, and dependencies; score
+        reproducibility on a $1$--$10$ scale against the standard: \emph{can a
+        stranger reproduce this from scratch?}
+  \item \textbf{Output automation.} Verify that every table, figure, and in-text
+        number is generated programmatically rather than typed or manually
+        exported.
+  \item \textbf{Econometrics.} Verify that the identification strategy is
+        credible, specifications are correct, standard errors are clustered
+        appropriately, assumptions (e.g., parallel trends for
+        difference-in-differences) are tested, and effect sizes are plausible.
+\end{enumerate}
+
+\noindent What makes the protocol work is not the AI alone but its design: it
+specifies exactly what to check, demands concrete deliverables (replication
+scripts, comparison tables, referee reports filed with dates), and enforces
+independence between the builder and the auditor. The open-source
+\href{https://github.com/scunning1975/MixtapeTools}{MixtapeTools} repository
+packages this as reusable Claude Code skills together with a \texttt{CLAUDE.md}
+template.
+
+% ---------------------------------------------------------------
+\section{Good-practice principles}
+
+Distilling the above into portable guidance for researchers adopting agentic AI:
+
+\begin{itemize}
+  \item \textbf{Separate generation from verification.} Never let the agent that
+        wrote the pipeline be the sole judge of it.
+  \item \textbf{Triangulate across tools.} Cross-language (and cross-package)
+        agreement is strong evidence that a result is not an artifact.
+  \item \textbf{Automate all outputs.} Tables, figures, and in-text numbers
+        should flow from code, never from manual entry.
+  \item \textbf{Encode conventions.} Use project memory and reusable skills so
+        standards are explicit, versioned, and shared.
+  \item \textbf{Keep a paper trail.} Dated audit reports and comparison logs
+        turn ``the AI checked it'' into evidence someone else can inspect.
+  \item \textbf{Invest in judgment.} Understanding identification and
+        econometrics is what lets a human accept or reject the agent's output.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{Conclusion}
+
+Agentic AI tools such as Claude Code compress the mechanical labor of empirical
+research---data wrangling, coding, replication, and output generation---from days
+into minutes. That compression is genuinely valuable, but it relocates the
+scientific burden onto \emph{verification}. The most useful contribution of the
+current wave of practice, exemplified by Cunningham's work, is not a demo of what
+an agent can produce but a discipline for deciding whether to believe it:
+independent, adversarial, cross-validated, and documented. Used that way,
+AI does not replace research expertise; it makes that expertise the scarce and
+decisive input.
+
+% ---------------------------------------------------------------
+\section*{Selected resources}
+\addcontentsline{toc}{section}{Selected resources}
+
+\begin{itemize}
+  \item Scott's Mixtape Substack --- \url{https://causalinf.substack.com/}
+  \item Claude Code series --- \url{https://causalinf.substack.com/s/claude-code}
+  \item MixtapeTools (Referee~2 skill, CLAUDE.md template) ---
+        \url{https://github.com/scunning1975/MixtapeTools}
+  \item Claude Code documentation --- \url{https://docs.claude.com/en/docs/claude-code}
+\end{itemize}
+
+\vspace{1em}
+\noindent\rule{\linewidth}{0.4pt}\\[0.3em]
+{\footnotesize Compiled 22 September 2026. Content synthesized from public
+descriptions of Scott Cunningham's Claude Code series and related coverage; live
+newsletter pages were not retrievable at compile time due to network
+restrictions. Verify specifics against primary sources.}
+
+\end{document}
