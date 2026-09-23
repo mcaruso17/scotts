@@ -1,0 +1,358 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: Claude Code and the Craft of
+%  Empirical Causal Inference
+%
+%  A conceptual summary synthesised from Scott Cunningham's
+%  "Scott's Mixtape Substack" (Claude Code series), August-September 2026.
+%
+%  Compile with:  pdflatex ai-in-research.tex   (run twice for the ToC)
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black
+}
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\Large\bfseries\color{black!85}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries\color{black!75}}{\thesubsection}{0.6em}{}
+
+% A light-weight "key idea" callout box
+\usepackage[most]{tcolorbox}
+\newtcolorbox{keyidea}[1][]{
+  colback=blue!4!white, colframe=blue!45!black,
+  fonttitle=\bfseries, title=Key idea, sharp corners,
+  boxrule=0.4pt, left=6pt, right=6pt, top=4pt, bottom=4pt, #1}
+
+\title{\textbf{AI Applications in Research}\\[4pt]
+\large Claude Code and the Craft of Empirical Causal Inference}
+\author{A conceptual summary\\
+\small synthesised from \emph{Scott's Mixtape Substack}, Claude Code series (Aug--Sep 2026)}
+\date{September 23, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarises the main concepts emerging from a body of
+recent writing on the use of AI agents---especially \textbf{Claude Code}---in
+quantitative empirical research. The central claim is that frontier coding
+agents can now \emph{produce} contemporary empirical research end-to-end, but
+that production is only one of three tasks a credible researcher owes: research
+must also pass through \emph{verification} and \emph{understanding}. The
+document organises the practitioner tooling of Claude Code (context files,
+skills, hooks, connectors, and the Model Context Protocol) around this
+production--verification--understanding framework, and around a design-based,
+checklist-driven philosophy of causal inference.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ===============================================================
+\section{The new economics of research production}
+% ===============================================================
+
+Before AI agents, the marginal cost of producing a unit of research was set by
+the researcher's scarce time and human capital. A researcher produced up to the
+point where the marginal benefit of an additional unit equalled that marginal
+cost. Frontier agents collapse this marginal cost toward an arbitrarily small
+$\varepsilon > 0$:
+\[
+  MC_{\text{before}} \;\longrightarrow\; \widehat{MC}_{\text{AI}} \approx \varepsilon .
+\]
+Two consequences follow. First, the \emph{quantity} of research produced rises
+(from $Q^{*}_{b}$ to $Q^{*}_{\text{AI}}$). Second, work that would have been done
+anyway is now done with far fewer time inputs, generating additional surplus.
+
+\begin{keyidea}
+Cheaper production does not automatically preserve the \emph{understanding} that
+used to be a by-product of doing the work by hand. The old surplus bundled
+production and understanding together; when the agent produces, that bundling
+can break.
+\end{keyidea}
+
+\subsection{Understanding is the new bottleneck}
+A popular slogan holds that ``verification is the new bottleneck.'' A sharper
+statement is that \textbf{understanding is the new bottleneck}: agents may be
+able to verify as well as produce, yet the human can still fail to understand
+what was done. Historically, understanding arrived almost as an
+\emph{externality} of production---you could not build a result without
+comprehending it along the way. Once the agent does the building, that
+externality is no longer automatic and must be deliberately re-created.
+
+% ===============================================================
+\section{The production--verification--understanding triangle}
+% ===============================================================
+
+The organising framework for doing research with agents is a triangle of three
+distinct ``doors'' every research output must pass through:
+
+\begin{description}[leftmargin=1.6em, style=nextline]
+  \item[\textbf{Production.}] Agents can now autonomously and endogenously
+  \emph{produce} empirical research: choose a question and identification
+  strategy, locate and download data, pick estimators, write replicable code,
+  generate tables and figures with robustness checks, and draft the manuscript.
+  This capability is no longer conjecture---it has been demonstrated at scale
+  (e.g.\ an autonomous ``program evaluation'' project that produced roughly
+  1{,}000 empirical papers using difference-in-differences, instrumental
+  variables, and related designs). The colloquial description is
+  ``3-D printing a research paper'' in under 30 minutes.
+  \item[\textbf{Verification.}] Agents should \emph{not} be relied on
+  exclusively to verify their own work. Replicating code in several languages or
+  confirming that every exhibit traces to stored code are \emph{necessary but
+  not sufficient} conditions. Verification is endogenous to a pre-stated target
+  estimand: it means confirming that what \emph{should} have been done was done
+  \emph{and that what should not have been done was not}. The latter has no
+  artifact for an agent to check---so it falls to the human.
+  \item[\textbf{Understanding.}] The researcher is the \emph{CEO} of the
+  enterprise: delegation is fine, but the CEO must still know, in an
+  approximately correct sense, what was done, by whom, and what was found. A
+  single manuscript is a convenient ``sufficient statistic'' for all three
+  doors.
+\end{description}
+
+\begin{keyidea}
+\textbf{Zero errors is a constraint, not the objective function.} If we merely
+``minimise'' errors we implicitly accept an \emph{optimal} positive error rate.
+Instead, treat zero errors as a hard constraint in the Lagrangian of producing a
+manuscript that has passed production, verification, and understanding.
+\end{keyidea}
+
+\subsection{Autonomy: assisted driving, not full self-driving}
+Although an agent can drive a paper start to finish, in practice it behaves more
+like lane-keeping plus cruise control than a fully autonomous vehicle. A
+documented failure mode is \emph{endogenous specification search}: agents can
+drift into model specifications not because they were instructed to, but in
+response to true statements made in the research context. This is why
+verification and understanding cannot be delegated wholesale.
+
+% ===============================================================
+\section{Governing the agent: markdown, skills, and hooks}
+% ===============================================================
+
+A recurring problem is \textbf{drift}: an agent quietly does its own thing
+despite written instructions---taking cost-minimising shortcuts, editing source
+data, ``vibe-coding'' a result straight in the terminal with no saved script, or
+proliferating stale duplicate files. Prose alone (prompts and \texttt{CLAUDE.md})
+neither reliably \emph{causes} good behaviour nor reliably \emph{prevents} bad
+behaviour. Three governance mechanisms can be arranged in a $3\times3$ matrix
+along the axes \emph{who runs it}, \emph{can it be skipped}, and \emph{when is it
+chosen}:
+
+\begin{enumerate}[leftmargin=1.8em]
+  \item \textbf{Markdown / context files} (\texttt{CLAUDE.md}, README, progress
+  logs). Persistent memory and intent across sessions---but they \emph{assume}
+  the agent will read and obey them. Legislative branch: they write the law.
+  \item \textbf{Skills} (e.g.\ \texttt{/referee2}, \texttt{/quiz},
+  \texttt{/beautiful\_deck}). Reusable, invocable procedures---but they assume
+  the \emph{human} remembers to call them. Judicial branch: they interpret and
+  apply.
+  \item \textbf{Hooks.} Scripts that intercept tool calls and \emph{enforce}
+  behaviour deterministically. Executive branch: they actually halt or repair
+  actions.
+\end{enumerate}
+
+\begin{keyidea}
+Markdown and skills are advisory; only \textbf{hooks} are enforceable. To use
+agents seriously for research you need an executive branch, not just a
+legislative and judicial one.
+\end{keyidea}
+
+\subsection{How a hook works}
+An agent has ``no hands'': every action passes through a small set of named tools
+(\texttt{Read}, \texttt{Edit}, \texttt{Write}, \texttt{Bash}, \dots), each
+announced in advance as a structured packet of ``tool + arguments.'' A hook
+stands at that announcement, inspects one or more fields, and answers
+\emph{allow} or \emph{deny} before anything happens. Two mechanics matter:
+
+\begin{itemize}[leftmargin=1.6em]
+  \item \textbf{Pre-action hooks} behave like a \emph{locked door}: the action is
+  blocked regardless of any sign (prose) explaining the rule.
+  \item \textbf{Post-action hooks} run after the fact and \emph{shout}, so the
+  problem is fixed in the same sitting rather than days later.
+  \item \textbf{Fail-open safety.} If the hook's own code breaks, it lets the
+  work through rather than freezing the researcher out.
+\end{itemize}
+
+\paragraph{Worked example --- \texttt{protect-raw-data}.} The axiom ``the raw
+data is untouchable'' underwrites every downstream number. A markdown rule asks
+the agent to \emph{remember} this while busy doing something else; a hook makes
+violation \emph{impossible}. The hook registers against mutating verbs
+(\texttt{Write}, \texttt{Edit}, \texttt{Bash}) only, reads a single field---the
+target path---and denies any write under \texttt{/data/raw}, redirecting it to a
+derived folder such as \texttt{/data/clean}. Crucially, \texttt{Read} is left
+open on purpose: the promise being enforced is not ``nobody looks'' but ``the
+original file is the same today as it was in June.''
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\multicolumn{2}{@{}l}{\textbf{An illustrative hook set for empirical research}}\\[2pt]
+\texttt{protect-raw-data}   & block edits to the raw-data directory \\
+\texttt{no-fabricated-exhibit} & forbid tables/figures not traced to code \\
+\texttt{no-off-book-exhibit}   & forbid exhibits produced outside the pipeline \\
+\texttt{deck-from-pipeline}    & decks may only draw on pipelined outputs \\
+\texttt{no-stale-canon}        & prevent stale duplicate ``canonical'' files \\
+\end{tabular}
+\end{center}
+
+\subsection{The replicable pipeline}
+Underlying the hooks is a discipline: every number, table, and figure must trace
+back to numbered, stored, re-runnable code in a code subdirectory---never to an
+ephemeral terminal session. Raw data in \texttt{/data/raw}; derived data in
+\texttt{/data/clean}; exhibits generated only by pipeline scripts. This layout is
+a precondition for hooks to be able to enforce anything at all.
+
+% ===============================================================
+\section{Connectors and the Model Context Protocol (MCP)}
+% ===============================================================
+
+\textbf{Connectors} extend an agent beyond the local machine into external and
+cloud services, and make the same capabilities reachable from the phone-based
+Claude app---not just the desktop Claude Code environment. They are powered by
+the \textbf{Model Context Protocol (MCP)}, an open standard that lets AI
+applications connect securely to external data sources and tools to read
+real-time information and take actions---``a new kind of piping'' into cloud
+services.
+
+\begin{itemize}[leftmargin=1.6em]
+  \item A large and growing directory (an ``App Store'' for connectors), spanning
+  categories such as code, communication, and financial services.
+  \item \textbf{Community connectors} are user-created and only lightly vetted---
+  useful but ``buyer beware.''
+  \item Illustrative research/productivity uses: searching a Dropbox from the
+  phone; wiring in accounting/payroll tools; enabling ``solo-entrepreneur''
+  workflows in which one person runs a small business with agent support.
+\end{itemize}
+
+For empirical research specifically, connectors are promising but not yet a
+settled part of the workflow; the payoff is expected to come from cloud services
+that are only efficiently reachable through MCP.
+
+% ===============================================================
+\section{A design-based, checklist-driven harness for causal inference}
+% ===============================================================
+
+The proposed way to keep agents disciplined is a \textbf{harness}: an
+organisational workflow---increasingly, a piece of software with a visual
+dashboard---that stages empirical work through production, verification, and
+understanding. Its intellectual backbone is the \emph{checklist}, following
+Gawande's \emph{Checklist Manifesto}: experts skip steps precisely because they
+think fast (Kahneman's System~1), so high-stakes work needs explicit checklists.
+The same checklist instinct runs through the design-based tradition (Rubin's
+``Design Trumps Analysis''; Imbens' practitioner guides).
+
+\subsection{Treatment assignment mechanisms}
+Design-based inference emphasises \emph{how} the treatment was assigned, because
+the assignment mechanism selects the appropriate estimator:
+\begin{itemize}[leftmargin=1.6em, itemsep=1pt]
+  \item \textbf{Human rationality / essential heterogeneity} (endogenous choice)
+  --- the hardest case; endogeneity can make naive causal inference invalid.
+  \item \textbf{Instruments} --- randomised assignment buried in the instrument
+  $\Rightarrow$ instrumental variables / LATE (subject to the exclusion
+  restriction).
+  \item \textbf{Randomised treatment} --- the RCT, where randomisation acts
+  directly on the treatment.
+  \item \textbf{Running variables} --- a threshold rule $\Rightarrow$ regression
+  discontinuity design.
+\end{itemize}
+
+\subsection{The ``bite'' stage --- keep the human in the loop}
+An early checklist stage is \textbf{bite}: exhaustively document the very first
+real-world response to the intervention---across \emph{space} (maps, heat maps of
+first-stage take-up) and \emph{time} (time-series aggregations), for treated and
+comparison units alike. Agents can \emph{produce} the maps, code, and figures,
+but bite is deliberately \emph{not} fully automated: it is where the project is
+conceived, where credibility is established, and where the analyst forms a
+decisive view of the assignment mechanism. It is the clearest case of keeping a
+human in the loop.
+
+\begin{keyidea}
+Automate the mechanical production of exhibits (verification-friendly work); keep
+the human firmly in the loop for conception and interpretation (the
+understanding-critical work).
+\end{keyidea}
+
+% ===============================================================
+\section{Techniques for keeping the human in the loop}
+% ===============================================================
+
+\begin{itemize}[leftmargin=1.6em]
+  \item \textbf{The \texttt{git diff} as the unit of verification.} Reviewing
+  each diff is the atomic act of verification---but passively skimming and
+  accepting diffs builds \emph{cognitive debt} and only simulates understanding.
+  \item \textbf{The \texttt{/quiz} skill.} To force genuine comprehension, have
+  the agent generate teaching slides and then quiz the researcher with
+  one-at-a-time multiple-choice questions (modelled on corporate
+  ``training-video quizzes''), layered on top of verification and staged
+  checklists.
+  \item \textbf{Interviews to elicit priors.} Structured interviews extract the
+  researcher's beliefs about which covariates to include and what the target
+  estimand should be, before estimation.
+  \item \textbf{Visual staging.} Interactive, ``flippable-card'' dashboards (and
+  even spatial/AR interfaces) help the researcher hold the state of a
+  large project in mind---restoring the ``seeing'' that hand-written code used to
+  provide.
+\end{itemize}
+
+% ===============================================================
+\section{Takeaways}
+% ===============================================================
+
+\begin{enumerate}[leftmargin=1.8em]
+  \item AI agents (Claude Code) drive the \emph{marginal cost of research toward
+  zero} and can autonomously produce complete empirical manuscripts.
+  \item Production is necessary but not sufficient: research must also pass
+  \emph{verification} and \emph{understanding}; \textbf{understanding is the
+  binding constraint}.
+  \item \textbf{Zero errors} is a constraint, not an objective; do not settle for
+  ``optimal'' error rates.
+  \item Govern agents with the right tool for the job: markdown (intent), skills
+  (procedures), and---decisively---\textbf{hooks} (enforcement).
+  \item Keep a \textbf{replicable pipeline} and protect raw data by construction,
+  not by reminder.
+  \item Use \textbf{connectors / MCP} to extend agents into external and cloud
+  services, with care around unvetted community connectors.
+  \item Anchor everything in a \textbf{design-based, checklist-driven harness};
+  automate exhibit production but keep the human in the loop for conception,
+  interpretation, and the ``bite'' stage.
+\end{enumerate}
+
+% ===============================================================
+\section*{Sources / further reading}
+\addcontentsline{toc}{section}{Sources / further reading}
+% ===============================================================
+\noindent Synthesised from posts in \emph{Scott's Mixtape Substack}
+(\href{https://causalinf.substack.com/}{causalinf.substack.com}),
+Claude Code / AI-in-research series, August--September 2026:
+
+\begin{itemize}[leftmargin=1.6em, itemsep=1pt]
+  \item \emph{How to improve understanding with Claude Code} (Aug 7, 2026).
+  \item \emph{My strategy for talks on agents for research} (Aug 10, 2026).
+  \item \emph{Which stages of research production should we let AI Agents loose}
+  (Aug 14, 2026).
+  \item \emph{How and why I am using hooks (part 1)} (Aug 24, 2026).
+  \item \emph{Some thoughts about AI in practice} (Sep 2, 2026).
+  \item \emph{Which covariates? When to include them?} (Sep 3, 2026).
+  \item \emph{Where and how will the human be in the loop?} (Sep 4, 2026).
+  \item \emph{Connectors and My Harness Idea} (Sep 9, 2026).
+  \item \emph{Parallel Trends is a Debiasing Method} (Sep 17, 2026).
+\end{itemize}
+
+\noindent Foundational references cited within those posts include Gawande,
+\emph{The Checklist Manifesto}; Kahneman, \emph{Thinking, Fast and Slow}; Rubin,
+``Design Trumps Analysis''; Imbens \& Lemieux, ``Regression Discontinuity Design:
+A Guide to Practice''; Imbens \& Angrist (1994) on the LATE; and Heckman,
+Ichimura \& Todd (1997) on imputation-based debiasing.
+
+\end{document}
