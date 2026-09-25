@@ -1,0 +1,254 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+% AI Applications in Research: Concepts and the Use of Claude Code
+% A conceptual summary aimed at quantitative and social-science researchers.
+% Compiles with any standard TeX distribution (pdflatex / xelatex / lualatex).
+% ---------------------------------------------------------------------------
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+
+% --- light styling ---------------------------------------------------------
+\definecolor{codebg}{gray}{0.96}
+\definecolor{accent}{RGB}{40,72,120}
+\titleformat*{\section}{\large\bfseries\color{accent}}
+\titleformat*{\subsection}{\normalsize\bfseries}
+\setlist{itemsep=2pt, topsep=3pt}
+
+\lstset{
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  rulecolor=\color{gray!40},
+  xleftmargin=1em,
+  framexleftmargin=1em,
+  columns=fullflexible,
+  keepspaces=true
+}
+
+\hypersetup{
+  pdftitle={AI Applications in Research: Concepts and the Use of Claude Code},
+  pdfauthor={Compiled summary},
+  colorlinks=true,
+  linkcolor=accent,
+  urlcolor=accent,
+  citecolor=accent
+}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Core Concepts and the Use of Claude Code in Quantitative Social Science}
+\author{Compiled summary}
+\date{September 25, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts behind the use of
+large language model (LLM) agents in empirical research, with particular
+emphasis on \emph{agentic coding assistants} and, specifically,
+\textbf{Claude Code}. It is written for quantitative and social-science
+researchers who want a conceptual map of where these tools help, how they
+change a research workflow, and which risks require new safeguards. The
+framing draws on the ongoing public discussion of AI-assisted research in
+economics and causal inference---notably Scott Cunningham's running series
+on using Claude Code for practical quantitative social-science work.
+\end{abstract}
+
+\tableofcontents
+\vspace{1em}
+
+% ===========================================================================
+\section{What ``AI in Research'' Means Now}
+% ===========================================================================
+The phrase covers several distinct capabilities that are easy to conflate:
+
+\begin{description}[leftmargin=1.5em, style=nextline]
+  \item[Assistive generation] Drafting code, prose, proofs, or documentation
+        from a natural-language prompt.
+  \item[Explanation \& tutoring] Turning an unfamiliar method, package, or
+        error message into an explanation at the researcher's level.
+  \item[Agentic execution] Not just \emph{suggesting} code but \emph{running}
+        it: reading files, editing a repository, executing scripts, inspecting
+        output, and iterating---closing the loop between writing and testing.
+  \item[Orchestration] Coordinating multiple tools, languages, and data
+        sources (via connectors / MCP servers) toward a multi-step goal.
+\end{description}
+
+\noindent The shift that defines the current moment is the move from
+\emph{autocomplete} to \emph{agent}: a system that can take a research task,
+plan it, act on a real filesystem, and verify its own results.
+
+% ===========================================================================
+\section{Claude Code: What It Is}
+% ===========================================================================
+\textbf{Claude Code} is a terminal- and IDE-based \emph{agentic} coding
+assistant from Anthropic. Rather than living only in a chat window, it
+operates inside the researcher's actual project directory and can:
+
+\begin{itemize}
+  \item read and search across a codebase and data files;
+  \item create, edit, and refactor scripts in place;
+  \item run shell commands, build steps, and tests, then read the output;
+  \item drive version control (branches, commits, pull requests);
+  \item connect to external tools and data through \emph{connectors} and the
+        Model Context Protocol (MCP);
+  \item run non-interactively---on a schedule, in CI, or on the web---so that
+        routine research chores can be automated.
+\end{itemize}
+
+\noindent For an empirical researcher this means the assistant lives where
+the work already lives: alongside the estimation code, the raw data, the
+logs, and the manuscript.
+
+% ===========================================================================
+\section{Where It Helps in the Research Pipeline}
+% ===========================================================================
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}p{0.32\linewidth} p{0.60\linewidth}@{}}
+\toprule
+\textbf{Stage} & \textbf{Representative AI-assisted tasks} \\
+\midrule
+Data acquisition \& cleaning & Writing scrapers/importers, reshaping panels,
+documenting variable construction, catching merge errors. \\
+Exploration & Fast descriptive summaries, plots, and sanity checks;
+explaining anomalies in the data. \\
+Method implementation & Translating an estimator from a paper into working
+code; wiring up standard errors, weights, and inference. \\
+Cross-language replication & Reproducing a pipeline in more than one language
+or package to check that results are not artifacts of one implementation. \\
+Robustness \& audits & Re-running specifications, stress-testing assumptions,
+and flagging silent failures. \\
+Writing \& reproducibility & Drafting documentation, README/replication
+packages, and turning analysis into a reproducible report. \\
+\bottomrule
+\end{tabular}
+\caption{A conceptual map of AI-assisted tasks across a research pipeline.}
+\end{table}
+
+% ===========================================================================
+\section{Key Concepts and Emerging Practices}
+% ===========================================================================
+
+\subsection{The coding ``audit'' / multi-implementation replication}
+A recurring idea in the applied discussion is using an agent to replicate the
+\emph{same} analysis independently across languages and packages---for
+example, estimating a difference-in-differences design in Python, R, and Stata
+with several different estimators. Agreement across independent
+implementations is evidence that a result reflects the data and the design
+rather than a quirk of one package; disagreement localizes a bug or a hidden
+modeling choice. The agent makes this cheap enough to do routinely.
+
+\subsection{The ``harness'' idea}
+Beyond one-off prompts, researchers are building \emph{harnesses}: structured
+scaffolding---repository conventions, task definitions, checks, and standing
+instructions---that let an agent perform a defined research routine reliably
+and repeatably. The harness encodes \emph{how} the lab wants work done, so the
+agent's behavior is reproducible rather than improvised each session.
+
+\subsection{Connectors, MCP, and tool use}
+Agents become far more useful when connected to real tools: a statistical
+engine, a database, a document store, a calendar, or a version-control host.
+The Model Context Protocol (MCP) standardizes these connections, letting one
+agent orchestrate many specialized tools within a single research task.
+
+\subsection{Human-in-the-loop verification}
+The consensus practice is that the researcher remains the author of record.
+The agent accelerates production, but claims, code, and numbers must be
+\emph{verified} by the human: re-reading diffs, re-running key results, and
+checking that the method matches the paper's intent.
+
+% ===========================================================================
+\section{New Problems, Not Just Old Ones Solved}
+% ===========================================================================
+A central and sobering theme is that AI in research can \emph{create new
+problems even while solving old ones}---and even when it does not reduce total
+time spent. Chief concerns:
+
+\begin{itemize}
+  \item \textbf{Plausible-but-wrong output.} Generated code and prose can look
+        correct and still be subtly wrong; fluency is not accuracy.
+  \item \textbf{Silent failures.} An agent may ``fix'' an error by suppressing
+        it, or produce results from a mis-specified model without complaint.
+  \item \textbf{Over-trust and deskilling.} Convenience can erode the
+        researcher's own scrutiny and craft over time.
+  \item \textbf{Provenance \& reproducibility.} Undocumented AI-generated
+        steps make it harder to say exactly how a result was produced.
+  \item \textbf{Verification cost.} Time saved on writing can be spent (or
+        exceeded) on checking; the net efficiency gain is not automatic.
+  \item \textbf{Data governance.} Sensitive or restricted data requires care
+        about what is sent to which tool.
+\end{itemize}
+
+% ===========================================================================
+\section{Recommended Workflow Principles}
+% ===========================================================================
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item \textbf{Version everything.} Work on branches; let the agent commit
+        small, reviewable changes so every step is auditable.
+  \item \textbf{Verify by replication.} Reproduce important results in a
+        second language or package before trusting them.
+  \item \textbf{Prefer tests and assertions.} Encode expected properties of
+        the data and results so silent failures surface loudly.
+  \item \textbf{Keep a harness.} Put standing instructions and checks in the
+        repository so behavior is consistent across sessions.
+  \item \textbf{Document AI involvement.} Record where the agent was used, so
+        the replication package is honest and complete.
+  \item \textbf{Stay the author.} Read the diff; own the result. The tool
+        drafts, the researcher decides.
+\end{enumerate}
+
+% ===========================================================================
+\section{A Minimal Illustration}
+% ===========================================================================
+A typical agentic session on a research repository looks less like chatting
+and more like delegating a bounded task:
+
+\begin{lstlisting}[language=bash]
+# Ask the agent to replicate a diff-in-diff result across engines
+> Reproduce the event-study estimates in analysis/did.py using R (fixest)
+  and Stata (csdid). Report the coefficients side by side and flag any
+  discrepancy larger than 1e-6. Commit the comparison script and a short
+  README on a new branch, then open a draft pull request.
+\end{lstlisting}
+
+\noindent The agent plans the task, writes the comparison scripts, runs each
+engine, tabulates the coefficients, commits the work, and opens a pull request
+for the researcher to review---who then verifies the numbers and the method
+before merging.
+
+% ===========================================================================
+\section{Takeaways}
+% ===========================================================================
+\begin{itemize}
+  \item AI in research has moved from suggestion to \emph{agency}: tools like
+        Claude Code act on real repositories and data.
+  \item The biggest practical wins are in implementation, cross-language
+        replication, robustness audits, and reproducible documentation.
+  \item The technology solves old bottlenecks but introduces new
+        risks---plausible errors, silent failures, and provenance gaps---so
+        verification and good repository hygiene are now core research skills.
+  \item The durable pattern is \textbf{human-authored, agent-accelerated,
+        replication-verified} research.
+\end{itemize}
+
+\vfill
+\noindent\rule{\linewidth}{0.4pt}\\
+{\footnotesize This is a conceptual summary compiled for internal reference.
+It synthesizes the public discussion of AI-assisted empirical research,
+including Scott Cunningham's ongoing ``Claude Code for quantitative social
+scientists'' series on his Substack (\url{https://causalinf.substack.com}).
+It is not affiliated with or endorsed by any author cited.}
+
+\end{document}
