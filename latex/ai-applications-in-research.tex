@@ -1,0 +1,273 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research, especially Claude Code
+%  A conceptual summary compiled from Scott Cunningham's
+%  "Scott's Mixtape Substack" (Aug--Sep 2026).
+%
+%  Compiles with any standard TeX distribution:
+%      pdflatex ai-applications-in-research.tex
+%  (No external assets or non-standard packages required.)
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.75em}{}
+\setlist{itemsep=2pt,topsep=4pt}
+
+\title{\textbf{AI Applications in Research, especially Claude Code}\\[0.4em]
+\large A Conceptual Summary}
+\author{Compiled from Scott Cunningham's \emph{Scott's Mixtape Substack}\\
+\small (posts of August--September 2026)}
+\date{September 27, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document summarizes the main concepts developed by the economist
+Scott Cunningham in a run of 2026 newsletter essays on the use of AI coding
+agents---especially \emph{Claude Code}---in quantitative empirical research.
+The central claim is that autonomous agents have driven the \emph{marginal cost
+of producing research} to nearly zero, but in doing so have stripped away the
+\emph{verification} and \emph{understanding} that used to come for free as
+byproducts of doing the work by hand. The essays develop a framework for
+recovering both: a triangle of \textbf{Production, Verification, and
+Understanding}; a personal ``harness'' that stages research through that
+triangle; and enforcement machinery---\emph{hooks}, \emph{skills}, and
+structured \emph{memory}---for keeping fast, capable agents on task. The
+recurring motto is that \emph{zero errors is a constraint, not the objective},
+and that \emph{everything done with AI agents must be on purpose}.
+\end{abstract}
+
+\section{The central thesis}
+Modern AI coding agents (Claude Code, Codex) can autonomously produce a complete
+quantitative empirical manuscript end to end: choose a question, pick an
+identification strategy, locate and download data, select estimators, write
+replicable code, generate tables, figures, and robustness checks, and draft a
+roughly twenty-page paper with references and a slide deck---in about thirty
+minutes. Cunningham calls this ``3-d printing a research paper.''
+
+He is careful, however, to separate \emph{capability} from \emph{trust}. An
+agent is ``more like a vehicle that automatically stays in lane and has cruise
+control than a truly autonomous vehicle.'' The economic core of the argument:
+when human time ($H$) and machine time ($M$) become near-perfect substitutes in
+producing cognitive output, and human time carries an opportunity cost, the
+cost-minimizing input mix tends toward \emph{zero human time}---pure automation.
+Formally, if AI drops the marginal cost of research from some baseline $MC_b$ to
+$\varepsilon \approx 0$,
+\[
+   MC_{\text{AI}} \;=\; \varepsilon \;\longrightarrow\; 0,
+\]
+then quantity produced rises, but the two things production used to yield ``for
+free''---\emph{verification} (knowing it is right) and \emph{understanding}
+(knowing what was done)---no longer come automatically. Recovering them is the
+whole problem. Cunningham frames this as a \textbf{principal--agent problem}:
+agents take \emph{hidden actions}, and, ironically, ``the less skilled you are in
+the tasks themselves \ldots\ the less problematic their behavior appears to be.''
+A recurring human note runs underneath the analysis: ``I never would've thought
+that speed and abundance would be this fatiguing.''
+
+\section{Three doors: Production, Verification, Understanding}
+Cunningham's organizing framework is a triangle he insists are \emph{doors},
+not gates---all agent-assisted research must pass through all three.
+
+\begin{itemize}
+  \item \textbf{Production---safely delegated.} Agents already produce empirical
+  research autonomously; he cites a lab project that generated roughly a thousand
+  automated program-evaluation papers (difference-in-differences, IV, and so on)
+  with humans controlling only the prompting. ``That part of the Turing test is
+  done.''
+  \item \textbf{Verification---never delegate exclusively.} Replicating code
+  across languages or confirming a figure came from stored code is
+  \emph{necessary but not sufficient}. Verification is \emph{endogenous to a
+  pre-stated target estimand}: it confirms both that what should have been done
+  \emph{was} done and that what should \emph{not} have been done was not. Agents
+  cannot confirm the latter, ``because there is nothing to verify.''
+  \item \textbf{Understanding---must remain human.} ``We must demand of ourselves
+  full and total understanding.'' The researcher is the \textbf{CEO} of the
+  research enterprise: free to delegate, but obligated to know approximately what
+  was done, by whom, and what was found.
+\end{itemize}
+
+\subsection*{The ``bite'' stage}
+Within his difference-in-differences workflow the human-critical step is the
+\emph{bite}: documenting exhaustively the very first thing an intervention does
+in the real world---for a gun law, tracking the movement of \emph{guns} rather
+than deaths; for a minimum wage, finding where the wage floor was \emph{binding}.
+Bite is explored across \emph{space} (heat maps, geographic first-stage response)
+and \emph{time} (time-series aggregations), for treatment and comparison groups
+alike. Agents can draw the maps and pull the data, but bite is ``where the
+project is conceived'' and where one infers the \textbf{treatment-assignment
+mechanism}, so a human must drive it: ``I would discourage anyone from fully
+automating the bite stage.'' The assignment mechanism in turn selects the design
+---human rationality / essential heterogeneity (the endogenous ``perfect
+doctor,'' hardest for inference), instruments ($\to$ IV), randomization on the
+treatment ($\to$ RCTs), and running variables ($\to$ RDD).
+
+\section{The harness and connectors}
+\textbf{The harness.} Cunningham's overarching project is a \emph{causal
+inference harness}---begun as a checklist, increasingly software---that stages
+all of his empirical work through Production, Verification, and Understanding.
+He has built a deliberately narrow \emph{difference-in-differences} harness since
+April (``the more narrow I can make it, the more I can \ldots\ perfect it''),
+believing it generalizes to synthetic control, unconfoundedness, and other
+designs. It is intensely \emph{visual}---a dashboard of ``flippable cards'' meant
+to deliver \emph{continuous understanding} and \emph{continuous verification}. He
+notes the visual emphasis is partly personal: he has aphantasia and navigates by
+narrative and memorization, so his particular solution may not fully generalize.
+He distinguishes three ``harnesses'' for language models: \emph{chatbots}
+(ChatGPT, Claude), \emph{coding copilots} (Cursor, GitHub Copilot), and
+\emph{coding agents} (Claude Code, Codex).
+
+\textbf{Connectors.} Connectors let him drive Claude from the phone app and
+extend it beyond the local machine into cloud services, built on the
+\textbf{Model Context Protocol (MCP)}---``an open standard that allows AI
+applications to securely connect to external data sources and tools.'' He
+distinguishes Anthropic-originated connectors from community ones (peer-reviewed
+but not fully vetted---``buyer beware''), and sees the strongest near-term value
+for solo entrepreneurs (Stripe, PayPal, QuickBooks, Gusto) rather than for
+research itself. His own steady use is having Claude search Dropbox from his
+phone. He suspects a future harness ``will make extensive use of'' connectors,
+but the harness proper will be a graphical dashboard, not a connector.
+
+\section{Hooks: enforcement, not exhortation}
+Prompted by Paul Goldsmith-Pinkham's NBER slides, Cunningham concluded he had
+been over-relying on \emph{prose} (CLAUDE.md files, prompts) to direct agents.
+The problem is \emph{drift}: ``Prose did not cause agents to do good things, and
+it did not stop them from doing bad things.'' Markdown rules are ``words on a
+page''; agents still take cost-minimizing shortcuts---for example, ``vibe
+coding'' a 3,000-permutation inference run directly in the terminal with no saved
+script, so the results could never be regenerated.
+
+\emph{Hooks} solve this because ``Claude does not have hands.'' Every action
+passes through a named tool---\texttt{Read}, \texttt{Edit}, \texttt{Write},
+\texttt{Bash}---announced in advance as a structured packet; a hook is a script
+that answers \emph{yes or no before anything happens}. He lays out a $3\times3$
+governance matrix over \emph{markdowns/prompts}, \emph{skills}, and \emph{hooks}:
+markdowns are the ``legislative branch'' (assume the agent reads and obeys),
+skills assume \emph{you} remember to invoke them, and only hooks are the
+``executive branch'' that actually enforces---``Hooks literally halt behavior
+when done correctly.'' Mechanically: \emph{pre-action} hooks cancel an action
+(``a locked door''), \emph{post-action} hooks fire afterward and ``shout'' so the
+problem is fixed in the same sitting, and well-built hooks \emph{fail open} (if
+the hook's own code breaks it lets you through rather than freezing you out).
+
+His five named hooks are \texttt{protect-raw-data}, \texttt{no-fabricated-exhibit},
+\texttt{no-off-book-exhibit}, \texttt{deck-from-pipeline}, and
+\texttt{no-stale-canon}. The exemplar, \texttt{protect-raw-data}, registers only
+against mutating tools, inspects the target path, and \emph{denies} any write
+into the raw-data folder (\texttt{/data/raw}), redirecting to the clean folder
+(\texttt{/data/clean})---while leaving \texttt{Read} fully open. It succeeds
+where markdown failed because ``nothing has to be held in mind by anyone \ldots\
+either the path starts with \texttt{raw/} or it doesn't,'' guaranteeing ``the
+original is the same file today that it was in June.'' The design philosophy:
+make bad outcomes \emph{impossible, not merely discouraged}, on the logic that
+``anything that can happen, will happen with enough trials.''
+
+\section{Memory: ``memory is the residue of thought''}
+Borrowing a cognitive scientist's line---\emph{memory is the residue of
+thought}---Cunningham argues that attentive time spent thinking is what produces
+memory. Writing your own code builds \emph{local, project-specific human capital}:
+you know where the code is, you feel the syntax, you have the muscle memory.
+Automating production means thinking less at the margin, forming fewer such
+memories, and losing ``the feel'' of the work---which harms your own future
+productivity on that same project.
+
+Because each Claude Code session starts fresh (``there were as many Claudes as
+there were independent sessions''), he first coped by leaving \emph{breadcrumbs}
+---progress logs, CLAUDE.md, readme files---so each new session could
+``download the consciousness'' of the last. His verdict is that such prose is
+necessary but insufficient, which is why he turned to hooks and to the visual
+checklist as a deliberate memory device: ``I want the muscle memory of research.
+I just have to now find ways to create it myself.'' A related pain is sheer
+\emph{volume}: a single experiment can leave tens of thousands of auxiliary files
+and JSON logs, and the visible code pipeline is ``survivor bias \ldots\ curated
+\ldots\ endogenous.'' The governing principle: \emph{everything with AI agents
+must be on purpose}---diminishing your own thinking is fine if chosen, dangerous
+if it happens without your noticing.
+
+\section{Understanding is the new bottleneck}
+Cunningham had been saying ``verification is the new bottleneck''; Geoffrey
+Litt's essay \emph{Understanding is the New Bottleneck} (shared by Paul
+Goldsmith-Pinkham) sharpened the claim: agents ``will be able to verify as well
+as produce, but that does not therefore mean we will understand it.'' He models
+understanding as having historically been almost an \emph{externality}---a
+byproduct created ``by accident'' while doing the work---so the time recovered by
+automation may not be reallocatable to reproduce it.
+
+Adopting Goldsmith-Pinkham's ``the unit of verification is the git diff,'' he
+confesses he is often ``skimming and accepting'' diffs, accumulating
+\emph{cognitive debt} rather than clearing it. His main constructive experiment
+is a \texttt{/quiz} skill: Claude Code first generates slides that \emph{teach}
+him the relevant material, then asks multiple-choice questions one at a time
+---modeled on corporate training videos---to build continuous understanding on
+top of verification. He endorses a corner solution attributed via an IBM line:
+``since machines cannot be held accountable for mistakes, they cannot be trusted
+to make decisions''---so agents either help you understand their work, or you do
+not use them at all.
+
+\section{Practical principles and cautions}
+\begin{itemize}
+  \item \textbf{Zero errors is a constraint, not the objective.} Do not
+  ``minimize'' errors (that admits an optimal error rate above zero); fix errors
+  at zero as an exogenous constraint and optimize output subject to it.
+  \item \textbf{Checklists (after Gawande's \emph{Checklist Manifesto}).} People
+  skip steps in high-stakes work, and \emph{experts skip more than beginners};
+  every chapter of his book ends in a checklist.
+  \item \textbf{Enforce structure, don't trust prose.} Pre-commit to a folder
+  layout (\texttt{/data/raw}, \texttt{/data/clean}, a numbered code pipeline);
+  require that every figure, table, and number trace back to stored, rerunnable
+  code---never a one-off terminal run---and use hooks to guarantee it.
+  \item \textbf{Watch for hidden specification search.} Agents can perform
+  covariate selection inside code in ways that hide which covariates were
+  actually used; you must be able to verify with certainty that what was reported
+  is what was run.
+  \item \textbf{AI agents for research are not chatbots.} Prior experience with
+  ChatGPT misleads people into thinking success is about ``the right prompts'';
+  for agents ``there is no such thing as prompt engineering anymore''---the skill
+  is learning by doing and treating the agent as a thinking partner.
+  \item \textbf{Research-culture caution.} He opposes journals demanding
+  submission of prompts or chat transcripts (an adverse-selection and
+  privacy problem) and remains honestly uncertain whether his own elaborate
+  scaffolding is over-engineered.
+\end{itemize}
+
+\section*{Key references mentioned}
+\addcontentsline{toc}{section}{Key references mentioned}
+\begin{itemize}
+  \item Geoffrey Litt, \emph{Understanding is the New Bottleneck} (blog post).
+  \item Paul Goldsmith-Pinkham --- NBER lecture slides; ``the unit of
+  verification is the git diff.''
+  \item Mitchell \& Ghosh (Hugging Face) and Passi (Data \& Society) --- on the
+  degradation of effective human oversight of AI agents.
+  \item Atul Gawande, \emph{The Checklist Manifesto}; Daniel Kahneman,
+  \emph{Thinking, Fast and Slow}.
+  \item Heckman, Ichimura \& Todd (1997); Imbens \& Angrist (1994, LATE);
+  Imbens \& Lemieux (RDD); LaLonde (1986); Rubin (``Design Trumps Analysis'').
+  \item Tools: Claude Code, Codex, Cursor, GitHub Copilot; MCP connectors
+  (Stripe, PayPal, QuickBooks, Gusto, Dropbox). Skills: \texttt{/referee2},
+  \texttt{/beautiful\_deck}, \texttt{/quiz}. Repo: \emph{Mixtapetools}.
+\end{itemize}
+
+\vfill
+\noindent\rule{\linewidth}{0.4pt}\\
+{\footnotesize Compiled as a conceptual summary of Scott Cunningham's
+\emph{Scott's Mixtape Substack} essays (Aug--Sep 2026):
+``Which stages of research production should we let AI Agents loose,''
+``My strategy for talks on agents for research,''
+``How to improve understanding with Claude Code,''
+``How and why I am using hooks (part 1),''
+``Memory is the residue of thought,''
+``Some thoughts about AI in practice,''
+``Where and how will the human be in the loop?,'' and
+``Connectors and My Harness Idea.'' Direct quotations are drawn from those
+posts.}
+
+\end{document}
