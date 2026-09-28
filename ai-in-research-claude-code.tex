@@ -1,0 +1,205 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\newcommand{\term}[1]{\textbf{#1}}
+
+\title{\vspace{-1.5em}AI Applications in Research\\[0.3em]
+  \large A Primer on Agentic Workflows and the Use of Claude Code}
+\author{}
+\date{September 28, 2026}
+
+\begin{document}
+
+\maketitle
+\vspace{-2.5em}
+
+\begin{abstract}
+\noindent This note surveys the main concepts behind the use of large language
+model (LLM) ``agents'' in research, with an emphasis on \term{Claude Code} as an
+agentic coding tool. It is written for empirical researchers---economists, social
+scientists, and quantitative analysts---who want a conceptual map of what these
+tools do, where they help, and what safeguards keep the science honest. The
+framing draws on the practitioner discussion circulating in the applied
+econometrics community (notably Scott Cunningham's \emph{Scott's Mixtape
+Substack}), where the recurring themes are \term{harnesses}, \term{connectors},
+\term{human-in-the-loop} oversight, and reproducibility.
+\end{abstract}
+
+\section{From Chatbots to Agents}
+
+The first wave of LLM use in research was \term{conversational}: a researcher
+pastes a question into a chat window and copies an answer back out. The current
+wave is \term{agentic}. An agent is an LLM placed inside a loop that lets it
+\emph{take actions}---read and write files, run code, query a database, search
+the web---observe the results, and decide what to do next, all in service of a
+goal stated in natural language.
+
+Three ideas separate an agent from a chatbot:
+\begin{itemize}[leftmargin=1.4em]
+  \item \term{Tool use.} The model is given a set of callable tools (a shell, a
+  file editor, a search API) and chooses when to invoke them.
+  \item \term{Autonomy within a loop.} The model plans, acts, inspects the
+  output, and self-corrects across many steps rather than a single turn.
+  \item \term{Context.} The agent is grounded in the researcher's actual
+  artifacts---the repository, the dataset, the prior draft---rather than a
+  generic prompt.
+\end{itemize}
+
+\section{Claude Code as an Agentic Coding Tool}
+
+\term{Claude Code} is a command-line agent that operates directly inside a
+project directory. It can read the codebase, edit files, execute commands, run
+tests, and use version control, all while explaining its reasoning. For a
+researcher, the relevant capabilities are:
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item \term{Repository-aware editing.} It navigates a real project---data
+  cleaning scripts, estimation code, a paper's \LaTeX{} source---and makes
+  coherent multi-file changes.
+  \item \term{Code execution and verification.} It can run an analysis, read the
+  error or the output, and iterate, closing the loop between writing code and
+  checking that it works.
+  \item \term{Reproducibility hooks.} Because it works through the shell and git,
+  its actions are logged as commits and diffs, which is the same audit trail a
+  careful empiricist already keeps.
+  \item \term{Extensibility.} Its behavior is shaped by project-level
+  instructions, custom commands, and skills, so a lab can encode its own
+  conventions once and have every session follow them.
+\end{enumerate}
+
+\section{Two Organizing Concepts: Harnesses and Connectors}
+
+\subsection{Harnesses}
+
+A \term{harness} is the scaffolding that turns a general model into a reliable
+research assistant for a \emph{specific} task. Rather than trusting a single
+open-ended prompt, the researcher wraps the model in structure: a fixed
+sequence of steps, checklists the model must satisfy, templates for output, and
+validation gates between stages. In the causal-inference setting this might be a
+harness that (i) states the identifying assumptions, (ii) selects an estimator
+consistent with those assumptions, (iii) runs the estimation, and (iv) produces
+diagnostic and robustness checks in a fixed order. The harness is where a
+researcher's methodological judgment gets encoded so the agent cannot skip it.
+
+\subsection{Connectors}
+
+\term{Connectors} give the agent authenticated, structured access to external
+systems---email, calendars, document stores, cloud drives, reference managers,
+data warehouses. They matter for research because they let the agent operate on
+the researcher's \emph{real} materials (a shared drive of datasets, a folder of
+PDFs to synthesize) instead of on pasted fragments. The trade-off is
+governance: every connector widens what the agent can see and do, so access
+should be scoped to exactly what a task requires.
+
+\section{The Human in the Loop}
+
+The dominant safeguard is \term{human-in-the-loop} design: the agent proposes,
+the researcher disposes. The open questions are \emph{where} and \emph{how} the
+human should sit in the loop---at which steps a person must approve, and what
+information they need to approve well. Useful placements include:
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \term{Before irreversible actions}---overwriting data, publishing,
+  sending---the agent pauses for explicit approval.
+  \item \term{At methodological forks}---choice of estimator, sample
+  restrictions, functional form---where the decision is a research judgment, not
+  a mechanical one.
+  \item \term{At verification points}---the human reads the diff, re-runs a
+  spot check, and confirms the result reproduces.
+\end{itemize}
+
+The goal is not to remove the human but to spend their attention where it is
+most valuable, while the agent absorbs the mechanical toil.
+
+\section{Where AI Helps Research}
+
+\begin{description}[leftmargin=0em, style=nextline]
+  \item[Literature synthesis] Summarizing, comparing, and cross-referencing a
+  corpus of papers, then tracing claims back to sources.
+  \item[Data wrangling] Cleaning, reshaping, merging, and documenting datasets,
+  with the transformations recorded as reviewable code.
+  \item[Estimation and simulation] Drafting estimation code, Monte Carlo
+  experiments, and diagnostic plots that the researcher then audits.
+  \item[Replication and robustness] Re-implementing a published method,
+  stress-testing a result across specifications, and building the robustness
+  table.
+  \item[Writing and exposition] Drafting method sections, docstrings, and
+  \LaTeX{}, and translating code into prose (and back).
+  \item[Tooling] Building small internal tools---scrapers, converters,
+  dashboards---that would otherwise not be worth a researcher's time.
+\end{description}
+
+\section{Risks and Discipline}
+
+The same properties that make agents useful make them hazardous if unsupervised.
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \term{Confabulation.} Models can produce fluent but false claims,
+  citations, or results; every factual and numerical output needs verification
+  against a primary source.
+  \item \term{Silent errors.} An agent can ``fix'' a failing test by weakening
+  it, or make code run by masking the real problem; read the diff, not just the
+  green check.
+  \item \term{Reproducibility drift.} Non-determinism and hidden context can make
+  a result hard to reproduce; pin versions, log prompts and actions, and commit
+  everything.
+  \item \term{Over-delegation of judgment.} Identification strategy, assumptions,
+  and interpretation are the researcher's responsibility and should never be
+  outsourced to the agent.
+  \item \term{Data governance.} Sensitive or restricted data sent through a tool
+  or connector may leave a boundary it should not; scope access deliberately.
+\end{itemize}
+
+The practical discipline mirrors good empirical practice: \term{version control
+everything}, \term{make each step reproducible}, \term{keep a human accountable
+for every claim}, and treat the agent's output as a draft to be checked, not an
+oracle to be trusted.
+
+\section{A Minimal Workflow}
+
+A defensible research workflow with Claude Code looks like this:
+\begin{enumerate}[leftmargin=1.4em]
+  \item State the task and the assumptions in a project instruction file the
+  agent reads on every session.
+  \item Work in a git branch so every change is a reviewable diff.
+  \item Let the agent draft code and run it; require tests or diagnostics at each
+  stage (the harness).
+  \item Review the diff and the numbers; approve before anything irreversible.
+  \item Commit with a clear message; keep the prompt, the diff, and the output
+  together as the reproducible record.
+\end{enumerate}
+
+\section*{Takeaway}
+
+AI agents like Claude Code are best understood as \emph{fast, tireless research
+assistants that require supervision}. They compress the mechanical distance
+between an idea and a result---but the value of the result still rests on the
+researcher's assumptions, verification, and accountability. The engineering
+concepts that make this safe---harnesses, scoped connectors, and a deliberate
+human-in-the-loop---are simply the reproducibility and peer-review instincts of
+good science, recast for a new tool.
+
+\vfill
+\noindent\rule{\linewidth}{0.4pt}\\[0.3em]
+{\small Prepared as a companion note to the \emph{Scott's Mixtape Substack}
+newsletter series on AI in applied econometrics. Newsletter archive:
+\url{https://causalinf.substack.com/}.}
+
+\end{document}
