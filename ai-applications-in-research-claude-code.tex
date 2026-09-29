@@ -1,0 +1,212 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: The Use of Claude Code
+%  A conceptual summary aimed at empirical / quantitative
+%  social-science researchers.
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{parskip}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+       \large The Use of Claude Code in Empirical and Quantitative Social Science}
+\author{Prepared as a conceptual summary}
+\date{September 29, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+Agentic artificial intelligence is reshaping how empirical research is
+conducted, moving beyond passive ``autocomplete'' assistance toward
+autonomous agents that can plan, write, run, and audit code on a
+researcher's behalf. This document summarizes the main concepts behind
+AI applications in research, with particular emphasis on
+\emph{Claude Code}, a command-line coding agent, and how it is being
+adopted for quantitative and empirical social-science workflows. The
+discussion is framed around themes popularized in ongoing practitioner
+writing---most visibly Scott Cunningham's ``Scott's Mixtape'' Substack
+series on Claude Code for social scientists.
+\end{abstract}
+
+\section{Introduction}
+
+Research computing has historically relied on the researcher writing every
+line of analysis code by hand. The emergence of large language models
+(LLMs) first introduced \emph{in-editor autocomplete} and chat-based
+assistance. The current frontier is \emph{agentic AI}: systems that
+operate an environment---reading files, executing commands, inspecting
+output, and iterating---under a researcher's supervision. Claude Code is
+one such agent that runs in the terminal (and in web, desktop, and IDE
+contexts) and can carry a multi-step empirical task from specification to
+result.
+
+For empirical social scientists---economists, political scientists,
+sociologists, epidemiologists---this shift matters because the bottleneck
+in applied work is rarely the idea; it is the labor of data cleaning,
+estimation, robustness checking, and replication. Agentic tools promise to
+compress that labor while, if used carefully, \emph{raising} the standard
+of transparency and reproducibility.
+
+\section{Core Concepts}
+
+\subsection{From Autocomplete to Agents}
+An \textbf{AI agent} differs from a chatbot in that it can take actions in
+a real environment and observe their consequences. Rather than returning a
+block of suggested code, the agent runs the code, reads the error, and
+fixes it---looping until a goal is met. This ``plan--act--observe'' loop is
+the defining feature of tools such as Claude Code.
+
+\subsection{The Agent Harness}
+A recurring theme is the idea of an \textbf{agent harness}: the scaffolding
+of instructions, project context, permissions, and repository conventions
+that steers a general-purpose agent toward reliable, domain-appropriate
+behavior. In a research setting this includes:
+\begin{itemize}[leftmargin=1.4em]
+  \item A project-level context file (e.g.\ a \texttt{CLAUDE.md}) describing
+        the dataset, the estimands, coding conventions, and ``house rules.''
+  \item Explicit statements of the empirical design (identification
+        strategy, sample restrictions, fixed effects, clustering).
+  \item Guardrails on what the agent may and may not do (e.g.\ never alter
+        raw data, always log every transformation).
+\end{itemize}
+A good harness turns a generic coding agent into a disciplined research
+assistant.
+
+\subsection{Reproducibility and Auditing}
+Because the agent produces a full, inspectable transcript of commands and
+edits, agentic workflows can \emph{improve} reproducibility. A prominent
+use case is the \textbf{code audit}: asking the agent to reproduce a
+published or draft result and to flag discrepancies. Because agents are
+increasingly language-agnostic, one audit can span \textbf{Python, R, and
+Stata}, checking that the same empirical estimator (for example, a
+difference-in-differences design) yields consistent numbers across
+implementations.
+
+\section{Applications in Empirical Research}
+
+\begin{enumerate}[leftmargin=1.5em]
+  \item \textbf{Data cleaning and wrangling.} Automating the tedious,
+        error-prone steps of merging, reshaping, and validating data, with
+        the agent documenting each transformation.
+  \item \textbf{Estimation and modeling.} Implementing econometric
+        estimators---panel fixed effects, instrumental variables, modern
+        difference-in-differences (e.g.\ Callaway--Sant'Anna style),
+        synthetic control---and generating the accompanying tables and
+        figures.
+  \item \textbf{Cross-language replication audits.} Re-implementing an
+        analysis in a second language to detect coding errors or
+        package-specific default differences.
+  \item \textbf{Robustness and specification search.} Systematically
+        varying controls, samples, and functional forms to map how
+        sensitive a result is---made explicit and logged rather than
+        hidden.
+  \item \textbf{Literate documentation.} Producing readable write-ups,
+        replication packages, and README files so that a project is
+        legible to co-authors and referees.
+  \item \textbf{Live and exploratory research.} Using the agent as a
+        pair-programmer during active projects, documenting ``what works
+        and what doesn't'' in real time.
+\end{enumerate}
+
+\section{Benefits and Risks}
+
+\subsection{Benefits}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Speed.} Compresses routine implementation work from hours to
+        minutes.
+  \item \textbf{Breadth.} Lowers the cost of working across unfamiliar
+        languages and packages.
+  \item \textbf{Transparency.} Every step is captured in a transcript that
+        can be reviewed and re-run.
+  \item \textbf{Learning.} Acts as an always-available tutor for methods and
+        tooling.
+\end{itemize}
+
+\subsection{Risks and Mitigations}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Silent errors / hallucination.} An agent can produce
+        plausible-but-wrong code. \emph{Mitigation:} the researcher remains
+        the accountable reviewer; results are cross-checked and audited.
+  \item \textbf{Over-delegation.} Losing understanding of one's own
+        pipeline. \emph{Mitigation:} treat the agent as an assistant, not an
+        author of record; keep human judgment on identification and
+        interpretation.
+  \item \textbf{Reproducibility of the agent itself.} Model behavior can
+        drift. \emph{Mitigation:} commit the generated code and data
+        pipeline, not just the prompts.
+  \item \textbf{Data governance.} Sensitive or restricted data require
+        care about where computation runs and what is shared.
+\end{itemize}
+
+\section{Practical Workflow Pattern}
+
+A representative agentic research loop:
+\begin{enumerate}[leftmargin=1.5em]
+  \item \textbf{Specify.} State the empirical goal, design, and constraints
+        in a project context file.
+  \item \textbf{Delegate.} Ask the agent to implement a discrete,
+        well-scoped step.
+  \item \textbf{Inspect.} Read the diff, the logs, and the output; question
+        anything surprising.
+  \item \textbf{Audit.} Have the agent (or a second pass) reproduce or
+        cross-check the result, ideally in another language.
+  \item \textbf{Commit.} Version-control the code, outputs, and
+        documentation so the work is durable and shareable.
+\end{enumerate}
+
+\section{Connection to Current Practitioner Writing}
+
+Much of the practical knowledge about using Claude Code in research is being
+developed in public. Scott Cunningham's ``Scott's Mixtape'' Substack runs an
+ongoing series documenting how agentic AI is changing empirical
+social-science work---covering agent harnesses for economics, cross-language
+diff-in-differences audits, and hands-on tutorials on using Claude Code for
+quantitative research. Such practitioner documentation is currently one of
+the best guides to \emph{what works and what does not} in day-to-day use.
+
+\section{Conclusion}
+
+AI applications in research have moved from suggestion to action. Claude
+Code and similar agents can meaningfully accelerate empirical work while,
+used responsibly, strengthening transparency and reproducibility. The
+central principle is unchanged: the researcher owns the identification
+strategy, the interpretation, and the accountability---the agent is a
+powerful, auditable assistant, not a replacement for scientific judgment.
+
+\vspace{1em}
+\hrule
+\vspace{0.6em}
+\footnotesize
+\noindent\textbf{Key references / further reading:}
+\begin{itemize}[leftmargin=1.4em, itemsep=0.1em]
+  \item Scott's Mixtape Substack --- Claude Code series:
+        \url{https://causalinf.substack.com/s/claude-code}
+  \item ``Claude Code 51: Harnessing AI Agents for Economic Research'':
+        \url{https://causalinf.substack.com/p/claude-code-51-harnessing-ai-agents}
+  \item ``Claude Code Part 12: How I Use Claude Code for Empirical
+        Research'':
+        \url{https://causalinf.substack.com/p/claude-code-part-12-how-i-use-claude}
+  \item Claude Code documentation:
+        \url{https://code.claude.com/docs}
+\end{itemize}
+
+\end{document}
