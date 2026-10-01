@@ -1,0 +1,195 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+% AI Applications in Research: The Agentic Turn and Claude Code
+% A conceptual summary synthesized from Scott Cunningham's
+% "Claude Code" series on Scott's Mixtape Substack and related
+% practice in applied quantitative social science.
+% Compiles with pdflatex (no non-standard packages required).
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black,
+  pdftitle={AI Applications in Research: The Agentic Turn and Claude Code},
+  pdfauthor={Compiled summary}
+}
+
+\setlist{itemsep=2pt, topsep=4pt}
+
+\title{\textbf{AI Applications in Research:\\ The Agentic Turn and Claude Code}}
+\author{A conceptual summary}
+\date{October 1, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This note summarizes the main concepts behind the use of artificial
+intelligence in empirical research, with particular attention to
+\emph{agentic} coding assistants and, specifically, \textbf{Claude Code}. The
+synthesis draws on Scott Cunningham's ongoing ``Claude Code'' series on
+\emph{Scott's Mixtape} Substack, which documents, in near real time, how an
+applied economist restructures the research workflow around an AI agent. The
+central argument is that AI has shifted from a passive writing aid to an
+autonomous collaborator that executes multi-step analytical pipelines, and
+that this shift changes not only \emph{how} research is produced but also what
+``doing research'' and ``publishing'' now mean.
+\end{abstract}
+
+\tableofcontents
+\vspace{1em}
+
+% ---------------------------------------------------------------
+\section{From Assistants to Agents}
+
+Early research uses of large language models were essentially \emph{autocomplete
+at scale}: drafting prose, explaining a method, or suggesting a snippet of code.
+The defining change is the move to \textbf{agentic} tools --- systems that do not
+merely answer a prompt but plan and carry out a sequence of actions against a
+real environment.
+
+\begin{itemize}
+  \item \textbf{Tool use.} The agent reads and writes files, runs code, inspects
+        output, and iterates --- operating inside the researcher's actual
+        project directory rather than in a detached chat window.
+  \item \textbf{Multi-step autonomy.} A single instruction (``replicate this
+        pipeline,'' ``audit these results'') unfolds into many coordinated
+        sub-tasks without step-by-step human steering.
+  \item \textbf{Environment awareness.} The agent treats the repository, its
+        data, scripts, and dependencies as the unit of work, giving it the
+        context needed to reason about an entire project.
+\end{itemize}
+
+\noindent Claude Code is the canonical example: a command-line agent that works
+directly within a codebase, making it a natural fit for the file-and-script
+reality of empirical research.
+
+% ---------------------------------------------------------------
+\section{The Empirical Research Workflow with Claude Code}
+
+Cunningham frames his practice as a \emph{harness} --- a set of conventions,
+templates, and protocols that make an agent reliable for serious analysis
+rather than a toy.
+
+\begin{description}[style=nextline, leftmargin=1.5em]
+  \item[Project onboarding] Point the agent at an existing directory (even a
+        decade-old project) and let it map the code, data, and intent before
+        any changes are made.
+  \item[The \texttt{CLAUDE.md} convention] A project-level instruction file
+        encodes standards, conventions, and guardrails so the agent behaves
+        consistently across sessions.
+  \item[Templates and skills] Reusable protocols (e.g., Cunningham's
+        \emph{MixtapeTools}) package common tasks --- cleaning, estimation,
+        table and figure generation, \LaTeX{} write-up --- into repeatable
+        units.
+  \item[Iterative review] Work proceeds in tight loops of generate, inspect,
+        correct --- with the human remaining the editor of record.
+\end{description}
+
+% ---------------------------------------------------------------
+\section{Reproducibility and Verification}
+
+A recurring theme is that autonomy raises the stakes for \textbf{verification}.
+If an agent can silently produce a plausible-but-wrong result, trust must be
+engineered rather than assumed.
+
+\begin{itemize}
+  \item \textbf{Cross-language replication.} Re-implement key analyses in a
+        second language or package and compare results (e.g., to six decimal
+        places for linear models). Agreement across independent toolchains is a
+        strong guard against silent errors.
+  \item \textbf{Adversarial / ``Referee 2'' review.} Run an audit in a
+        \emph{fresh} session so the agent cannot see --- and defend --- its own
+        prior work, then require a formal written report of discrepancies.
+  \item \textbf{Parallel audits.} Several independent checks (code audit,
+        cross-language replication, numerical reconciliation) run in parallel
+        and must converge before results are trusted.
+  \item \textbf{Determinism checks.} For non-random quantities ($R^2$, means,
+        observation counts), independently regenerated pipelines should produce
+        \emph{identical} numbers.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{Keeping the Human in the Loop}
+
+The productivity gain is real, but so is the risk of over-delegation. The design
+question Cunningham repeatedly returns to is \emph{where and how} the human
+stays in the loop.
+
+\begin{itemize}
+  \item The researcher owns the \textbf{question}, the \textbf{identification
+        strategy}, and the \textbf{interpretation} --- the agent accelerates
+        execution, not judgment.
+  \item Verification protocols exist precisely so that human oversight scales
+        with, rather than against, the agent's speed.
+  \item New problems emerge even as old ones are solved: an agent can create
+        subtle errors, false confidence, or unexamined analytical choices that
+        a careless workflow would wave through.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{Research versus Publishing}
+
+One of the series' sharper claims is that AI agents \emph{decouple} research
+from publishing.
+
+\begin{itemize}
+  \item \textbf{Research gets easier.} Pipelines that once took weeks can be
+        assembled, audited, and written up in a fraction of the time.
+  \item \textbf{Publishing gets harder.} If anyone can automate a competent
+        paper from a vague prompt, the volume of submissions --- and the risk of
+        ``paper milling'' --- threatens to overwhelm traditional gatekeeping.
+  \item \textbf{Consequence.} Scarcity shifts from the ability to \emph{produce}
+        a result to the ability to \emph{certify} that a result is credible,
+        novel, and honestly obtained --- relocating value toward verification,
+        curation, and trust.
+\end{itemize}
+
+% ---------------------------------------------------------------
+\section{Key Takeaways}
+
+\begin{enumerate}
+  \item AI in research has crossed from \emph{assistant} to \emph{agent}:
+        planning and executing full analytical pipelines, not just drafting
+        text.
+  \item Claude Code operationalizes this inside the researcher's own codebase,
+        making it well suited to empirical social science.
+  \item Reliability is \emph{engineered} through cross-language replication,
+        adversarial review, and parallel audits --- not assumed.
+  \item The human remains responsible for the question, the design, and the
+        interpretation; good harnesses scale oversight alongside automation.
+  \item The agentic turn separates the economics of doing research from the
+        economics of publishing it, pushing scholarly value toward
+        verification and trust.
+\end{enumerate}
+
+% ---------------------------------------------------------------
+\section*{Sources}
+\addcontentsline{toc}{section}{Sources}
+\begin{itemize}
+  \item Scott Cunningham, \emph{Scott's Mixtape} Substack --- the ``Claude
+        Code'' series, incl. \href{https://causalinf.substack.com/p/claude-code-27-research-and-publishing}{\textit{Claude Code 27: Research and Publishing Are Now Two Different Things}} and \href{https://causalinf.substack.com/p/claude-code-25-more-autonomous-agents}{\textit{Claude Code 25: More Autonomous Agents Are Coming to Research}}.
+  \item Scott Cunningham, \emph{MixtapeTools} --- templates and audit protocols
+        for AI-assisted empirical research: \url{https://github.com/scunning1975/mixtapetools}.
+  \item \emph{Scott's Mixtape} Substack home: \url{https://causalinf.substack.com/}.
+\end{itemize}
+
+\vspace{1em}
+\noindent\rule{\linewidth}{0.4pt}\\
+{\footnotesize Compiled 2026-10-01 as a conceptual summary. Compile with
+\texttt{pdflatex ai-in-research-claude-code.tex} (run twice for the table of
+contents and hyperlinks).}
+
+\end{document}
