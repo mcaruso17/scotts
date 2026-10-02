@@ -1,0 +1,199 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------
+%  AI Applications in Research: Concepts and the Role of Claude Code
+%  A concept summary inspired by Scott Cunningham's "Mixtape" series
+%  on AI agents for empirical / causal-inference research.
+% ---------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{parskip}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\title{\textbf{AI Applications in Research}\\[0.3em]
+\large Core Concepts, with an Emphasis on Claude Code for Empirical Work}
+\author{Compiled summary --- Scott's Mixtape routine}
+\date{2 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This note summarises the main concepts behind using AI --- and
+AI \emph{agents} in particular --- in academic and applied research. It pays
+special attention to \textbf{Claude Code}, the agentic command-line tool, as a
+research instrument for quantitative empirical work (econometrics, causal
+inference, data cleaning, and manuscript production). The framing draws on
+themes developed across Scott Cunningham's ``Mixtape'' Substack series on AI
+agents for empirical research, combined with general principles of reproducible,
+disciplined scientific computing.
+\end{abstract}
+
+\section{Why AI Agents Matter for Research}
+
+Large language models have moved from \emph{chat assistants} that answer
+questions to \emph{agents} that take actions: reading files, writing and running
+code, inspecting outputs, and iterating toward a goal. For researchers, this
+shift is significant because much of empirical work is itself a loop of
+``write code $\rightarrow$ run $\rightarrow$ inspect $\rightarrow$ revise.''
+An agent that can operate inside that loop can compress hours of mechanical
+effort, while leaving the researcher responsible for judgement, identification
+strategy, and interpretation.
+
+\begin{description}[leftmargin=1.4em, style=nextline]
+  \item[Assistant vs.\ agent] An assistant suggests; an agent executes within a
+  controlled environment and observes the results of its own actions.
+  \item[The research loop] Data cleaning, estimation, diagnostics, tables, and
+  figures are repetitive and rule-bound --- well suited to delegation.
+  \item[Human in the loop] The scientist remains accountable for design and
+  conclusions; the agent accelerates execution, not epistemics.
+\end{description}
+
+\section{What Claude Code Is}
+
+\textbf{Claude Code} is an agentic coding tool that runs in the terminal (and in
+web, desktop, and IDE forms). Rather than pasting snippets into a chat window,
+the researcher points Claude Code at a \emph{project directory}; it can then read
+the data dictionary, open scripts, execute them, read the errors or results, and
+propose or make edits --- all within the actual project environment.
+
+\subsection{Key capabilities relevant to research}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Repository awareness.} It reads and edits real files in context,
+  so suggestions respect the project's existing structure and conventions.
+  \item \textbf{Tool use \& execution.} It can run the project's scripts, tests,
+  and linters, and react to their output.
+  \item \textbf{Connectors / MCP.} Through the Model Context Protocol and
+  connectors, it can reach external systems (e.g.\ email, calendars, drives,
+  databases, GitHub) that supply or receive research artifacts.
+  \item \textbf{Subagents \& parallelism.} Independent subtasks (searching,
+  reviewing, drafting) can be delegated and run concurrently.
+  \item \textbf{Automation.} Scheduled / recurring runs let routine tasks (a
+  literature digest, a nightly rebuild) run unattended.
+\end{itemize}
+
+\section{A Discipline for Research Agents: the ``Harness''}
+
+A recurring theme in using agents responsibly is building a \textbf{harness}:
+the scaffolding of rules, guardrails, and standard procedures that keep an
+autonomous tool from doing damage and keep its work reproducible. The agent is
+powerful precisely because it acts, so the surrounding discipline matters more,
+not less.
+
+\subsection{Hooks}
+\emph{Hooks} are automated checks or actions the harness runs at defined moments
+(before or after a tool call, before a commit, on session start). They turn good
+intentions into enforced policy. Canonical examples for empirical research:
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Protect raw data.} Block any edit to raw/input data --- the
+  cardinal rule ``\emph{don't edit raw data}'' becomes a hard constraint, not a
+  hope. All cleaning writes to derived files.
+  \item \textbf{Environment checks.} Ensure the project can build, lint, and run
+  tests at the start of a session.
+  \item \textbf{Provenance.} Log what was run and when, so results are traceable.
+\end{itemize}
+
+\subsection{Reproducibility first}
+The payoff of the harness is that an agent-assisted analysis remains
+\emph{reproducible}: deterministic pipelines, version-controlled code, immutable
+raw inputs, and generated (never hand-edited) outputs. This aligns agent use
+with the long-standing norms of credible empirical science.
+
+\section{Where to Let the Agent Loose: Stages of Research Production}
+
+Not every stage of research should be delegated equally. A useful way to think
+about it is to grade stages by how mechanical versus how judgement-laden they
+are, and how verifiable the output is.
+
+\begin{description}[leftmargin=1.4em, style=nextline]
+  \item[High suitability] Data wrangling and cleaning (to derived files), code
+  refactoring, writing unit tests, building tables and figures from results,
+  reformatting, literature search and triage, boilerplate replication code.
+  \item[Shared / supervised] Specification and robustness grids, diagnostics,
+  drafting prose that the researcher then edits, exploratory data analysis.
+  \item[Low suitability (human-owned)] Identification strategy, choice of
+  estimand, interpretation of effects, and the final scientific claims.
+\end{description}
+
+The guiding question --- ``\emph{which stages of research production should we let
+AI agents loose on?}'' --- is answered by verifiability: delegate most freely
+where a human (or a test) can cheaply check the result.
+
+\section{Causal Inference Meets AI: Two Kinds of Uncertainty}
+
+Scott Cunningham's writing ties AI back to the core of causal inference, and to
+\textbf{uncertainty}. It is worth separating the kinds:
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item \textbf{Epistemological / causal uncertainty.} We never observe the
+  counterfactual --- the ``missing'' potential-outcome cells. We can only
+  \emph{estimate} causal effects, usually as averages, not individual effects.
+  This uncertainty is deep and cannot be fully resolved; claims that it has been
+  should be treated with suspicion.
+  \item \textbf{Uncertainty about the future.} Whether AI reshapes the labour
+  market for knowledge workers is genuinely hard to identify: the question is
+  heavily confounded (many things are changing at once), and ``AI exposure''
+  estimates carry very wide error bands.
+\end{enumerate}
+
+A reflective point from the same discussion: the sense of \emph{certainty} people
+felt about their careers before AI was itself an illusion. The future never
+existed as a fixed object; agents simply make that pre-existing uncertainty more
+salient. For researchers this is a reminder to quantify and communicate
+uncertainty honestly rather than to project false precision.
+
+\section{Practical Principles for AI-Assisted Empirical Research}
+
+\begin{enumerate}[leftmargin=1.4em]
+  \item \textbf{Never edit raw data.} Treat inputs as immutable; all
+  transformations produce new, derived artifacts.
+  \item \textbf{Make the pipeline reproducible.} Version control, scripted
+  end-to-end builds, pinned environments.
+  \item \textbf{Keep a human in the loop} for identification, estimands, and
+  interpretation.
+  \item \textbf{Build a harness} with hooks that enforce your lab's rules
+  automatically.
+  \item \textbf{Delegate by verifiability.} Hand off tasks whose output you can
+  cheaply check.
+  \item \textbf{Use connectors deliberately.} Reaching external data/services is
+  powerful but widens the trust surface --- scope access narrowly.
+  \item \textbf{Be honest about uncertainty.} Report averages as averages, and
+  do not let fluent output masquerade as certainty.
+\end{enumerate}
+
+\section{Summary}
+
+AI agents such as Claude Code turn the language model from a passive advisor into
+an active participant in the research pipeline --- reading the project, running
+code, and iterating. Their value in empirical research is greatest on
+mechanical, verifiable stages (cleaning, tables, tests, search) and least on the
+irreducibly human work of causal identification and interpretation. The
+organising idea is \textbf{disciplined autonomy}: wrap the agent in a harness of
+hooks and reproducibility rules, protect raw data absolutely, delegate by
+verifiability, and keep uncertainty --- both the counterfactual kind and the
+about-the-future kind --- explicit and honest.
+
+\vfill
+\begin{center}
+\small\itshape
+Concept summary generated as part of the ``Scott Cunningham newsletter'' routine.
+Latest newsletter referenced: ``AI Workshop, AI Uncertainty,'' 2 October 2026 ---
+\url{https://causalinf.substack.com/p/ai-workshop-ai-uncertainty}
+\end{center}
+
+\end{document}
